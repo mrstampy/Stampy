@@ -24,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import asia.stampy.examples.remote.exe.common.MissingProperyException;
+import asia.stampy.examples.remote.exe.common.MissingPropertyException;
 import asia.stampy.examples.remote.exe.common.Remoteable;
 
 // TODO: Auto-generated Javadoc
@@ -58,7 +58,7 @@ public class Log4jLevelChanger implements Remoteable {
 	 * @see asia.stampy.examples.remote.exe.common.Remoteable#setProperties(java.util.Map)
 	 */
 	@Override
-	public void setProperties(Map<String, String> properties) throws MissingProperyException {
+	public void setProperties(Map<String, String> properties) throws MissingPropertyException {
 		// unimplemented
 	}
 

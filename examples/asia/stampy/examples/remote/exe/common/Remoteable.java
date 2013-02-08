@@ -42,8 +42,8 @@ public interface Remoteable extends Serializable {
 	 * 
 	 * @param properties
 	 *          the properties
-	 * @throws MissingProperyException
+	 * @throws MissingPropertyException
 	 *           the missing propery exception
 	 */
-	void setProperties(Map<String, String> properties) throws MissingProperyException;
+	void setProperties(Map<String, String> properties) throws MissingPropertyException;
 }

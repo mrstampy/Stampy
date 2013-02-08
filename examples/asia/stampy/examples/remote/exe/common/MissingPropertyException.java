@@ -23,13 +23,13 @@ import asia.stampy.common.message.StampyMessageHeader;
 /**
  * Thrown when a property is missing from the {@link StampyMessageHeader}.
  */
-public class MissingProperyException extends Exception {
+public class MissingPropertyException extends Exception {
 	private static final long serialVersionUID = 4900660741154749582L;
 
 	/**
 	 * Instantiates a new missing propery exception.
 	 */
-	public MissingProperyException() {
+	public MissingPropertyException() {
 
 	}
 
@@ -38,7 +38,7 @@ public class MissingProperyException extends Exception {
 	 *
 	 * @param message the message
 	 */
-	public MissingProperyException(String message) {
+	public MissingPropertyException(String message) {
 		super(message);
 	}
 
@@ -47,7 +47,7 @@ public class MissingProperyException extends Exception {
 	 *
 	 * @param cause the cause
 	 */
-	public MissingProperyException(Throwable cause) {
+	public MissingPropertyException(Throwable cause) {
 		super(cause);
 	}
 
@@ -57,7 +57,7 @@ public class MissingProperyException extends Exception {
 	 * @param message the message
 	 * @param cause the cause
 	 */
-	public MissingProperyException(String message, Throwable cause) {
+	public MissingPropertyException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
