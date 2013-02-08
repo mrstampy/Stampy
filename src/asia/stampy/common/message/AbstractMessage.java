@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2013 Burton Alexander
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 
+ */
 package asia.stampy.common.message;
 
 import org.apache.commons.lang.StringUtils;
@@ -6,28 +24,60 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import asia.stampy.common.StompMessageParser;
 
+/**
+ * Abstract implementation of a {@link StampyMessage}.
+ * 
+ * @param <HDR>
+ *          the generic type
+ */
 public abstract class AbstractMessage<HDR extends StampyMessageHeader> implements StampyMessage<HDR> {
 
 	private static final long serialVersionUID = -577180637937320507L;
 
 	private HDR header;
-	private final StampyMessageType messageType;
+	private final StompMessageType messageType;
 
-	protected AbstractMessage(StampyMessageType messageType) {
+	/**
+	 * Instantiates a new abstract message.
+	 * 
+	 * @param messageType
+	 *          the message type
+	 */
+	protected AbstractMessage(StompMessageType messageType) {
 		this.messageType = messageType;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see asia.stampy.common.message.StampyMessage#getHeader()
+	 */
 	public HDR getHeader() {
 		if (header == null) header = createNewHeader();
 		return header;
 	}
 
+	/**
+	 * Creates the new header.
+	 * 
+	 * @return the hdr
+	 */
 	protected abstract HDR createNewHeader();
 
-	public StampyMessageType getMessageType() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see asia.stampy.common.message.StampyMessage#getMessageType()
+	 */
+	public StompMessageType getMessageType() {
 		return messageType;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see asia.stampy.common.message.StampyMessage#toStompMessage(boolean)
+	 */
 	public final String toStompMessage(boolean validate) {
 		if (validate) validate();
 
@@ -49,20 +99,45 @@ public abstract class AbstractMessage<HDR extends StampyMessageHeader> implement
 		return builder.toString();
 	}
 
+	/**
+	 * Validates the message should {@link AbstractMessage#toStompMessage(true)}
+	 * be called.
+	 */
 	protected abstract void validate();
 
+	/**
+	 * This method is used to create the body of the message, if applicable. The
+	 * default implementation returns null.
+	 * 
+	 * @return the string
+	 */
 	protected String postHeader() {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	public boolean equals(Object o) {
 		return EqualsBuilder.reflectionEquals(this, o);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return toStompMessage(false);
 	}

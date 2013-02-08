@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2013 Burton Alexander
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 
+ */
 package asia.stampy.common.mina.raw;
 
 import java.io.BufferedReader;
@@ -18,14 +36,27 @@ import asia.stampy.common.HostPort;
 import asia.stampy.common.StompMessageParser;
 import asia.stampy.common.UnparseableException;
 import asia.stampy.common.message.StampyMessage;
-import asia.stampy.common.message.StampyMessageType;
+import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaHandler;
 
+/**
+ * This class uses its own message parsing to piece together STOMP messages. In
+ * non-Stampy STOMP environments subclasses are to be used. While tested
+ * successfully in simple cases it has not (yet) been battle-tested. Use at your
+ * own risk.
+ */
 public abstract class StampyRawStringHandler extends StampyMinaHandler {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private Map<HostPort, String> messageParts = new ConcurrentHashMap<>();
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaHandler#messageReceived(org.apache.mina
+	 * .core.session.IoSession, java.lang.Object)
+	 */
 	@Override
 	public void messageReceived(final IoSession session, Object message) throws Exception {
 		final HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
@@ -52,11 +83,23 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
 		getExecutor().execute(runnable);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see asia.stampy.common.mina.StampyMinaHandler#getFactory(int)
+	 */
 	@Override
 	public ProtocolCodecFactory getFactory(int maxMessageSize) {
 		return new StringCodecFactory(maxMessageSize);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaHandler#asyncProcessing(org.apache.mina
+	 * .core.session.IoSession, asia.stampy.common.HostPort, java.lang.String)
+	 */
 	protected void asyncProcessing(IoSession session, HostPort hostPort, String msg) {
 		try {
 			String existing = messageParts.get(hostPort);
@@ -103,7 +146,7 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
 		int idx = msg.indexOf(StompMessageParser.EOM);
 		String fullMessage = msg.substring(0, idx + 1);
 		String partMessage = msg.substring(idx);
-		if(partMessage.startsWith(StompMessageParser.EOM)) {
+		if (partMessage.startsWith(StompMessageParser.EOM)) {
 			partMessage = partMessage.substring(1);
 		}
 
@@ -118,6 +161,7 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
 		messageParts.remove(hostPort);
 		StampyMessage<?> sm = getParser().parseMessage(msg);
 		if (isValidMessage(sm)) {
+			securityCheck(sm, session);
 			notifyListeners(sm, session, hostPort);
 			sendResponseIfRequired(sm, session, hostPort);
 		}
@@ -128,9 +172,9 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
 		try {
 			reader = new BufferedReader(new StringReader(msg));
 			String stompMessageType = reader.readLine();
-			if(isHeartbeat(stompMessageType)) return true;
-			
-			StampyMessageType type = StampyMessageType.valueOf(stompMessageType);
+			if (isHeartbeat(stompMessageType)) return true;
+
+			StompMessageType type = StompMessageType.valueOf(stompMessageType);
 			return type != null;
 		} catch (Exception e) {
 			log.error("Unexpected exception parsing " + msg, e);

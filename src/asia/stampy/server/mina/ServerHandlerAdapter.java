@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2013 Burton Alexander
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 
+ */
 package asia.stampy.server.mina;
 
 import java.lang.invoke.MethodHandles;
@@ -14,16 +32,26 @@ import asia.stampy.client.message.stomp.StompMessage;
 import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
-import asia.stampy.common.message.StampyMessageType;
+import asia.stampy.common.message.StompMessageType;
 import asia.stampy.server.message.connected.ConnectedMessage;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
+
+/**
+ * The Class ServerHandlerAdapter.
+ */
 class ServerHandlerAdapter {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private AbstractStampyMessageGateway messageGateway;
 
+	/**
+	 * Checks if is valid message.
+	 *
+	 * @param message the message
+	 * @return true, if is valid message
+	 */
 	boolean isValidMessage(StampyMessage<?> message) {
 		switch (message.getMessageType()) {
 
@@ -45,10 +73,17 @@ class ServerHandlerAdapter {
 		}
 	}
 
+	/**
+	 * Error handle.
+	 *
+	 * @param message the message
+	 * @param e the e
+	 * @param hostPort the host port
+	 */
 	void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) {
 		log.error("Handling error, sending error message to " + hostPort, e);
 		String receipt = null;
-		if (!message.getMessageType().equals(StampyMessageType.CONNECT)) {
+		if (!message.getMessageType().equals(StompMessageType.CONNECT)) {
 			receipt = ((ClientMessageHeader) message.getHeader()).getReceipt();
 		}
 
@@ -60,6 +95,13 @@ class ServerHandlerAdapter {
 		getMessageGateway().sendMessage(error, hostPort);
 	}
 
+	/**
+	 * Send response if required.
+	 *
+	 * @param message the message
+	 * @param session the session
+	 * @param hostPort the host port
+	 */
 	void sendResponseIfRequired(StampyMessage<?> message, IoSession session, HostPort hostPort) {
 		if (isConnectMessage(message)) {
 			sendConnected(((ConnectMessage) message).getHeader(), session, hostPort);
@@ -96,21 +138,31 @@ class ServerHandlerAdapter {
 	}
 
 	private boolean isConnectMessage(StampyMessage<?> message) {
-		return message.getMessageType().equals(StampyMessageType.CONNECT);
+		return message.getMessageType().equals(StompMessageType.CONNECT);
 	}
 
 	private boolean isStompMessage(StampyMessage<?> message) {
-		return message.getMessageType().equals(StampyMessageType.STOMP);
+		return message.getMessageType().equals(StompMessageType.STOMP);
 	}
 
 	private boolean isDisconnectMessage(StampyMessage<?> message) {
-		return message.getMessageType().equals(StampyMessageType.DISCONNECT);
+		return message.getMessageType().equals(StompMessageType.DISCONNECT);
 	}
 
+	/**
+	 * Gets the message gateway.
+	 *
+	 * @return the message gateway
+	 */
 	public AbstractStampyMessageGateway getMessageGateway() {
 		return messageGateway;
 	}
 
+	/**
+	 * Sets the message gateway.
+	 *
+	 * @param messageGateway the new message gateway
+	 */
 	public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
 		this.messageGateway = messageGateway;
 	}

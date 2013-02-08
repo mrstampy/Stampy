@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2013 Burton Alexander
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 
+ */
 package asia.stampy.common;
 
 import java.io.BufferedReader;
@@ -27,18 +45,31 @@ import asia.stampy.client.message.unsubscribe.UnsubscribeMessage;
 import asia.stampy.common.message.AbstractBodyMessage;
 import asia.stampy.common.message.AbstractBodyMessageHeader;
 import asia.stampy.common.message.StampyMessage;
-import asia.stampy.common.message.StampyMessageType;
+import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.serialization.SerializationUtils;
 import asia.stampy.server.message.connected.ConnectedMessage;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.message.MessageMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
+
+/**
+ * This class parses STOMP messages into {@link StampyMessage}s.
+ */
 public class StompMessageParser {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+	/** The Constant EOM. */
 	public static final String EOM = "\000";
 
+	/**
+	 * Parses the message.
+	 *
+	 * @param <MSG> the generic type
+	 * @param stompMessage the stomp message
+	 * @return the msg
+	 * @throws UnparseableException the unparseable exception
+	 */
 	public <MSG extends StampyMessage<?>> MSG parseMessage(String stompMessage) throws UnparseableException {
 		BufferedReader reader = null;
 		try {
@@ -46,7 +77,7 @@ public class StompMessageParser {
 
 			String messageType = reader.readLine();
 
-			StampyMessageType type = StampyMessageType.valueOf(messageType);
+			StompMessageType type = StompMessageType.valueOf(messageType);
 
 			List<String> headers = new ArrayList<String>();
 			String hdr = reader.readLine();
@@ -79,9 +110,20 @@ public class StompMessageParser {
 		}
 	}
 
+	/**
+	 * Converts the specified string to an object based upon the specified content type.  Only
+	 * base64 encoding is supported for Java objects.
+	 *
+	 * @param body the body
+	 * @param contentType the content type
+	 * @return the object
+	 * @throws IllegalObjectException the illegal object exception
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected Object convertToObject(String body, String contentType) throws IllegalObjectException,
 			ClassNotFoundException, IOException {
-		if (!AbstractBodyMessage.BINARY_BASE64_MIME_TYPE.equals(contentType)) {
+		if (!AbstractBodyMessage.JAVA_BASE64_MIME_TYPE.equals(contentType)) {
 			throw new NotImplementedException(
 					"Subclass this class and override convertToObject to enable conversion using mime type " + contentType);
 		}
@@ -93,10 +135,22 @@ public class StompMessageParser {
 		return o;
 	}
 
+	/**
+	 * Blank implementation; override to add any object checking logic.
+	 *
+	 * @param o the o
+	 * @throws IllegalObjectException the illegal object exception
+	 */
 	protected void illegalObjectCheck(Object o) throws IllegalObjectException {
 
 	}
 
+	/**
+	 * Checks if is text.
+	 *
+	 * @param headers the headers
+	 * @return true, if is text
+	 */
 	protected boolean isText(List<String> headers) {
 		boolean text = false;
 		boolean content = false;
@@ -110,8 +164,17 @@ public class StompMessageParser {
 		return !content || (content && text);
 	}
 
+	/**
+	 * Creates the stampy message.
+	 *
+	 * @param <MSG> the generic type
+	 * @param type the type
+	 * @param headers the headers
+	 * @return the msg
+	 * @throws UnparseableException the unparseable exception
+	 */
 	@SuppressWarnings("unchecked")
-	protected <MSG extends StampyMessage<?>> MSG createStampyMessage(StampyMessageType type, List<String> headers)
+	protected <MSG extends StampyMessage<?>> MSG createStampyMessage(StompMessageType type, List<String> headers)
 			throws UnparseableException {
 
 		MSG message = null;
@@ -194,6 +257,14 @@ public class StompMessageParser {
 		}
 	}
 
+	/**
+	 * Fills the body of the STOMP message.
+	 *
+	 * @param body the body
+	 * @param reader the reader
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected String fillBody(String body, BufferedReader reader) throws IOException {
 		StringBuilder builder = new StringBuilder(trimEOM(body));
 
@@ -207,6 +278,12 @@ public class StompMessageParser {
 		return builder.toString();
 	}
 
+	/**
+	 * Trims the terminating byte.
+	 *
+	 * @param s the s
+	 * @return the string
+	 */
 	protected String trimEOM(String s) {
 		String trimmed = s;
 		if (s.contains(EOM)) {

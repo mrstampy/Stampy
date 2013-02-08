@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2013 Burton Alexander
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 
+ */
 package asia.stampy.common.heartbeat;
 
 import java.lang.invoke.MethodHandles;
@@ -10,6 +28,10 @@ import org.slf4j.LoggerFactory;
 import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 
+/**
+ * Sends heartbeats to a remote connection as specified by the STOMP
+ * specification.
+ */
 public class PaceMaker {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -23,14 +45,26 @@ public class PaceMaker {
 
 	private int heartbeatCount;
 
+	/** The Constant HB1. */
 	public static final String HB1 = "\n";
+
+	/** The Constant HB2. */
 	public static final String HB2 = "\r";
 
+	/**
+	 * Instantiates a new pace maker.
+	 * 
+	 * @param timeInMillis
+	 *          the time in millis
+	 */
 	public PaceMaker(int timeInMillis) {
 		this.timeInMillis = timeInMillis;
 		start();
 	}
 
+	/**
+	 * Reset.
+	 */
 	public void reset() {
 		log.trace("PaceMaker reset invoked");
 		setHeartbeatCount(0);
@@ -38,11 +72,17 @@ public class PaceMaker {
 		start();
 	}
 
+	/**
+	 * Stop.
+	 */
 	public void stop() {
 		log.trace("PaceMaker stop invoked");
 		if (stopwatch != null) stopwatch.cancel();
 	}
 
+	/**
+	 * Start.
+	 */
 	public void start() {
 		log.trace("PaceMaker start invoked for sleep time of {} ms", getSleepTime());
 		stopwatch = new TimerTask() {
@@ -68,30 +108,69 @@ public class PaceMaker {
 		}
 	}
 
+	/**
+	 * Gets the sleep time.
+	 * 
+	 * @return the sleep time
+	 */
 	public long getSleepTime() {
 		return timeInMillis;
 	}
 
+	/**
+	 * Gets the message gateway.
+	 * 
+	 * @return the message gateway
+	 */
 	public AbstractStampyMessageGateway getMessageGateway() {
 		return messageGateway;
 	}
 
+	/**
+	 * Sets the message gateway. Must be called upon instantiation.
+	 * 
+	 * @param messageGateway
+	 *          the new message gateway
+	 */
 	public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
 		this.messageGateway = messageGateway;
 	}
 
+	/**
+	 * Gets the host port.
+	 * 
+	 * @return the host port
+	 */
 	public HostPort getHostPort() {
 		return hostPort;
 	}
 
+	/**
+	 * Sets the host port. Must be called upon instantiation.
+	 * 
+	 * @param hostPort
+	 *          the new host port
+	 */
 	public void setHostPort(HostPort hostPort) {
 		this.hostPort = hostPort;
 	}
 
+	/**
+	 * Gets the heartbeat count. If the count reaches 2 then the connection is
+	 * assumed to be dead and the connection to the remote host is closed.
+	 * 
+	 * @return the heartbeat count
+	 */
 	public int getHeartbeatCount() {
 		return heartbeatCount;
 	}
 
+	/**
+	 * Sets the heartbeat count.
+	 * 
+	 * @param heartbeatCount
+	 *          the new heartbeat count
+	 */
 	public void setHeartbeatCount(int heartbeatCount) {
 		this.heartbeatCount = heartbeatCount;
 	}
