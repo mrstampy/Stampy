@@ -39,6 +39,7 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
  * @see TestServerMessageEvent
  */
 public class TestServerMessageListener implements StampyMinaMessageListener {
+	private static StompMessageType[] TYPES = { StompMessageType.SEND };
 
 	/* (non-Javadoc)
 	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
@@ -62,7 +63,7 @@ public class TestServerMessageListener implements StampyMinaMessageListener {
 	 */
 	@Override
 	public StompMessageType[] getMessageTypes() {
-		return new StompMessageType[] { StompMessageType.SEND };
+		return TYPES;
 	}
 
 }

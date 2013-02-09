@@ -45,6 +45,7 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 @Resource
 public class ServerHeartbeatListener implements StampyMinaMessageListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP, StompMessageType.DISCONNECT };
 
 	private HeartbeatContainer heartbeatContainer;
 
@@ -55,7 +56,7 @@ public class ServerHeartbeatListener implements StampyMinaMessageListener {
 	 */
 	@Override
 	public StompMessageType[] getMessageTypes() {
-		return new StompMessageType[] { StompMessageType.CONNECT, StompMessageType.STOMP, StompMessageType.DISCONNECT };
+		return TYPES;
 	}
 
 	/* (non-Javadoc)

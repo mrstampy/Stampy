@@ -32,6 +32,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  */
 public class RemoteExeMessageListener implements StampyMinaMessageListener {
 	private ServerMinaMessageGateway gateway;
+	private static StompMessageType[] TYPES = { StompMessageType.SEND };
 
 	/*
 	 * (non-Javadoc)
@@ -40,7 +41,7 @@ public class RemoteExeMessageListener implements StampyMinaMessageListener {
 	 */
 	@Override
 	public StompMessageType[] getMessageTypes() {
-		return new StompMessageType[] { StompMessageType.SEND };
+		return TYPES;
 	}
 
 	/*
