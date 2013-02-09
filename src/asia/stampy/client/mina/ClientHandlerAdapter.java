@@ -39,6 +39,7 @@ public class ClientHandlerAdapter {
 		case ERROR:
 		case MESSAGE:
 		case RECEIPT:
+			message.validate();
 			return true;
 		default:
 			return false;

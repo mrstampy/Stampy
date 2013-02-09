@@ -21,6 +21,7 @@ package asia.stampy.client.message.subscribe;
 import org.apache.commons.lang.StringUtils;
 
 import asia.stampy.common.message.AbstractMessage;
+import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
 
@@ -63,13 +64,13 @@ public class SubscribeMessage extends AbstractMessage<SubscribeHeader> {
 	 * @see asia.stampy.common.message.AbstractMessage#validate()
 	 */
 	@Override
-	protected void validate() {
+	public void validate() {
 		if (StringUtils.isEmpty(getHeader().getDestination())) {
-			throw new NullPointerException(SubscribeHeader.DESTINATION + " is required");
+			throw new InvalidStompMessageException(SubscribeHeader.DESTINATION + " is required");
 		}
 
 		if (StringUtils.isEmpty(getHeader().getId())) {
-			throw new NullPointerException(SubscribeHeader.ID + " is required");
+			throw new InvalidStompMessageException(SubscribeHeader.ID + " is required");
 		}
 	}
 

@@ -21,6 +21,7 @@ package asia.stampy.server.message.connected;
 import org.apache.commons.lang.StringUtils;
 
 import asia.stampy.common.message.AbstractMessage;
+import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
 
@@ -60,9 +61,9 @@ public class ConnectedMessage extends AbstractMessage<ConnectedHeader> {
 	 * @see asia.stampy.common.message.AbstractMessage#validate()
 	 */
 	@Override
-	protected void validate() {
+	public void validate() {
 		if (StringUtils.isEmpty(getHeader().getVersion())) {
-			throw new NullPointerException(ConnectedHeader.VERSION + " is required");
+			throw new InvalidStompMessageException(ConnectedHeader.VERSION + " is required");
 		}
 
 	}

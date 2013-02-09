@@ -60,7 +60,7 @@ public class StompMessage extends AbstractMessage<StompHeader> {
 	 * @see asia.stampy.common.message.AbstractMessage#validate()
 	 */
 	@Override
-	protected void validate() {
+	public void validate() {
 		// TODO Auto-generated method stub
 
 	}

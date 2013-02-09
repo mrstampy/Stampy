@@ -21,6 +21,7 @@ package asia.stampy.server.message.receipt;
 import org.apache.commons.lang.StringUtils;
 
 import asia.stampy.common.message.AbstractMessage;
+import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
 
@@ -61,9 +62,9 @@ public class ReceiptMessage extends AbstractMessage<ReceiptHeader> {
 	 * @see asia.stampy.common.message.AbstractMessage#validate()
 	 */
 	@Override
-	protected void validate() {
+	public void validate() {
 		if (StringUtils.isEmpty(getHeader().getReceiptId())) {
-			throw new NullPointerException(ReceiptHeader.RECEIPT_ID + " is required");
+			throw new InvalidStompMessageException(ReceiptHeader.RECEIPT_ID + " is required");
 		}
 	}
 

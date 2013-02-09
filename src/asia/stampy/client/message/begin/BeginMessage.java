@@ -21,6 +21,7 @@ package asia.stampy.client.message.begin;
 import org.apache.commons.lang.StringUtils;
 
 import asia.stampy.common.message.AbstractMessage;
+import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
 
@@ -61,9 +62,9 @@ public class BeginMessage extends AbstractMessage<BeginHeader> {
 	 * @see asia.stampy.common.message.AbstractMessage#validate()
 	 */
 	@Override
-	protected void validate() {
+	public void validate() {
 		if (StringUtils.isEmpty(getHeader().getTransaction())) {
-			throw new NullPointerException(BeginHeader.TRANSACTION + " is required");
+			throw new InvalidStompMessageException(BeginHeader.TRANSACTION + " is required");
 		}
 	}
 

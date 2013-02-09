@@ -66,6 +66,7 @@ class ServerHandlerAdapter {
 		case SEND:
 		case SUBSCRIBE:
 		case UNSUBSCRIBE:
+			message.validate();
 			return true;
 		default:
 			return false;

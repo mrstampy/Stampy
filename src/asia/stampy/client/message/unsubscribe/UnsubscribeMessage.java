@@ -21,6 +21,7 @@ package asia.stampy.client.message.unsubscribe;
 import org.apache.commons.lang.StringUtils;
 
 import asia.stampy.common.message.AbstractMessage;
+import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
 
@@ -61,9 +62,9 @@ public class UnsubscribeMessage extends AbstractMessage<UnsubscribeHeader> {
 	 * @see asia.stampy.common.message.AbstractMessage#validate()
 	 */
 	@Override
-	protected void validate() {
+	public void validate() {
 		if (StringUtils.isEmpty(getHeader().getId())) {
-			throw new NullPointerException(UnsubscribeHeader.ID + " is required");
+			throw new InvalidStompMessageException(UnsubscribeHeader.ID + " is required");
 		}
 	}
 

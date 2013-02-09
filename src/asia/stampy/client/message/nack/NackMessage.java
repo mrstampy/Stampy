@@ -21,6 +21,7 @@ package asia.stampy.client.message.nack;
 import org.apache.commons.lang.StringUtils;
 
 import asia.stampy.common.message.AbstractMessage;
+import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
 
@@ -61,9 +62,9 @@ public class NackMessage extends AbstractMessage<NackHeader> {
 	 * @see asia.stampy.common.message.AbstractMessage#validate()
 	 */
 	@Override
-	protected void validate() {
+	public void validate() {
 		if (StringUtils.isEmpty(getHeader().getId())) {
-			throw new NullPointerException(NackHeader.ID + " is required");
+			throw new InvalidStompMessageException(NackHeader.ID + " is required");
 		}
 	}
 

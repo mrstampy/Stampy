@@ -49,5 +49,10 @@ public interface StampyMessage<HDR extends StampyMessageHeader> extends Serializ
 	 * @return the message type
 	 */
 	StompMessageType getMessageType();
+	
+	/**
+	 * Performs validation on the message
+	 */
+	void validate();
 
 }

@@ -103,7 +103,7 @@ public abstract class AbstractMessage<HDR extends StampyMessageHeader> implement
 	 * Validates the message should {@link AbstractMessage#toStompMessage(true)}
 	 * be called.
 	 */
-	protected abstract void validate();
+	public abstract void validate();
 
 	/**
 	 * This method is used to create the body of the message, if applicable. The

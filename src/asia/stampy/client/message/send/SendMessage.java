@@ -21,6 +21,7 @@ package asia.stampy.client.message.send;
 import org.apache.commons.lang.StringUtils;
 
 import asia.stampy.common.message.AbstractBodyMessage;
+import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
 
@@ -63,9 +64,9 @@ public class SendMessage extends AbstractBodyMessage<SendHeader> {
 	 * @see asia.stampy.common.message.AbstractMessage#validate()
 	 */
 	@Override
-	protected void validate() {
+	public void validate() {
 		if (StringUtils.isEmpty(getHeader().getDestination())) {
-			throw new NullPointerException(SendHeader.DESTINATION + " is required");
+			throw new InvalidStompMessageException(SendHeader.DESTINATION + " is required");
 		}
 	}
 

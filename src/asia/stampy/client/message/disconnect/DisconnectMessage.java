@@ -49,7 +49,7 @@ public class DisconnectMessage extends AbstractMessage<DisconnectHeader> {
 	 * @see asia.stampy.common.message.AbstractMessage#validate()
 	 */
 	@Override
-	protected void validate() {
+	public void validate() {
 		// TODO Auto-generated method stub
 
 	}
