@@ -56,6 +56,9 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	private int port;
 
 	private void init() {
+		serviceAdapter.setGateway(this);
+		serviceAdapter.setAutoShutdown(isAutoShutdown());
+		
 		log.trace("Initializing Stampy MINA connector");
 
 		connector = new NioSocketConnector();

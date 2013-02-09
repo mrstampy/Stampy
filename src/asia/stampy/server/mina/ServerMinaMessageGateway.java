@@ -57,6 +57,10 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 
 	private void init() {
 		log.trace("Initializing Stampy MINA acceptor");
+		
+		serviceAdapter.setGateway(this);
+		serviceAdapter.setAutoShutdown(isAutoShutdown());
+		
 		acceptor = new NioSocketAcceptor();
 
 		acceptor.setReuseAddress(true);

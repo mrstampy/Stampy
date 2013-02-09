@@ -41,6 +41,7 @@ public class Initializer {
 		HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
 		ClientMinaMessageGateway gateway = new ClientMinaMessageGateway();
+		gateway.setAutoShutdown(true);
 		gateway.setPort(1234);
 		gateway.setHost("localhost");
 

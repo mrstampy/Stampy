@@ -45,6 +45,10 @@ public class StampyServiceAdapter implements IoServiceListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	private Map<HostPort, IoSession> sessions = new ConcurrentHashMap<>();
+	
+	private boolean autoShutdown;
+	
+	private AbstractStampyMinaMessageGateway gateway;
 
 	/* (non-Javadoc)
 	 * @see org.apache.mina.core.service.IoServiceListener#sessionCreated(org.apache.mina.core.session.IoSession)
@@ -64,6 +68,8 @@ public class StampyServiceAdapter implements IoServiceListener {
 		log.info("Stampy MINA session destroyed for {}", hostPort);
 
 		sessions.remove(hostPort);
+		
+		if(sessions.isEmpty() && isAutoShutdown()) gateway.shutdown();
 	}
 
 	private HostPort createHostPort(IoSession session) {
@@ -139,6 +145,22 @@ public class StampyServiceAdapter implements IoServiceListener {
 	 */
 	public void serviceDeactivated(IoService service) throws Exception {
 		// blank
+	}
+
+	public boolean isAutoShutdown() {
+		return autoShutdown;
+	}
+
+	public void setAutoShutdown(boolean autoClose) {
+		this.autoShutdown = autoClose;
+	}
+
+	public AbstractStampyMinaMessageGateway getGateway() {
+		return gateway;
+	}
+
+	public void setGateway(AbstractStampyMinaMessageGateway gateway) {
+		this.gateway = gateway;
 	}
 
 }

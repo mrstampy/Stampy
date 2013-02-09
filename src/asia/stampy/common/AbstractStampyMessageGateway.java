@@ -39,6 +39,8 @@ public abstract class AbstractStampyMessageGateway {
 	private Queue<StampyOutgoingMessageInterceptor> interceptors = new ConcurrentLinkedQueue<>();
 	private Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<>();
 
+	private boolean autoShutdown;
+
 	/**
 	 * Broadcasts a {@link StampyMessage} to all connected clients from the server
 	 * or to the server from a client. Use this method for all STOMP messages.
@@ -50,71 +52,77 @@ public abstract class AbstractStampyMessageGateway {
 		interceptOutgoingMessage(message);
 		broadcastMessage(message.toStompMessage(true));
 	}
-	
+
 	/**
 	 * Adds the specified outgoing message interceptor
+	 * 
 	 * @param interceptor
 	 * @see StampyOutgoingMessageInterceptor
 	 */
 	public void addOutgoingMessageInterceptor(StampyOutgoingMessageInterceptor interceptor) {
 		interceptors.add(interceptor);
 	}
-	
+
 	/**
 	 * Removes the specified outgoing message interceptor
+	 * 
 	 * @param interceptor
 	 * @see StampyOutgoingMessageInterceptor
 	 */
 	public void removeOutgoingMessageInterceptor(StampyOutgoingMessageInterceptor interceptor) {
 		interceptors.remove(interceptor);
 	}
-	
+
 	/**
-	 * Adds the specified outgoing message interceptors.  For use by DI frameworks.
+	 * Adds the specified outgoing message interceptors. For use by DI frameworks.
+	 * 
 	 * @param interceptor
 	 * @see StampyOutgoingMessageInterceptor
 	 */
 	public void setOutgoingMessageInterceptors(Collection<StampyOutgoingMessageInterceptor> interceptors) {
 		this.interceptors.addAll(interceptors);
 	}
-	
+
 	/**
 	 * Adds the specified outgoing message interceptor
+	 * 
 	 * @param interceptor
 	 * @see StampyOutgoingMessageInterceptor
 	 */
 	public void addOutgoingTextInterceptor(StampyOutgoingTextInterceptor interceptor) {
 		textInterceptors.add(interceptor);
 	}
-	
+
 	/**
 	 * Removes the specified outgoing message interceptor
+	 * 
 	 * @param interceptor
 	 * @see StampyOutgoingMessageInterceptor
 	 */
 	public void removeOutgoingTextInterceptor(StampyOutgoingTextInterceptor interceptor) {
 		textInterceptors.remove(interceptor);
 	}
-	
+
 	/**
-	 * Adds the specified outgoing message interceptors.  For use by DI frameworks.
+	 * Adds the specified outgoing message interceptors. For use by DI frameworks.
+	 * 
 	 * @param interceptor
 	 * @see StampyOutgoingMessageInterceptor
 	 */
 	public void setOutgoingTextInterceptors(Collection<StampyOutgoingTextInterceptor> interceptors) {
 		this.textInterceptors.addAll(interceptors);
 	}
-	
+
 	protected void interceptOutgoingMessage(StampyMessage<?> message) throws InterceptException {
-		for(StampyOutgoingMessageInterceptor interceptor : interceptors) {
-			if(isForType(interceptor.getMessageTypes(), message.getMessageType()) && interceptor.isForMessage(message)) {
+		for (StampyOutgoingMessageInterceptor interceptor : interceptors) {
+			if (isForType(interceptor.getMessageTypes(), message.getMessageType()) && interceptor.isForMessage(message)) {
 				interceptor.interceptMessage(message);
 			}
 		}
 	}
-	
+
 	protected void interceptOutgoingMessage(String message) throws InterceptException {
-		for(StampyOutgoingTextInterceptor interceptor : textInterceptors) {
+		for (StampyOutgoingTextInterceptor interceptor : textInterceptors) {
 			interceptor.interceptMessage(message);
 		}
 	}
@@ -181,4 +189,18 @@ public abstract class AbstractStampyMessageGateway {
 	 * @return true, if is connected
 	 */
 	public abstract boolean isConnected(HostPort hostPort);
+
+	/**
+	 * If true the gateway will shut down when all sessions are terminated.
+	 * Typically clients will be set to true, servers to false (the default).
+	 * 
+	 * @return
+	 */
+	public boolean isAutoShutdown() {
+		return autoShutdown;
+	}
+
+	public void setAutoShutdown(boolean autoShutdown) {
+		this.autoShutdown = autoShutdown;
+	}
 }
