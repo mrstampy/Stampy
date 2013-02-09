@@ -18,13 +18,9 @@
  */
 package asia.stampy.examples.remote.exe.log4j.client;
 
-
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.mina.ConnectedMessageListener;
-import asia.stampy.client.mina.ErrorMessageListener;
-import asia.stampy.client.mina.MessageMessageListener;
 import asia.stampy.client.mina.RawClientMinaHandler;
-import asia.stampy.client.mina.ReceiptMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 
 /**
@@ -38,7 +34,7 @@ public class Initializer {
 
 	/**
 	 * Initialize.
-	 *
+	 * 
 	 * @return the client mina message gateway
 	 */
 	public static ClientMinaMessageGateway initialize() {
@@ -52,10 +48,6 @@ public class Initializer {
 		RawClientMinaHandler handler = new RawClientMinaHandler();
 		handler.setHeartbeatContainer(heartbeatContainer);
 		handler.setMessageGateway(gateway);
-
-		handler.addMessageListener(new ErrorMessageListener());
-		handler.addMessageListener(new MessageMessageListener());
-		handler.addMessageListener(new ReceiptMessageListener());
 
 		ConnectedMessageListener cml = new ConnectedMessageListener();
 		cml.setHeartbeatContainer(heartbeatContainer);

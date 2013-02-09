@@ -22,6 +22,8 @@ import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
 import java.util.Queue;
 
+import javax.annotation.Resource;
+
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.service.IoServiceListener;
 import org.apache.mina.core.session.IoSession;
@@ -32,6 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asia.stampy.common.HostPort;
+import asia.stampy.common.message.StampyMessage;
+import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.StampyMinaHandler;
 import asia.stampy.common.mina.StampyMinaMessageListener;
@@ -41,11 +45,12 @@ import asia.stampy.common.mina.StampyServiceAdapter;
 /**
  * The Class ServerMinaMessageGateway.
  */
+@Resource
 public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private StampyServiceAdapter serviceAdapter = new StampyServiceAdapter();
-	private StampyMinaHandler handler;
+	private StampyMinaHandler<ServerMinaMessageGateway> handler;
 	private NioSocketAcceptor acceptor;
 	private int maxMessageSize = Integer.MAX_VALUE;
 	private int port;
@@ -69,6 +74,21 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		log.trace("Acceptor initialized");
 	}
 
+	/**
+	 * Sends a {@link StampyMessage} to the specified {@link HostPort}. Use this
+	 * method for all STOMP messages.
+	 * 
+	 * @param message
+	 *          the message
+	 * @param hostPort
+	 *          the host port
+	 * @throws InterceptException 
+	 */
+	public void sendMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
+		interceptOutgoingMessage(message);
+		sendMessage(message.toStompMessage(true), hostPort);
+	}
+
 	/* (non-Javadoc)
 	 * @see asia.stampy.common.AbstractStampyMessageGateway#connect()
 	 */
@@ -87,35 +107,35 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		return serviceAdapter.hasSession(hostPort) && acceptor.isActive();
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.AbstractStampyMessageGateway#sendMessage(java.lang.String, asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void sendMessage(String stompMessage, HostPort hostPort) {
+	public void sendMessage(String message, HostPort hostPort) throws InterceptException {
 		if (!isConnected(hostPort)) {
-			log.warn("Attempting to send message {} to {} when the acceptor is not active", stompMessage, hostPort);
+			log.warn("Attempting to send message {} to {} when the acceptor is not active", message, hostPort);
 			throw new IllegalStateException("The acceptor is not active, cannot send message");
 		}
 		
+		interceptOutgoingMessage(message);
+		
 		getHandler().getHeartbeatContainer().reset(hostPort);
-		serviceAdapter.sendMessage(stompMessage, hostPort);
+		serviceAdapter.sendMessage(message, hostPort);
 	}
 
 	/* (non-Javadoc)
 	 * @see asia.stampy.common.AbstractStampyMessageGateway#broadcastMessage(java.lang.String)
 	 */
 	@Override
-	public void broadcastMessage(String stompMessage) {
+	public void broadcastMessage(String message) throws InterceptException {
 		if(! acceptor.isActive()) {
-			log.warn("Attempting to broadcast {} when the acceptor is not active", stompMessage);
+			log.warn("Attempting to broadcast {} when the acceptor is not active", message);
 			throw new IllegalStateException("The acceptor is not active, cannot send message");
 		}
+		
+		interceptOutgoingMessage(message);
 		
 		for(HostPort hostPort : serviceAdapter.getHostPorts()) {
 			getHandler().getHeartbeatContainer().reset(hostPort);
 		}
 		
-		acceptor.broadcast(stompMessage);
+		acceptor.broadcast(message);
 	}
 
 	/* (non-Javadoc)
@@ -223,7 +243,7 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	 *
 	 * @return the handler
 	 */
-	public StampyMinaHandler getHandler() {
+	public StampyMinaHandler<ServerMinaMessageGateway> getHandler() {
 		return handler;
 	}
 
@@ -232,7 +252,7 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	 *
 	 * @param handler the new handler
 	 */
-	public void setHandler(StampyMinaHandler handler) {
+	public void setHandler(StampyMinaHandler<ServerMinaMessageGateway> handler) {
 		this.handler = handler;
 	}
 

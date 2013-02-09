@@ -20,6 +20,8 @@ package asia.stampy.server.mina;
 
 import java.lang.invoke.MethodHandles;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
@@ -38,16 +40,9 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 
 
 /**
- * The listener interface for receiving serverHeartbeat events.
- * The class that is interested in processing a serverHeartbeat
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addServerHeartbeatListener<code> method. When
- * the serverHeartbeat event occurs, that object's appropriate
- * method is invoked.
- *
- * @see ServerHeartbeatEvent
+ * 
  */
+@Resource
 public class ServerHeartbeatListener implements StampyMinaMessageListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

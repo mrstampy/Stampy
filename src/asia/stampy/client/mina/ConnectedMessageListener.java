@@ -20,6 +20,8 @@ package asia.stampy.client.mina;
 
 import java.lang.invoke.MethodHandles;
 
+import javax.annotation.Resource;
+
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,16 +37,9 @@ import asia.stampy.server.message.connected.ConnectedMessage;
 
 
 /**
- * The listener interface for receiving connectedMessage events.
- * The class that is interested in processing a connectedMessage
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addConnectedMessageListener<code> method. When
- * the connectedMessage event occurs, that object's appropriate
- * method is invoked.
- *
- * @see ConnectedMessageEvent
+ * 
  */
+@Resource
 public class ConnectedMessageListener implements StampyMinaMessageListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

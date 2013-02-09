@@ -29,6 +29,7 @@ import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
+import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.loadtest.server.TestServer;
 import asia.stampy.server.message.error.ErrorMessage;
@@ -78,7 +79,7 @@ public class TestClientMessageListener implements StampyMinaMessageListener {
 			receipts.add(((ReceiptMessage) message).getHeader().getReceiptId());
 			receiptId++;
 
-			if (receiptId >= times) {
+			if (receiptId == times) {
 				synchronized (waiter) {
 					waiter.notifyAll();
 				}
@@ -145,7 +146,7 @@ public class TestClientMessageListener implements StampyMinaMessageListener {
 		}
 	}
 
-	private void sendAck(int i) {
+	private void sendAck(int i) throws InterceptException {
 		String id = Integer.toString(i);
 		AckMessage ack = new AckMessage(id);
 		ack.getHeader().setReceipt(id);

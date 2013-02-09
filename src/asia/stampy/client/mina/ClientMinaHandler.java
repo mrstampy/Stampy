@@ -18,20 +18,25 @@
  */
 package asia.stampy.client.mina;
 
+import javax.annotation.Resource;
 
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.mina.StampyMinaHandler;
 
-
 /**
  * The Class ClientMinaHandler.
  */
-public class ClientMinaHandler extends StampyMinaHandler {
+@Resource
+public class ClientMinaHandler extends StampyMinaHandler<ClientMinaMessageGateway> {
 
 	private ClientHandlerAdapter adapter = new ClientHandlerAdapter();
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common.message.StampyMessage)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common
+	 * .message.StampyMessage)
 	 */
 	@Override
 	protected boolean isValidMessage(StampyMessage<?> message) {

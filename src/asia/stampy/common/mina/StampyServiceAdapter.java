@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.Resource;
+
 import org.apache.mina.core.service.IoService;
 import org.apache.mina.core.service.IoServiceListener;
 import org.apache.mina.core.session.IdleStatus;
@@ -38,6 +40,7 @@ import asia.stampy.common.HostPort;
  * This class keeps track of all connections and disconnections and is the interface for
  * sending messages to remote hosts.
  */
+@Resource
 public class StampyServiceAdapter implements IoServiceListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	

@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
+import asia.stampy.common.message.interceptor.InterceptException;
 
 /**
  * Sends heartbeats to a remote connection as specified by the STOMP
@@ -101,10 +102,14 @@ public class PaceMaker {
 			log.warn("No response after 2 heartbeats, closing connection");
 			messageGateway.closeConnection(getHostPort());
 		} else {
-			messageGateway.sendMessage(HB1, getHostPort());
-			log.debug("Sent heartbeat");
-			start();
-			heartbeatCount++;
+			try {
+				messageGateway.sendMessage(HB1, getHostPort());
+				log.debug("Sent heartbeat");
+				start();
+				heartbeatCount++;
+			} catch (InterceptException e) {
+				log.error("Could not send heartbeat", e);
+			}
 		}
 	}
 

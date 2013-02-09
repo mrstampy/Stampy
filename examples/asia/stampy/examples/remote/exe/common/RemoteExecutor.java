@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import asia.stampy.client.message.send.SendMessage;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.AbstractBodyMessage;
+import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
@@ -65,7 +66,7 @@ public class RemoteExecutor {
 		return false;
 	}
 
-	private void sendSuccess(SendMessage message, HostPort hostPort) {
+	private void sendSuccess(SendMessage message, HostPort hostPort) throws InterceptException {
 		String receiptId = message.getHeader().getReceipt();
 
 		if (StringUtils.isEmpty(receiptId)) return;
@@ -75,7 +76,7 @@ public class RemoteExecutor {
 		getGateway().sendMessage(receipt, hostPort);
 	}
 
-	private void sendError(SendMessage message, Exception e, HostPort hostPort) {
+	private void sendError(SendMessage message, Exception e, HostPort hostPort) throws InterceptException {
 		String receipt = message.getHeader().getReceipt();
 
 		ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);

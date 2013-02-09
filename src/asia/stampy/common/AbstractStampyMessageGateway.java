@@ -18,7 +18,15 @@
  */
 package asia.stampy.common;
 
+import java.util.Collection;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import asia.stampy.common.message.StampyMessage;
+import asia.stampy.common.message.StompMessageType;
+import asia.stampy.common.message.interceptor.InterceptException;
+import asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor;
+import asia.stampy.common.message.interceptor.StampyOutgoingTextInterceptor;
 
 /**
  * A StampyMessageGateway is the interface between the technology used to
@@ -28,19 +36,8 @@ import asia.stampy.common.message.StampyMessage;
  * Subclasses are singletons; wire into the system appropriately.
  */
 public abstract class AbstractStampyMessageGateway {
-
-	/**
-	 * Sends a {@link StampyMessage} to the specified {@link HostPort}. Use this
-	 * method for all STOMP messages.
-	 * 
-	 * @param message
-	 *          the message
-	 * @param hostPort
-	 *          the host port
-	 */
-	public void sendMessage(StampyMessage<?> message, HostPort hostPort) {
-		sendMessage(message.toStompMessage(true), hostPort);
-	}
+	private Queue<StampyOutgoingMessageInterceptor> interceptors = new ConcurrentLinkedQueue<>();
+	private Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * Broadcasts a {@link StampyMessage} to all connected clients from the server
@@ -49,8 +46,85 @@ public abstract class AbstractStampyMessageGateway {
 	 * @param message
 	 *          the message
 	 */
-	public void broadcastMessage(StampyMessage<?> message) {
+	public void broadcastMessage(StampyMessage<?> message) throws InterceptException {
+		interceptOutgoingMessage(message);
 		broadcastMessage(message.toStompMessage(true));
+	}
+	
+	/**
+	 * Adds the specified outgoing message interceptor
+	 * @param interceptor
+	 * @see StampyOutgoingMessageInterceptor
+	 */
+	public void addOutgoingMessageInterceptor(StampyOutgoingMessageInterceptor interceptor) {
+		interceptors.add(interceptor);
+	}
+	
+	/**
+	 * Removes the specified outgoing message interceptor
+	 * @param interceptor
+	 * @see StampyOutgoingMessageInterceptor
+	 */
+	public void removeOutgoingMessageInterceptor(StampyOutgoingMessageInterceptor interceptor) {
+		interceptors.remove(interceptor);
+	}
+	
+	/**
+	 * Adds the specified outgoing message interceptors.  For use by DI frameworks.
+	 * @param interceptor
+	 * @see StampyOutgoingMessageInterceptor
+	 */
+	public void setOutgoingMessageInterceptors(Collection<StampyOutgoingMessageInterceptor> interceptors) {
+		this.interceptors.addAll(interceptors);
+	}
+	
+	/**
+	 * Adds the specified outgoing message interceptor
+	 * @param interceptor
+	 * @see StampyOutgoingMessageInterceptor
+	 */
+	public void addOutgoingTextInterceptor(StampyOutgoingTextInterceptor interceptor) {
+		textInterceptors.add(interceptor);
+	}
+	
+	/**
+	 * Removes the specified outgoing message interceptor
+	 * @param interceptor
+	 * @see StampyOutgoingMessageInterceptor
+	 */
+	public void removeOutgoingTextInterceptor(StampyOutgoingTextInterceptor interceptor) {
+		textInterceptors.remove(interceptor);
+	}
+	
+	/**
+	 * Adds the specified outgoing message interceptors.  For use by DI frameworks.
+	 * @param interceptor
+	 * @see StampyOutgoingMessageInterceptor
+	 */
+	public void setOutgoingTextInterceptors(Collection<StampyOutgoingTextInterceptor> interceptors) {
+		this.textInterceptors.addAll(interceptors);
+	}
+	
+	protected void interceptOutgoingMessage(StampyMessage<?> message) throws InterceptException {
+		for(StampyOutgoingMessageInterceptor interceptor : interceptors) {
+			if(isForType(interceptor.getMessageTypes(), message.getMessageType()) && interceptor.isForMessage(message)) {
+				interceptor.interceptMessage(message);
+			}
+		}
+	}
+	
+	protected void interceptOutgoingMessage(String message) throws InterceptException {
+		for(StampyOutgoingTextInterceptor interceptor : textInterceptors) {
+			interceptor.interceptMessage(message);
+		}
+	}
+
+	private boolean isForType(StompMessageType[] messageTypes, StompMessageType messageType) {
+		for (StompMessageType type : messageTypes) {
+			if (type.equals(messageType)) return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -61,7 +135,7 @@ public abstract class AbstractStampyMessageGateway {
 	 * @param stompMessage
 	 *          the stomp message
 	 */
-	public abstract void broadcastMessage(String stompMessage);
+	public abstract void broadcastMessage(String stompMessage) throws InterceptException;
 
 	/**
 	 * Sends the specified String to the specified {@link HostPort}. Included for
@@ -73,7 +147,7 @@ public abstract class AbstractStampyMessageGateway {
 	 * @param hostPort
 	 *          the host port
 	 */
-	public abstract void sendMessage(String stompMessage, HostPort hostPort);
+	public abstract void sendMessage(String stompMessage, HostPort hostPort) throws InterceptException;
 
 	/**
 	 * Closes the connection to the STOMP server or client.

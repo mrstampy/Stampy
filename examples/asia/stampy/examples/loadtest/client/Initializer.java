@@ -20,10 +20,7 @@ package asia.stampy.examples.loadtest.client;
 
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.mina.ConnectedMessageListener;
-import asia.stampy.client.mina.ErrorMessageListener;
-import asia.stampy.client.mina.MessageMessageListener;
 import asia.stampy.client.mina.RawClientMinaHandler;
-import asia.stampy.client.mina.ReceiptMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 
 /**
@@ -51,10 +48,6 @@ public class Initializer {
 		RawClientMinaHandler handler = new RawClientMinaHandler();
 		handler.setHeartbeatContainer(heartbeatContainer);
 		handler.setMessageGateway(gateway);
-
-		handler.addMessageListener(new ErrorMessageListener());
-		handler.addMessageListener(new MessageMessageListener());
-		handler.addMessageListener(new ReceiptMessageListener());
 
 		ConnectedMessageListener cml = new ConnectedMessageListener();
 		cml.setHeartbeatContainer(heartbeatContainer);

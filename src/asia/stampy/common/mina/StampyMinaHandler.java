@@ -21,6 +21,7 @@ package asia.stampy.common.mina;
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
@@ -33,7 +34,6 @@ import org.apache.mina.filter.codec.prefixedstring.PrefixedStringCodecFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.StompMessageParser;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
@@ -56,7 +56,7 @@ import asia.stampy.common.mina.raw.StampyRawStringHandler;
  * 
  * @see StampyRawStringHandler
  */
-public abstract class StampyMinaHandler extends IoHandlerAdapter {
+public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGateway> extends IoHandlerAdapter {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private Queue<StampyMinaMessageListener> listeners = new ConcurrentLinkedQueue<>();
@@ -65,7 +65,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 
 	private HeartbeatContainer heartbeatContainer;
 
-	private AbstractStampyMessageGateway messageGateway;
+	private ASMG messageGateway;
 
 	private static final String ILLEGAL_ACCESS_ATTEMPT = "Illegal access attempt";
 
@@ -332,8 +332,8 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 	 * @param listeners
 	 *          the new listeners
 	 */
-	public void setListeners(Queue<StampyMinaMessageListener> listeners) {
-		this.listeners = listeners;
+	public void setListeners(Collection<StampyMinaMessageListener> listeners) {
+		this.listeners.addAll(listeners);
 	}
 
 	/**
@@ -379,7 +379,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 	 * 
 	 * @return the message gateway
 	 */
-	public AbstractStampyMessageGateway getMessageGateway() {
+	public ASMG getMessageGateway() {
 		return messageGateway;
 	}
 
@@ -389,7 +389,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 	 * @param messageGateway
 	 *          the new message gateway
 	 */
-	public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
+	public void setMessageGateway(ASMG messageGateway) {
 		this.messageGateway = messageGateway;
 	}
 

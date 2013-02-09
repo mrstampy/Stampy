@@ -37,6 +37,7 @@ import asia.stampy.common.StompMessageParser;
 import asia.stampy.common.UnparseableException;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
+import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.StampyMinaHandler;
 
 /**
@@ -45,7 +46,7 @@ import asia.stampy.common.mina.StampyMinaHandler;
  * successfully in simple cases it has not (yet) been battle-tested. Use at your
  * own risk.
  */
-public abstract class StampyRawStringHandler extends StampyMinaHandler {
+public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMessageGateway> extends StampyMinaHandler<ASMG> {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private Map<HostPort, String> messageParts = new ConcurrentHashMap<>();

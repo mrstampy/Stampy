@@ -18,47 +18,80 @@
  */
 package asia.stampy.server.mina;
 
-import org.apache.mina.core.session.IoSession;
+import java.lang.invoke.MethodHandles;
 
-import asia.stampy.common.AbstractStampyMessageGateway;
+import javax.annotation.Resource;
+
+import org.apache.mina.core.session.IoSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
+import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.StampyMinaHandler;
-
 
 /**
  * The Class ServerMinaHandler.
  */
-public class ServerMinaHandler extends StampyMinaHandler {
+@Resource
+public class ServerMinaHandler extends StampyMinaHandler<ServerMinaMessageGateway> {
+	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private ServerHandlerAdapter adapter = new ServerHandlerAdapter();
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common.message.StampyMessage)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common
+	 * .message.StampyMessage)
 	 */
 	@Override
 	protected boolean isValidMessage(StampyMessage<?> message) {
 		return adapter.isValidMessage(message);
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaHandler#errorHandle(asia.stampy.common.message.StampyMessage, java.lang.Exception, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaHandler#errorHandle(asia.stampy.common
+	 * .message.StampyMessage, java.lang.Exception,
+	 * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
 	 */
 	protected void errorHandle(StampyMessage<?> message, Exception e, IoSession session, HostPort hostPort) {
-		adapter.errorHandle(message, e, hostPort);
+		try {
+			adapter.errorHandle(message, e, hostPort);
+		} catch (InterceptException e1) {
+			log.error("Could not send error message", e);
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaHandler#sendResponseIfRequired(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaHandler#sendResponseIfRequired(asia.stampy
+	 * .common.message.StampyMessage, org.apache.mina.core.session.IoSession,
+	 * asia.stampy.common.HostPort)
 	 */
 	protected void sendResponseIfRequired(StampyMessage<?> message, IoSession session, HostPort hostPort) {
-		adapter.sendResponseIfRequired(message, session, hostPort);
+		try {
+			adapter.sendResponseIfRequired(message, session, hostPort);
+		} catch (InterceptException e) {
+			log.error("Could not send receipt message", e);
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaHandler#setMessageGateway(asia.stampy.common.AbstractStampyMessageGateway)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaHandler#setMessageGateway(asia.stampy
+	 * .common.AbstractStampyMessageGateway)
 	 */
-	public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
+	public void setMessageGateway(ServerMinaMessageGateway messageGateway) {
 		super.setMessageGateway(messageGateway);
 		adapter.setMessageGateway(messageGateway);
 	}

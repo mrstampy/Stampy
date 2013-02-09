@@ -29,14 +29,13 @@ import asia.stampy.client.message.ClientMessageHeader;
 import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.message.stomp.StompMessage;
-import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
+import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.server.message.connected.ConnectedMessage;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
-
 
 /**
  * The Class ServerHandlerAdapter.
@@ -44,12 +43,13 @@ import asia.stampy.server.message.receipt.ReceiptMessage;
 class ServerHandlerAdapter {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private AbstractStampyMessageGateway messageGateway;
+	private ServerMinaMessageGateway messageGateway;
 
 	/**
 	 * Checks if is valid message.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *          the message
 	 * @return true, if is valid message
 	 */
 	boolean isValidMessage(StampyMessage<?> message) {
@@ -75,12 +75,16 @@ class ServerHandlerAdapter {
 
 	/**
 	 * Error handle.
-	 *
-	 * @param message the message
-	 * @param e the e
-	 * @param hostPort the host port
+	 * 
+	 * @param message
+	 *          the message
+	 * @param e
+	 *          the e
+	 * @param hostPort
+	 *          the host port
+	 * @throws InterceptException 
 	 */
-	void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) {
+	void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws InterceptException {
 		log.error("Handling error, sending error message to " + hostPort, e);
 		String receipt = null;
 		if (!message.getMessageType().equals(StompMessageType.CONNECT)) {
@@ -97,12 +101,16 @@ class ServerHandlerAdapter {
 
 	/**
 	 * Send response if required.
-	 *
-	 * @param message the message
-	 * @param session the session
-	 * @param hostPort the host port
+	 * 
+	 * @param message
+	 *          the message
+	 * @param session
+	 *          the session
+	 * @param hostPort
+	 *          the host port
+	 * @throws InterceptException 
 	 */
-	void sendResponseIfRequired(StampyMessage<?> message, IoSession session, HostPort hostPort) {
+	void sendResponseIfRequired(StampyMessage<?> message, IoSession session, HostPort hostPort) throws InterceptException {
 		if (isConnectMessage(message)) {
 			sendConnected(((ConnectMessage) message).getHeader(), session, hostPort);
 			log.debug("Sent CONNECTED message to {}", hostPort);
@@ -114,8 +122,8 @@ class ServerHandlerAdapter {
 			log.debug("Sent CONNECTED message to {}", hostPort);
 			return;
 		}
-		
-		if(isDisconnectMessage(message)) {
+
+		if (isDisconnectMessage(message)) {
 			log.info("Disconnect message received, closing session", hostPort);
 			session.close(false);
 			return;
@@ -130,7 +138,7 @@ class ServerHandlerAdapter {
 		log.debug("Sent RECEIPT message to {}", hostPort);
 	}
 
-	private void sendConnected(ConnectHeader header, IoSession session, HostPort hostPort) {
+	private void sendConnected(ConnectHeader header, IoSession session, HostPort hostPort) throws InterceptException {
 		ConnectedMessage message = new ConnectedMessage("1.2");
 		message.getHeader().setHeartbeat(header.getClientHeartbeat(), header.getServerHeartbeat());
 		message.getHeader().setSession(Long.toString(session.getId()));
@@ -151,19 +159,20 @@ class ServerHandlerAdapter {
 
 	/**
 	 * Gets the message gateway.
-	 *
+	 * 
 	 * @return the message gateway
 	 */
-	public AbstractStampyMessageGateway getMessageGateway() {
+	public ServerMinaMessageGateway getMessageGateway() {
 		return messageGateway;
 	}
 
 	/**
 	 * Sets the message gateway.
-	 *
-	 * @param messageGateway the new message gateway
+	 * 
+	 * @param messageGateway
+	 *          the new message gateway
 	 */
-	public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
+	public void setMessageGateway(ServerMinaMessageGateway messageGateway) {
 		this.messageGateway = messageGateway;
 	}
 

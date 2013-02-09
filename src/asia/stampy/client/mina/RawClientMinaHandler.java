@@ -19,6 +19,8 @@
 package asia.stampy.client.mina;
 
 
+import javax.annotation.Resource;
+
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
 
@@ -26,7 +28,8 @@ import asia.stampy.common.mina.raw.StampyRawStringHandler;
 /**
  * The Class RawClientMinaHandler.
  */
-public class RawClientMinaHandler extends StampyRawStringHandler {
+@Resource
+public class RawClientMinaHandler extends StampyRawStringHandler<ClientMinaMessageGateway> {
 
 	private ClientHandlerAdapter adapter = new ClientHandlerAdapter();
 

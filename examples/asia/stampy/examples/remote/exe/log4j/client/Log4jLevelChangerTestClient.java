@@ -25,6 +25,7 @@ import asia.stampy.client.message.disconnect.DisconnectMessage;
 import asia.stampy.client.message.send.SendMessage;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.common.message.AbstractBodyMessage;
+import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.examples.remote.exe.log4j.common.Log4jLevelChanger;
 
 /**
@@ -56,7 +57,7 @@ public class Log4jLevelChangerTestClient {
 		gateway.broadcastMessage(new DisconnectMessage());
 	}
 
-	private void sendSendMessage(Log4jLevelChanger levelChanger) {
+	private void sendSendMessage(Log4jLevelChanger levelChanger) throws InterceptException {
 		SendMessage message = new SendMessage("over/there", "blah");
 		message.getHeader().setContentType(AbstractBodyMessage.JAVA_BASE64_MIME_TYPE);
 		message.setBody(levelChanger);
@@ -112,7 +113,8 @@ public class Log4jLevelChangerTestClient {
 		}
 	}
 
-	private static void sendMessage(Log4jLevelChangerTestClient client, Level level) throws InterruptedException {
+	private static void sendMessage(Log4jLevelChangerTestClient client, Level level) throws InterruptedException,
+			InterceptException {
 		client.sendSendMessage(client.createLevelChanger("asia.stampy.examples.remote.exe.log4j.server", level));
 		Thread.sleep(500);
 	}

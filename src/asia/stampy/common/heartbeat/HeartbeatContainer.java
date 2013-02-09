@@ -22,6 +22,8 @@ import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +34,7 @@ import asia.stampy.common.HostPort;
  * Encapsulates all the currently active {@link PaceMaker}s.  This class is a singleton; wire into
  * the system appropriately.
  */
+@Resource
 public class HeartbeatContainer {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
