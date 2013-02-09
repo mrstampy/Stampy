@@ -69,7 +69,10 @@ public class StampyServiceAdapter implements IoServiceListener {
 
 		sessions.remove(hostPort);
 		
-		if(sessions.isEmpty() && isAutoShutdown()) gateway.shutdown();
+		if(sessions.isEmpty() && isAutoShutdown()) {
+			log.info("No more sessions and auto shutdown is true, shutting down gateway");
+			gateway.shutdown();
+		}
 	}
 
 	private HostPort createHostPort(IoSession session) {
