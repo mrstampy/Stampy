@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2013 Burton Alexander
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 
+ */
 package asia.stampy.server.mina.login;
 
 import java.lang.invoke.MethodHandles;
@@ -24,6 +42,18 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The listener interface for receiving loginMessage events.
+ * The class that is interested in processing a loginMessage
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addLoginMessageListener<code> method. When
+ * the loginMessage event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see LoginMessageEvent
+ */
 @Resource
 public class LoginMessageListener implements StampyMinaMessageListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -34,16 +64,25 @@ public class LoginMessageListener implements StampyMinaMessageListener {
 	private StampyLoginHandler loginHandler;
 	private ServerMinaMessageGateway gateway;
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+	 */
 	@Override
 	public StompMessageType[] getMessageTypes() {
 		return TYPES;
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
+	 */
 	@Override
 	public boolean isForMessage(StampyMessage<?> message) {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+	 */
 	@Override
 	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
 		switch (message.getMessageType()) {
@@ -111,18 +150,38 @@ public class LoginMessageListener implements StampyMinaMessageListener {
 		return StringUtils.isNotEmpty(header.getLogin()) && StringUtils.isNotEmpty(header.getPasscode());
 	}
 
+	/**
+	 * Gets the login handler.
+	 *
+	 * @return the login handler
+	 */
 	public StampyLoginHandler getLoginHandler() {
 		return loginHandler;
 	}
 
+	/**
+	 * Sets the login handler.
+	 *
+	 * @param loginHandler the new login handler
+	 */
 	public void setLoginHandler(StampyLoginHandler loginHandler) {
 		this.loginHandler = loginHandler;
 	}
 
+	/**
+	 * Gets the gateway.
+	 *
+	 * @return the gateway
+	 */
 	public ServerMinaMessageGateway getGateway() {
 		return gateway;
 	}
 
+	/**
+	 * Sets the gateway.
+	 *
+	 * @param gateway the new gateway
+	 */
 	public void setGateway(ServerMinaMessageGateway gateway) {
 		this.gateway = gateway;
 		
