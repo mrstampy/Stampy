@@ -40,6 +40,8 @@ public abstract class AbstractStampyMessageGateway {
 	private Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<>();
 
 	private boolean autoShutdown;
+	
+	private int heartbeat;
 
 	/**
 	 * Broadcasts a {@link StampyMessage} to all connected clients from the server
@@ -202,5 +204,13 @@ public abstract class AbstractStampyMessageGateway {
 
 	public void setAutoShutdown(boolean autoShutdown) {
 		this.autoShutdown = autoShutdown;
+	}
+
+	public int getHeartbeat() {
+		return heartbeat;
+	}
+
+	public void setHeartbeat(int heartbeat) {
+		this.heartbeat = heartbeat;
 	}
 }

@@ -80,12 +80,13 @@ public class ServerHeartbeatListener implements StampyMinaMessageListener {
 
 		ConnectHeader header = getConnectHeader(message);
 
-		int serverSleep = header.getServerHeartbeat();
-		int clientSleep = header.getClientHeartbeat();
-		if (clientSleep <= 0 || serverSleep <= 0) return;
+		int requested = header.getIncomingHeartbeat();
+		if (getMessageGateway().getHeartbeat() <= 0 || requested <= 0) return;
+		
+		int heartbeat = Math.max(requested, getMessageGateway().getHeartbeat());
 
-		log.info("Starting heartbeats for {} at {} ms intervals", hostPort, serverSleep);
-		PaceMaker paceMaker = new PaceMaker(serverSleep);
+		log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
+		PaceMaker paceMaker = new PaceMaker(heartbeat);
 		paceMaker.setHostPort(hostPort);
 		paceMaker.setMessageGateway(getMessageGateway());
 

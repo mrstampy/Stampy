@@ -82,7 +82,7 @@ class ServerHandlerAdapter {
 	 *          the e
 	 * @param hostPort
 	 *          the host port
-	 * @throws InterceptException 
+	 * @throws InterceptException
 	 */
 	void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws InterceptException {
 		log.error("Handling error, sending error message to " + hostPort, e);
@@ -108,7 +108,7 @@ class ServerHandlerAdapter {
 	 *          the session
 	 * @param hostPort
 	 *          the host port
-	 * @throws InterceptException 
+	 * @throws InterceptException
 	 */
 	void sendResponseIfRequired(StampyMessage<?> message, IoSession session, HostPort hostPort) throws InterceptException {
 		if (isConnectMessage(message)) {
@@ -140,8 +140,14 @@ class ServerHandlerAdapter {
 
 	private void sendConnected(ConnectHeader header, IoSession session, HostPort hostPort) throws InterceptException {
 		ConnectedMessage message = new ConnectedMessage("1.2");
-		message.getHeader().setHeartbeat(header.getClientHeartbeat(), header.getServerHeartbeat());
-		message.getHeader().setSession(Long.toString(session.getId()));
+		
+		int requested = message.getHeader().getIncomingHeartbeat();
+		if (requested >= 0 || messageGateway.getHeartbeat() >= 0) {
+			int heartbeat = Math.max(requested, messageGateway.getHeartbeat());
+			message.getHeader().setHeartbeat(heartbeat, header.getOutgoingHeartbeat());
+			message.getHeader().setSession(Long.toString(session.getId()));
+		}
+		
 		getMessageGateway().sendMessage(message, hostPort);
 	}
 

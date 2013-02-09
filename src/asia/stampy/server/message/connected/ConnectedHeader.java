@@ -73,7 +73,7 @@ public class ConnectedHeader extends AbstractMessageHeader {
 	 *
 	 * @return the client heartbeat
 	 */
-	public int getClientHeartbeat() {
+	public int getOutgoingHeartbeat() {
 		return getHeartbeat(0);
 	}
 	
@@ -82,7 +82,7 @@ public class ConnectedHeader extends AbstractMessageHeader {
 	 *
 	 * @return the server heartbeat
 	 */
-	public int getServerHeartbeat() {
+	public int getIncomingHeartbeat() {
 		return getHeartbeat(1);
 	}
 	

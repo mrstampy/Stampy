@@ -35,21 +35,22 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.connected.ConnectedMessage;
 
-
 /**
  * 
  */
 @Resource
 public class ConnectedMessageListener implements StampyMinaMessageListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	
+
 	private static StompMessageType[] TYPES = { StompMessageType.CONNECTED };
 
 	private HeartbeatContainer heartbeatContainer;
-	
+
 	private AbstractStampyMessageGateway messageGateway;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
 	 */
 	@Override
@@ -57,28 +58,39 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
 		return TYPES;
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+	 * .common.message.StampyMessage)
 	 */
 	@Override
 	public boolean isForMessage(StampyMessage<?> message) {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+	 * stampy.common.message.StampyMessage,
+	 * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
 	 */
 	@Override
 	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
 		log.debug("Received connect message {} from {}", message, hostPort);
 		ConnectedMessage cm = (ConnectedMessage) message;
 
-		int clientHeartbeat = cm.getHeader().getClientHeartbeat();
-		int serverHeartbeat = cm.getHeader().getServerHeartbeat();
-		if (serverHeartbeat <= 0 || clientHeartbeat <= 0) return;
+		int requested = cm.getHeader().getIncomingHeartbeat();
 
-		log.info("Starting heartbeats for {} at {} ms intervals", hostPort, clientHeartbeat);
-		PaceMaker paceMaker = new PaceMaker(clientHeartbeat);
+		if (requested <= 0 || messageGateway.getHeartbeat() <= 0) return;
+
+		int heartbeat = Math.max(requested, messageGateway.getHeartbeat());
+
+		log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
+		PaceMaker paceMaker = new PaceMaker(heartbeat);
 		paceMaker.setHostPort(hostPort);
 		paceMaker.setMessageGateway(getMessageGateway());
 		getHeartbeatContainer().add(hostPort, paceMaker);
@@ -86,7 +98,7 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
 
 	/**
 	 * Gets the heartbeat container.
-	 *
+	 * 
 	 * @return the heartbeat container
 	 */
 	public HeartbeatContainer getHeartbeatContainer() {
@@ -95,8 +107,9 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
 
 	/**
 	 * Sets the heartbeat container.
-	 *
-	 * @param heartbeatContainer the new heartbeat container
+	 * 
+	 * @param heartbeatContainer
+	 *          the new heartbeat container
 	 */
 	public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
 		this.heartbeatContainer = heartbeatContainer;
@@ -104,7 +117,7 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
 
 	/**
 	 * Gets the message gateway.
-	 *
+	 * 
 	 * @return the message gateway
 	 */
 	public AbstractStampyMessageGateway getMessageGateway() {
@@ -113,8 +126,9 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
 
 	/**
 	 * Sets the message gateway.
-	 *
-	 * @param messageGateway the new message gateway
+	 * 
+	 * @param messageGateway
+	 *          the new message gateway
 	 */
 	public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
 		this.messageGateway = messageGateway;

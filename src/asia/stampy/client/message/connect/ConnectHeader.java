@@ -126,20 +126,20 @@ public class ConnectHeader extends AbstractMessageHeader {
 	}
 	
 	/**
-	 * Gets the client heartbeat.
+	 * Gets the outgoing heartbeat sleep time requested in milliseconds.
 	 *
 	 * @return the client heartbeat
 	 */
-	public int getClientHeartbeat() {
+	public int getOutgoingHeartbeat() {
 		return getHeartbeat(0);
 	}
 	
 	/**
-	 * Gets the server heartbeat.
+	 * Gets the incoming heartbeat sleep time requested in milliseconds.
 	 *
 	 * @return the server heartbeat
 	 */
-	public int getServerHeartbeat() {
+	public int getIncomingHeartbeat() {
 		return getHeartbeat(1);
 	}
 	
