@@ -49,7 +49,7 @@ public class VersionListener implements StampyMinaMessageListener {
 		}
 	}
 
-	private void checkVersion(HostPort hostPort, ConnectHeader header) throws VersionException {
+	private void checkVersion(HostPort hostPort, ConnectHeader header) throws StompVersionException {
 		String acceptVersion = header.getAcceptVersion();
 		
 		String[] parts = acceptVersion.split(",");
@@ -61,7 +61,7 @@ public class VersionListener implements StampyMinaMessageListener {
 			}
 		}
 		
-		throw new VersionException("Only version " + VERSION + " is supported");
+		throw new StompVersionException("Only version " + VERSION + " is supported");
 	}
 
 }
