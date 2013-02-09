@@ -61,7 +61,7 @@ public class VersionListener implements StampyMinaMessageListener {
 			}
 		}
 		
-		throw new StompVersionException("Only version " + VERSION + " is supported");
+		throw new StompVersionException("Only STOMP version " + VERSION + " is supported");
 	}
 
 }

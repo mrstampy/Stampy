@@ -18,7 +18,11 @@
  */
 package asia.stampy.client.message.stomp;
 
+import org.apache.commons.lang.StringUtils;
+
+import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.common.message.AbstractMessage;
+import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
 
@@ -61,8 +65,13 @@ public class StompMessage extends AbstractMessage<StompHeader> {
 	 */
 	@Override
 	public void validate() {
-		// TODO Auto-generated method stub
-
+		if(StringUtils.isEmpty(getHeader().getAcceptVersion())) {
+			throw new InvalidStompMessageException(ConnectHeader.ACCEPT_VERSION + " is required, 1.2 only");
+		}
+		
+		if(StringUtils.isEmpty(getHeader().getHost())) {
+			throw new InvalidStompMessageException(ConnectHeader.HOST + " is required");
+		}
 	}
 
 }

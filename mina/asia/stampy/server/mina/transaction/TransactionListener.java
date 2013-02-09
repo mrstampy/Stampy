@@ -113,7 +113,7 @@ public class TransactionListener implements StampyMinaMessageListener {
 			public void sessionDestroyed(IoSession session) throws Exception {
 				HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
 				if (activeTransactions.contains(hostPort)) {
-					log.info("{} session terminated with outstanding transaction, cleaning up", hostPort);
+					log.debug("{} session terminated with outstanding transaction, cleaning up", hostPort);
 					activeTransactions.remove(hostPort);
 				}
 			}

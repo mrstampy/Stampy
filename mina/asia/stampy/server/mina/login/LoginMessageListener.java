@@ -131,7 +131,7 @@ public class LoginMessageListener implements StampyMinaMessageListener {
 			public void sessionDestroyed(IoSession session) throws Exception {
 				HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
 				if (loggedInConnections.contains(hostPort)) {
-					log.info("{} session terminated before DISCONNECT message received, cleaning up", hostPort);
+					log.debug("{} session terminated before DISCONNECT message received, cleaning up", hostPort);
 					loggedInConnections.remove(hostPort);
 				}
 			}

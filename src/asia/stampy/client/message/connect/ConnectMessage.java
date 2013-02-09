@@ -75,7 +75,7 @@ public class ConnectMessage extends AbstractMessage<ConnectHeader> {
 	@Override
 	public void validate() {
 		if(StringUtils.isEmpty(getHeader().getAcceptVersion())) {
-			throw new InvalidStompMessageException(ConnectHeader.ACCEPT_VERSION + " is required");
+			throw new InvalidStompMessageException(ConnectHeader.ACCEPT_VERSION + " is required, 1.2 only");
 		}
 		
 		if(StringUtils.isEmpty(getHeader().getHost())) {
