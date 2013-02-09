@@ -107,19 +107,17 @@ public class TransactionListener implements StampyMinaMessageListener {
 
 	public void setGateway(ServerMinaMessageGateway gateway) {
 		this.gateway = gateway;
-		gateway.addServiceListener(new TransactionTerminatorAdapter());
-	}
+		
+		gateway.addServiceListener(new MinaServiceAdapter() {
 
-	private class TransactionTerminatorAdapter extends MinaServiceAdapter {
-
-		public void sessionDestroyed(IoSession session) throws Exception {
-			HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
-			if (activeTransactions.contains(hostPort)) {
-				log.info("{} session terminated with outstanding transaction, cleaning up", hostPort);
-				activeTransactions.remove(hostPort);
+			public void sessionDestroyed(IoSession session) throws Exception {
+				HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
+				if (activeTransactions.contains(hostPort)) {
+					log.info("{} session terminated with outstanding transaction, cleaning up", hostPort);
+					activeTransactions.remove(hostPort);
+				}
 			}
-		}
-
+		});
 	}
 
 }
