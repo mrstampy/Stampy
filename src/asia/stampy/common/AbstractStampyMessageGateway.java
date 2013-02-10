@@ -176,7 +176,7 @@ public abstract class AbstractStampyMessageGateway {
 	public abstract void connect() throws Exception;
 
 	/**
-	 * Shutsdown the underlying connection technology.
+	 * Shuts down the underlying connection technology.
 	 * 
 	 * @throws Exception
 	 *           the exception

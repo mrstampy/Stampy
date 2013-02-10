@@ -18,12 +18,13 @@
  */
 package asia.stampy.examples.loadtest.server;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.mina.core.session.IoSession;
 
-import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
@@ -31,36 +32,43 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 
 /**
  * 
- *
+ * 
  * @see TestServerMessageEvent
  */
 public class TestServerMessageListener implements StampyMinaMessageListener {
-
-	private List<String> acks = new ArrayList<>();
+	
+	private Map<HostPort, AtomicInteger> acks = new ConcurrentHashMap<>();
 
 	private boolean connect = false;
 	private boolean disconnect = false;
-	
+
 	private long start;
 	private long end;
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+	 * stampy.common.message.StampyMessage,
+	 * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
 	 */
 	@Override
 	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
 		switch (message.getMessageType()) {
 		case ACK:
-			acks.add(((AckMessage) message).getHeader().getId());
+			acks.get(hostPort).getAndIncrement();
 			break;
 		case CONNECT:
 			connect = true;
 			start = System.nanoTime();
+			acks.put(hostPort, new AtomicInteger());
 			break;
 		case DISCONNECT:
 			disconnect = true;
 			end = System.nanoTime();
-			stats();
+			stats(acks.get(hostPort));
+			acks.remove(hostPort);
 			break;
 		default:
 			System.out.println("Unexpected message " + message.getMessageType());
@@ -69,23 +77,33 @@ public class TestServerMessageListener implements StampyMinaMessageListener {
 		}
 	}
 
-	private void stats() {
-		System.out.println("# of acks: " + acks.size());
+	private void stats(AtomicInteger ai) {
+		System.out.println("# of acks: " + ai.get());
 		System.out.println("Connect message? " + connect);
 		System.out.println("Disconnect message? " + disconnect);
 		long diff = end - start;
 		System.out.println("Nano time elapsed: " + diff);
+		BigDecimal bd = new BigDecimal(diff);
+		int divisor = ai.get() * 2 * 1000;
+		bd = bd.divide(new BigDecimal(divisor), 7, BigDecimal.ROUND_HALF_UP);
+		System.out.println("Micro seconds per message: " + bd.doubleValue());
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+	 * .common.message.StampyMessage)
 	 */
 	@Override
 	public boolean isForMessage(StampyMessage<?> message) {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
 	 */
 	@Override

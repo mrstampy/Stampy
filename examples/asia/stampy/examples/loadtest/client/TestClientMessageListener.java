@@ -18,8 +18,8 @@
  */
 package asia.stampy.examples.loadtest.client;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -33,7 +33,6 @@ import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.loadtest.server.TestServer;
 import asia.stampy.server.message.error.ErrorMessage;
-import asia.stampy.server.message.receipt.ReceiptMessage;
 
 /**
  * This listener sends a bunch of messages to the {@link TestServer} to load
@@ -42,11 +41,9 @@ import asia.stampy.server.message.receipt.ReceiptMessage;
 public class TestClientMessageListener implements StampyMinaMessageListener {
 	private ClientMinaMessageGateway gateway;
 
-	private List<String> receipts = new ArrayList<>();
+	private AtomicInteger receipts = new AtomicInteger();
 
 	private boolean connected = false;
-
-	private int receiptId = 1;
 
 	private long start;
 	private long end;
@@ -76,10 +73,9 @@ public class TestClientMessageListener implements StampyMinaMessageListener {
 			System.out.println("Unexpected error " + ((ErrorMessage) message).getHeader().getMessageHeader());
 			break;
 		case RECEIPT:
-			receipts.add(((ReceiptMessage) message).getHeader().getReceiptId());
-			receiptId++;
+			receipts.getAndIncrement();
 
-			if (receiptId == times) {
+			if (receipts.get() == times) {
 				synchronized (waiter) {
 					waiter.notifyAll();
 				}
@@ -134,10 +130,14 @@ public class TestClientMessageListener implements StampyMinaMessageListener {
 	 * Stats.
 	 */
 	public void stats() {
-		System.out.println("# of receipts: " + receipts.size());
+		System.out.println("# of receipts: " + receipts.get());
 		System.out.println("Connected message? " + connected);
 		long diff = end - start;
 		System.out.println("Nano time elapsed: " + diff);
+		BigDecimal bd = new BigDecimal(diff);
+		int divisor = (times + receipts.get()) * 1000;
+		bd = bd.divide(new BigDecimal(divisor), 7, BigDecimal.ROUND_HALF_UP);
+		System.out.println("Micro seconds per message: " + bd.doubleValue());
 	}
 
 	private void sendAcks() throws Exception {

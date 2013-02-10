@@ -77,7 +77,6 @@ public class TestClient {
 			client.listener.disconnect();
 			client.listener.stats();
 			client.getGateway().shutdown();
-			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

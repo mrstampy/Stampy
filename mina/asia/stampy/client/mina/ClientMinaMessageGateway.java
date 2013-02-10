@@ -116,7 +116,7 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	 */
 	@Override
 	public void closeConnection(HostPort hostPort) {
-		connector.dispose(true);
+		connector.dispose(false);
 		init();
 	}
 

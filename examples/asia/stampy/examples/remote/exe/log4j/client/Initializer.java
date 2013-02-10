@@ -18,6 +18,7 @@
  */
 package asia.stampy.examples.remote.exe.log4j.client;
 
+import asia.stampy.client.AutoTerminatingClientGateway;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.mina.ConnectedMessageListener;
 import asia.stampy.client.mina.RawClientMinaHandler;
@@ -40,7 +41,7 @@ public class Initializer {
 	public static ClientMinaMessageGateway initialize() {
 		HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-		ClientMinaMessageGateway gateway = new ClientMinaMessageGateway();
+		AutoTerminatingClientGateway gateway = new AutoTerminatingClientGateway();
 		gateway.setAutoShutdown(true);
 		gateway.setPort(1234);
 		gateway.setHost("localhost");
