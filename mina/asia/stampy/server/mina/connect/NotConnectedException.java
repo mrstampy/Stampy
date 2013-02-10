@@ -27,7 +27,7 @@ public class NotConnectedException extends Exception {
 	private static final long serialVersionUID = -255334241693552005L;
 
 	/**
-	 * Instantiates a new transaction already started exception.
+	 * Instantiates a new not connected exception.
 	 * 
 	 * @param message
 	 *          the message
