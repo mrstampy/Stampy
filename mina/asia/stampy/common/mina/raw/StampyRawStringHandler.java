@@ -109,7 +109,9 @@ public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMess
 		try {
 			String existing = messageParts.get(hostPort);
 			if (StringUtils.isEmpty(existing)) {
-				if (isStompMessage(msg)) {
+				if(isHeartbeat(msg)) {
+					return;
+				} else if (isStompMessage(msg)) {
 					processMessage(msg, session, hostPort);
 				} else {
 					log.error("Message {} is not a valid STOMP message, closing connection {}", msg, hostPort);
@@ -191,8 +193,6 @@ public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMess
 	}
 
 	private boolean isStompMessage(String msg) throws IOException {
-		if (isHeartbeat(msg)) return true;
-		
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new StringReader(msg));

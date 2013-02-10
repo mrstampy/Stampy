@@ -217,7 +217,7 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
 	 * @return true, if is heartbeat
 	 */
 	protected boolean isHeartbeat(String msg) {
-		return PaceMaker.HB1.equals(msg) || PaceMaker.HB2.equals(msg);
+		return msg.equals(PaceMaker.HB1) || msg.equals(PaceMaker.HB2);
 	}
 
 	/**
