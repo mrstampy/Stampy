@@ -21,6 +21,7 @@ package asia.stampy.common.message;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 import asia.stampy.common.StompMessageParser;
 
@@ -140,7 +141,7 @@ public abstract class AbstractMessage<HDR extends StampyMessageHeader> implement
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return toStompMessage(false);
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

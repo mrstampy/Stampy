@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
 
+import org.apache.mina.core.future.CloseFuture;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,22 @@ public class StampyServiceAdapter extends MinaServiceAdapter {
 		if (sessions.isEmpty() && isAutoShutdown()) {
 			log.info("No more sessions and auto shutdown is true, shutting down gateway");
 			gateway.shutdown();
+		}
+	}
+	
+	public void closeAllSessions() {
+		for(IoSession session : sessions.values()) {
+			CloseFuture cf = session.close(true);
+			cf.awaitUninterruptibly();
+		}
+		
+		sessions.clear();
+	}
+	
+	public void closeSession(HostPort hostPort) {
+		IoSession session = sessions.get(hostPort);
+		if(session != null) {
+			session.close(false);
 		}
 	}
 
@@ -134,7 +151,7 @@ public class StampyServiceAdapter extends MinaServiceAdapter {
 
 		IoSession session = getSession(hostPort);
 		session.write(stompMessage);
-		log.debug("Sent message {} to {}", stompMessage, hostPort);
+		log.trace("Sent message {} to {}", stompMessage, hostPort);
 	}
 
 	/**

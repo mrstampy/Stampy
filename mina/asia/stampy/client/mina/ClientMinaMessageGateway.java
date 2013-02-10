@@ -60,7 +60,7 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	private void init() {
 		serviceAdapter.setGateway(this);
 		serviceAdapter.setAutoShutdown(isAutoShutdown());
-		
+
 		log.trace("Initializing Stampy MINA connector");
 
 		connector.setHandler(handler);
@@ -86,8 +86,8 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		if (connector == null || connector.isDisposed()) {
 			connector = new NioSocketConnector();
 		}
-		
-		if(! connector.isActive()) init();
+
+		if (!connector.isActive()) init();
 
 		ConnectFuture cf = connector.connect(new InetSocketAddress(getHost(), getPort()));
 
@@ -120,8 +120,8 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	 */
 	@Override
 	public void closeConnection(HostPort hostPort) {
-		connector.dispose(false);
-		init();
+		serviceAdapter.closeAllSessions();
+		connector.dispose();
 	}
 
 	/*
@@ -136,12 +136,15 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 
 	/**
 	 * Send message. Use
-	 *
-	 * @param message the message
-	 * @param hostPort the host port
-	 * @throws InterceptException the intercept exception
-	 * {@link ClientMinaMessageGateway#broadcastMessage(StampyMessage)} in
-	 * preference.
+	 * 
+	 * @param message
+	 *          the message
+	 * @param hostPort
+	 *          the host port
+	 * @throws InterceptException
+	 *           the intercept exception
+	 *           {@link ClientMinaMessageGateway#broadcastMessage(StampyMessage)}
+	 *           in preference.
 	 */
 	@Override
 	public void sendMessage(String message, HostPort hostPort) throws InterceptException {
@@ -170,8 +173,11 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		connector.broadcast(message);
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.AbstractStampyMessageGateway#getConnectedHostPorts()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.AbstractStampyMessageGateway#getConnectedHostPorts()
 	 */
 	@Override
 	public Set<HostPort> getConnectedHostPorts() {
@@ -226,16 +232,24 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		getHandler().setListeners(listeners);
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addServiceListener(org.apache.mina.core.service.IoServiceListener)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addServiceListener
+	 * (org.apache.mina.core.service.IoServiceListener)
 	 */
 	@Override
 	public void addServiceListener(IoServiceListener listener) {
 		connector.addListener(listener);
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.AbstractStampyMinaMessageGateway#removeServiceListener(org.apache.mina.core.service.IoServiceListener)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#removeServiceListener
+	 * (org.apache.mina.core.service.IoServiceListener)
 	 */
 	@Override
 	public void removeServiceListener(IoServiceListener listener) {

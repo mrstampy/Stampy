@@ -65,7 +65,7 @@ public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMess
 	@Override
 	public void messageReceived(final IoSession session, Object message) throws Exception {
 		final HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
-		log.debug("Received raw message {} from {}", message, hostPort);
+		log.trace("Received raw message {} from {}", message, hostPort);
 
 		resetHeartbeat(hostPort);
 
@@ -140,14 +140,14 @@ public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMess
 		int idx = msg.indexOf(StompMessageParser.EOM);
 
 		if (idx == length - 1) {
-			log.debug("Creating StampyMessage from {}", msg);
+			log.trace("Creating StampyMessage from {}", msg);
 			processStompMessage(msg, session, hostPort);
 		} else if (idx > 0) {
-			log.debug("Multiple messages detected, parsing {}", msg);
+			log.trace("Multiple messages detected, parsing {}", msg);
 			processMultiMessages(msg, session, hostPort);
 		} else {
 			messageParts.put(hostPort, msg);
-			log.debug("Message part {} stored for {}", msg, hostPort);
+			log.trace("Message part {} stored for {}", msg, hostPort);
 		}
 	}
 
