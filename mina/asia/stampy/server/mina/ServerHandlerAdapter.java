@@ -78,11 +78,15 @@ class ServerHandlerAdapter {
 
 	/**
 	 * Error handle.
-	 *
-	 * @param message the message
-	 * @param e the e
-	 * @param hostPort the host port
-	 * @throws InterceptException the intercept exception
+	 * 
+	 * @param message
+	 *          the message
+	 * @param e
+	 *          the e
+	 * @param hostPort
+	 *          the host port
+	 * @throws InterceptException
+	 *           the intercept exception
 	 */
 	void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws InterceptException {
 		log.error("Handling error, sending error message to " + hostPort, e);
@@ -96,11 +100,15 @@ class ServerHandlerAdapter {
 
 	/**
 	 * Send response if required.
-	 *
-	 * @param message the message
-	 * @param session the session
-	 * @param hostPort the host port
-	 * @throws InterceptException the intercept exception
+	 * 
+	 * @param message
+	 *          the message
+	 * @param session
+	 *          the session
+	 * @param hostPort
+	 *          the host port
+	 * @throws InterceptException
+	 *           the intercept exception
 	 */
 	void sendResponseIfRequired(StampyMessage<?> message, IoSession session, HostPort hostPort) throws InterceptException {
 		if (isConnectMessage(message)) {
@@ -143,10 +151,6 @@ class ServerHandlerAdapter {
 
 	private boolean isStompMessage(StampyMessage<?> message) {
 		return message.getMessageType().equals(StompMessageType.STOMP);
-	}
-
-	private boolean isDisconnectMessage(StampyMessage<?> message) {
-		return message.getMessageType().equals(StompMessageType.DISCONNECT);
 	}
 
 	/**
