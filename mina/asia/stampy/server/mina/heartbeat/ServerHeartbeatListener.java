@@ -89,6 +89,7 @@ public class ServerHeartbeatListener implements StampyMinaMessageListener {
 		PaceMaker paceMaker = new PaceMaker(heartbeat);
 		paceMaker.setHostPort(hostPort);
 		paceMaker.setMessageGateway(getMessageGateway());
+		paceMaker.start();
 
 		getHeartbeatContainer().add(hostPort, paceMaker);
 	}

@@ -60,7 +60,6 @@ public class PaceMaker {
 	 */
 	public PaceMaker(int timeInMillis) {
 		this.timeInMillis = timeInMillis;
-		start();
 	}
 
 	/**
