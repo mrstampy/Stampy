@@ -120,6 +120,7 @@ public class LoginMessageListener implements StampyMinaMessageListener {
 
 		try {
 			getLoginHandler().login(header.getLogin(), header.getPasscode());
+			loggedInConnections.add(hostPort);
 		} catch (TerminateSessionException e) {
 			log.error(e.getMessage(), e);
 			sendErrorMessage(e.getMessage(), hostPort);

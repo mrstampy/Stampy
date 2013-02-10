@@ -94,6 +94,7 @@ public class ConnectListener implements StampyMinaMessageListener {
 		case CONNECT:
 		case STOMP:
 			checkDisconnected(hostPort);
+			connectedClients.add(hostPort);
 			break;
 		case DISCONNECT:
 			connectedClients.remove(hostPort);
