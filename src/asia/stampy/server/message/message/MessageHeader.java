@@ -20,7 +20,6 @@ package asia.stampy.server.message.message;
 
 import asia.stampy.common.message.AbstractBodyMessageHeader;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class MessageHeader.
@@ -28,83 +27,86 @@ import asia.stampy.common.message.AbstractBodyMessageHeader;
 public class MessageHeader extends AbstractBodyMessageHeader {
 
 	private static final long serialVersionUID = -1715758376656092863L;
-	
+
 	/** The Constant ACK. */
 	public static final String ACK = "ack";
-	
+
 	/** The Constant SUBSCRIPTION. */
 	public static final String SUBSCRIPTION = "subscription";
-	
+
 	/** The Constant MESSAGE_ID. */
 	public static final String MESSAGE_ID = "message-id";
-	
+
 	/** The Constant DESTINATION. */
 	public static final String DESTINATION = "destination";
 
 	/**
 	 * Sets the destination.
-	 *
-	 * @param destination the new destination
+	 * 
+	 * @param destination
+	 *          the new destination
 	 */
 	public void setDestination(String destination) {
 		addHeader(DESTINATION, destination);
 	}
-	
+
 	/**
 	 * Gets the destination.
-	 *
+	 * 
 	 * @return the destination
 	 */
 	public String getDestination() {
 		return getHeaderValue(DESTINATION);
 	}
-	
+
 	/**
 	 * Sets the message id.
-	 *
-	 * @param messageId the new message id
+	 * 
+	 * @param messageId
+	 *          the new message id
 	 */
 	public void setMessageId(String messageId) {
 		addHeader(MESSAGE_ID, messageId);
 	}
-	
+
 	/**
 	 * Gets the message id.
-	 *
+	 * 
 	 * @return the message id
 	 */
 	public String getMessageId() {
 		return getHeaderValue(MESSAGE_ID);
 	}
-	
+
 	/**
 	 * Sets the subscription.
-	 *
-	 * @param subscription the new subscription
+	 * 
+	 * @param subscription
+	 *          the new subscription
 	 */
 	public void setSubscription(String subscription) {
 		addHeader(SUBSCRIPTION, subscription);
 	}
-	
+
 	/**
 	 * Gets the subscription.
-	 *
+	 * 
 	 * @return the subscription
 	 */
 	public String getSubscription() {
 		return getHeaderValue(SUBSCRIPTION);
 	}
-	
+
 	/**
 	 * Sets the ack.
 	 */
-	public void setAck() {
-		addHeader(ACK, Boolean.TRUE.toString());
+	public void setAck(String ack) {
+		addHeader(ACK, ack);
 	}
-	
+
 	/**
 	 * Gets the ack.
-	 *
+	 * 
 	 * @return the ack
 	 */
 	public String getAck() {
