@@ -50,16 +50,24 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
 	private boolean closeOnDisconnectMessage = true;
 	private String receiptId;
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor#getMessageTypes()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor
+	 * #getMessageTypes()
 	 */
 	@Override
 	public StompMessageType[] getMessageTypes() {
 		return TYPES;
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor#isForMessage(asia.stampy.common.message.StampyMessage)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor
+	 * #isForMessage(asia.stampy.common.message.StampyMessage)
 	 */
 	@Override
 	public boolean isForMessage(StampyMessage<?> message) {
@@ -70,7 +78,7 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
 				log.warn("Outstanding receipt id {} in DisconnectListenerAndInterceptor, resetting", getReceiptId());
 				setReceiptId((String) null);
 			}
-			return absent;
+			return true;
 		case RECEIPT:
 			ReceiptMessage receipt = (ReceiptMessage) message;
 			return StringUtils.isNotEmpty(getReceiptId()) && getReceiptId().equals(receipt.getHeader().getReceiptId());
@@ -80,8 +88,13 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor#interceptMessage(asia.stampy.common.message.StampyMessage, asia.stampy.common.HostPort)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor
+	 * #interceptMessage(asia.stampy.common.message.StampyMessage,
+	 * asia.stampy.common.HostPort)
 	 */
 	@Override
 	public void interceptMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
@@ -95,15 +108,23 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+	 * stampy.common.message.StampyMessage,
+	 * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
 	 */
 	@Override
 	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
 		switch (message.getMessageType()) {
 		case RECEIPT:
 			setReceiptId((String) null);
-			if (isCloseOnDisconnectMessage()) session.close(false);
+			if (isCloseOnDisconnectMessage()) {
+				log.info("Receipt for disconnect message received, disconnecting");
+				session.close(false);
+			}
 			break;
 		default:
 			return;
@@ -112,12 +133,14 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
 	}
 
 	private void setReceiptId(DisconnectMessage message) {
-		setReceiptId(message.getHeader().getReceipt());
+		String id = message.getHeader().getReceipt();
+		log.info("Disconnect message intercepted, receipt id {}", id);
+		setReceiptId(id);
 	}
 
 	/**
 	 * Checks if is close on disconnect message.
-	 *
+	 * 
 	 * @return true, if is close on disconnect message
 	 */
 	public boolean isCloseOnDisconnectMessage() {
@@ -126,8 +149,9 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
 
 	/**
 	 * Sets the close on disconnect message.
-	 *
-	 * @param closeOnDisconnectMessage the new close on disconnect message
+	 * 
+	 * @param closeOnDisconnectMessage
+	 *          the new close on disconnect message
 	 */
 	public void setCloseOnDisconnectMessage(boolean closeOnDisconnectMessage) {
 		this.closeOnDisconnectMessage = closeOnDisconnectMessage;
@@ -135,7 +159,7 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
 
 	/**
 	 * Gets the receipt id.
-	 *
+	 * 
 	 * @return the receipt id
 	 */
 	public String getReceiptId() {
@@ -144,8 +168,9 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
 
 	/**
 	 * Sets the receipt id.
-	 *
-	 * @param receiptId the new receipt id
+	 * 
+	 * @param receiptId
+	 *          the new receipt id
 	 */
 	public void setReceiptId(String receiptId) {
 		this.receiptId = receiptId;
