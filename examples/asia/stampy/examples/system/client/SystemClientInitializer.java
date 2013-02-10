@@ -42,7 +42,6 @@ public class SystemClientInitializer {
 		HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
 		AutoTerminatingClientGateway gateway = new AutoTerminatingClientGateway();
-		gateway.setAutoShutdown(true);
 		gateway.setPort(1234);
 		gateway.setHost("localhost");
 		gateway.setHeartbeat(1000);

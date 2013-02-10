@@ -188,11 +188,12 @@ public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMess
 	}
 
 	private boolean isStompMessage(String msg) throws IOException {
+		if (isHeartbeat(msg)) return true;
+		
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new StringReader(msg));
 			String stompMessageType = reader.readLine();
-			if (isHeartbeat(stompMessageType)) return true;
 
 			StompMessageType type = StompMessageType.valueOf(stompMessageType);
 			return type != null;

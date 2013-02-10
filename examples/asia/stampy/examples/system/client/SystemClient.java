@@ -139,6 +139,7 @@ public class SystemClient {
 			System.out.println("Unexpected error message received");
 		}
 		System.out.println(error.toStompMessage(false));
+		System.out.println();
 		error = null;
 	}
 
