@@ -16,12 +16,18 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.examples.remote.exe.log4j.server;
+package asia.stampy.examples.system.server;
 
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.examples.remote.exe.common.RemoteExeMessageListener;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
+import asia.stampy.server.mina.connect.ConnectListener;
+import asia.stampy.server.mina.heartbeat.HeartbeatListener;
+import asia.stampy.server.mina.login.LoginMessageListener;
+import asia.stampy.server.mina.subscription.AcknowledgementListener;
+import asia.stampy.server.mina.subscription.MessageInterceptor;
+import asia.stampy.server.mina.transaction.TransactionListener;
+import asia.stampy.server.mina.version.VersionListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
@@ -30,7 +36,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
-public class Initializer {
+public class SystemServerInitializer {
 
 	/**
 	 * Initialize.
@@ -42,14 +48,40 @@ public class Initializer {
 
 		ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();
 		gateway.setPort(1234);
+		gateway.setHeartbeat(1000);
 
 		RawServerMinaHandler handler = new RawServerMinaHandler();
 		handler.setHeartbeatContainer(heartbeatContainer);
 		handler.setMessageGateway(gateway);
 
-		RemoteExeMessageListener remoteExe = new RemoteExeMessageListener();
-		remoteExe.setGateway(gateway);
-		handler.addMessageListener(remoteExe);
+		handler.addMessageListener(new VersionListener());
+
+		LoginMessageListener login = new LoginMessageListener();
+		login.setGateway(gateway);
+		login.setLoginHandler(new SystemLoginHandler());
+		handler.addMessageListener(login);
+
+		ConnectListener connect = new ConnectListener();
+		connect.setGateway(gateway);
+		handler.addMessageListener(connect);
+
+		HeartbeatListener heartbeat = new HeartbeatListener();
+		heartbeat.setHeartbeatContainer(heartbeatContainer);
+		heartbeat.setGateway(gateway);
+		handler.addMessageListener(heartbeat);
+
+		TransactionListener transaction = new TransactionListener();
+		transaction.setGateway(gateway);
+		handler.addMessageListener(transaction);
+		
+		MessageInterceptor mi = new MessageInterceptor();
+		mi.setGateway(gateway);
+		gateway.addOutgoingMessageInterceptor(mi);
+		
+		AcknowledgementListener acknowledgement = new AcknowledgementListener();
+		acknowledgement.setHandler(new SystemAcknowledgementHandler());
+		acknowledgement.setInterceptor(mi);
+		handler.addMessageListener(acknowledgement);
 
 		gateway.setHandler(handler);
 

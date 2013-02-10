@@ -46,7 +46,6 @@ public class Initializer {
 		gateway.setPort(1234);
 		gateway.setHost("localhost");
 
-		// ClientMinaHandler handler = new ClientMinaHandler();
 		RawClientMinaHandler handler = new RawClientMinaHandler();
 		handler.setHeartbeatContainer(heartbeatContainer);
 		handler.setMessageGateway(gateway);

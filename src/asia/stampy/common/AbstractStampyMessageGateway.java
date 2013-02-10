@@ -20,6 +20,7 @@ package asia.stampy.common;
 
 import java.util.Collection;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import asia.stampy.common.message.StampyMessage;
@@ -36,8 +37,8 @@ import asia.stampy.common.message.interceptor.StampyOutgoingTextInterceptor;
  * Subclasses are singletons; wire into the system appropriately.
  */
 public abstract class AbstractStampyMessageGateway {
-	private Queue<StampyOutgoingMessageInterceptor> interceptors = new ConcurrentLinkedQueue<>();
-	private Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<>();
+	protected Queue<StampyOutgoingMessageInterceptor> interceptors = new ConcurrentLinkedQueue<>();
+	protected Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<>();
 
 	private boolean autoShutdown;
 	
@@ -129,7 +130,7 @@ public abstract class AbstractStampyMessageGateway {
 		}
 	}
 
-	private boolean isForType(StompMessageType[] messageTypes, StompMessageType messageType) {
+	protected boolean isForType(StompMessageType[] messageTypes, StompMessageType messageType) {
 		for (StompMessageType type : messageTypes) {
 			if (type.equals(messageType)) return true;
 		}
@@ -191,6 +192,8 @@ public abstract class AbstractStampyMessageGateway {
 	 * @return true, if is connected
 	 */
 	public abstract boolean isConnected(HostPort hostPort);
+	
+	public abstract Set<HostPort> getConnectedHostPorts();
 
 	/**
 	 * If true the gateway will shut down when all sessions are terminated.

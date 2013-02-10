@@ -21,6 +21,7 @@ package asia.stampy.server.mina;
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
 import java.util.Queue;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.interceptor.InterceptException;
+import asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.StampyMinaHandler;
 import asia.stampy.common.mina.StampyMinaMessageListener;
@@ -89,8 +91,16 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	 * @throws InterceptException 
 	 */
 	public void sendMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
-		interceptOutgoingMessage(message);
+		interceptOutgoingMessage(message, hostPort);
 		sendMessage(message.toStompMessage(true), hostPort);
+	}
+
+	protected void interceptOutgoingMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
+		for (StampyOutgoingMessageInterceptor interceptor : interceptors) {
+			if (isForType(interceptor.getMessageTypes(), message.getMessageType()) && interceptor.isForMessage(message)) {
+				interceptor.interceptMessage(message, hostPort);
+			}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -162,6 +172,11 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		log.info("shutdown() invoked, disposing the acceptor");
 		acceptor.dispose(false);
 		init();
+	}
+
+	@Override
+	public Set<HostPort> getConnectedHostPorts() {
+		return serviceAdapter.getHostPorts();
 	}
 
 	@Override

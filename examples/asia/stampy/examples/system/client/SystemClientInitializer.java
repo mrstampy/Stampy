@@ -16,12 +16,13 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.examples.remote.exe.log4j.server;
+package asia.stampy.examples.system.client;
 
+import asia.stampy.client.AutoTerminatingClientGateway;
+import asia.stampy.client.mina.ClientMinaMessageGateway;
+import asia.stampy.client.mina.RawClientMinaHandler;
+import asia.stampy.client.mina.connected.ConnectedMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.examples.remote.exe.common.RemoteExeMessageListener;
-import asia.stampy.server.mina.RawServerMinaHandler;
-import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
@@ -30,30 +31,34 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
-public class Initializer {
+public class SystemClientInitializer {
 
 	/**
 	 * Initialize.
 	 * 
-	 * @return the server mina message gateway
+	 * @return the client mina message gateway
 	 */
-	public static ServerMinaMessageGateway initialize() {
+	public static ClientMinaMessageGateway initialize() {
 		HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-		ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();
+		AutoTerminatingClientGateway gateway = new AutoTerminatingClientGateway();
+		gateway.setAutoShutdown(true);
 		gateway.setPort(1234);
+		gateway.setHost("localhost");
+		gateway.setHeartbeat(1000);
 
-		RawServerMinaHandler handler = new RawServerMinaHandler();
+		RawClientMinaHandler handler = new RawClientMinaHandler();
 		handler.setHeartbeatContainer(heartbeatContainer);
 		handler.setMessageGateway(gateway);
 
-		RemoteExeMessageListener remoteExe = new RemoteExeMessageListener();
-		remoteExe.setGateway(gateway);
-		handler.addMessageListener(remoteExe);
+		ConnectedMessageListener cml = new ConnectedMessageListener();
+		cml.setHeartbeatContainer(heartbeatContainer);
+		cml.setMessageGateway(gateway);
+		handler.addMessageListener(cml);
 
 		gateway.setHandler(handler);
 
 		return gateway;
-	}
 
+	}
 }

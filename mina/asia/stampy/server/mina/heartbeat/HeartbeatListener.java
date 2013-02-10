@@ -43,7 +43,7 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
  * 
  */
 @Resource
-public class ServerHeartbeatListener implements StampyMinaMessageListener {
+public class HeartbeatListener implements StampyMinaMessageListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP, StompMessageType.DISCONNECT };
 
@@ -147,7 +147,7 @@ public class ServerHeartbeatListener implements StampyMinaMessageListener {
 	 *
 	 * @param messageGateway the new message gateway
 	 */
-	public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
+	public void setGateway(AbstractStampyMessageGateway messageGateway) {
 		this.messageGateway = messageGateway;
 	}
 

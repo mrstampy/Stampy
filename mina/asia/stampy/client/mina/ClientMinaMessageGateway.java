@@ -21,6 +21,7 @@ package asia.stampy.client.mina;
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
 import java.util.Queue;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -165,6 +166,11 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 			getHandler().getHeartbeatContainer().reset(hostPort);
 		}
 		connector.broadcast(message);
+	}
+
+	@Override
+	public Set<HostPort> getConnectedHostPorts() {
+		return serviceAdapter.getHostPorts();
 	}
 
 	/*

@@ -21,7 +21,6 @@ package asia.stampy.examples.loadtest.server;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
-import asia.stampy.server.mina.heartbeat.ServerHeartbeatListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
@@ -43,16 +42,9 @@ public class Initializer {
 		ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();
 		gateway.setPort(1234);
 
-		// ServerMinaHandler handler = new ServerMinaHandler();
 		RawServerMinaHandler handler = new RawServerMinaHandler();
 		handler.setHeartbeatContainer(heartbeatContainer);
 		handler.setMessageGateway(gateway);
-
-		ServerHeartbeatListener hbListener = new ServerHeartbeatListener();
-		hbListener.setHeartbeatContainer(heartbeatContainer);
-		hbListener.setMessageGateway(gateway);
-
-		handler.addMessageListener(hbListener);
 
 		gateway.setHandler(handler);
 

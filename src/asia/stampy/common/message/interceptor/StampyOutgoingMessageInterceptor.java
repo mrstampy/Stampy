@@ -1,6 +1,7 @@
 package asia.stampy.common.message.interceptor;
 
 import asia.stampy.common.AbstractStampyMessageGateway;
+import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 
@@ -38,5 +39,14 @@ public interface StampyOutgoingMessageInterceptor {
 	 *           if the outgoing message is to be aborted
 	 */
 	void interceptMessage(StampyMessage<?> message) throws InterceptException;
+
+	/**
+	 * Intercepts the outgoing message for capturing state etc.
+	 * 
+	 * @param message
+	 * @throws InterceptException
+	 *           if the outgoing message is to be aborted
+	 */
+	void interceptMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException;
 
 }

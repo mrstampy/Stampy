@@ -20,6 +20,7 @@ package asia.stampy.common.mina;
 
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -117,7 +118,7 @@ public class StampyServiceAdapter extends MinaServiceAdapter {
 	 * @return the host ports
 	 */
 	public Set<HostPort> getHostPorts() {
-		return sessions.keySet();
+		return Collections.unmodifiableSet(sessions.keySet());
 	}
 
 	/**
