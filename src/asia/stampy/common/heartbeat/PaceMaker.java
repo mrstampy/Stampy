@@ -65,7 +65,7 @@ public class PaceMaker {
 	/**
 	 * Reset.
 	 */
-	public void reset() {
+	public synchronized void reset() {
 		log.trace("PaceMaker reset invoked");
 		setHeartbeatCount(0);
 		stop();
