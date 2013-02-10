@@ -302,7 +302,7 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
 	protected void notifyListeners(StampyMessage<?> sm, IoSession session, HostPort hostPort) throws Exception {
 		for (StampyMinaMessageListener listener : listeners) {
 			if (isForType(listener.getMessageTypes(), sm.getMessageType()) && listener.isForMessage(sm)) {
-				log.debug("Executing message {} for listener {}", sm, listener);
+				log.debug("Evaluating message {} with listener {}", sm, listener);
 				listener.messageReceived(sm, session, hostPort);
 			}
 		}
