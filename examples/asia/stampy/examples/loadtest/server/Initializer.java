@@ -20,8 +20,8 @@ package asia.stampy.examples.loadtest.server;
 
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.server.mina.RawServerMinaHandler;
-import asia.stampy.server.mina.ServerHeartbeatListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
+import asia.stampy.server.mina.heartbeat.ServerHeartbeatListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this

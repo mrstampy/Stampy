@@ -20,8 +20,8 @@ package asia.stampy.examples.remote.exe.log4j.client;
 
 import asia.stampy.client.AutoTerminatingClientGateway;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
-import asia.stampy.client.mina.ConnectedMessageListener;
 import asia.stampy.client.mina.RawClientMinaHandler;
+import asia.stampy.client.mina.connected.ConnectedMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 
 /**
