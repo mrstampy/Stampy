@@ -99,7 +99,7 @@ public class ConnectListener implements StampyMinaMessageListener {
 			connectedClients.remove(hostPort);
 			break;
 		default:
-			break;
+			throw new IllegalArgumentException("Unexpected message type " + message.getMessageType());
 
 		}
 
