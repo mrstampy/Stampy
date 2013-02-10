@@ -25,6 +25,7 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.client.message.AbstractClientMessageHeader;
 import asia.stampy.client.message.ClientMessageHeader;
 import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.client.message.connect.ConnectMessage;
@@ -87,15 +88,10 @@ class ServerHandlerAdapter {
 	 */
 	void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws InterceptException {
 		log.error("Handling error, sending error message to " + hostPort, e);
-		String receipt = null;
-		if (!message.getMessageType().equals(StompMessageType.CONNECT)) {
-			receipt = ((ClientMessageHeader) message.getHeader()).getReceipt();
-		}
+		String receipt = message.getHeader().getHeaderValue(AbstractClientMessageHeader.RECEIPT);
 
-		ErrorMessage error = new ErrorMessage(receipt);
-		error.getHeader().setMessageHeader(
-				"Could not execute " + message.getClass().getCanonicalName() + ": " + e.getMessage());
-		error.setBody(e);
+		ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
+		error.getHeader().setMessageHeader("Could not execute " + message.getMessageType() + " - " + e.getMessage());
 
 		getMessageGateway().sendMessage(error, hostPort);
 	}
@@ -141,14 +137,14 @@ class ServerHandlerAdapter {
 
 	private void sendConnected(ConnectHeader header, IoSession session, HostPort hostPort) throws InterceptException {
 		ConnectedMessage message = new ConnectedMessage("1.2");
-		
+
 		int requested = message.getHeader().getIncomingHeartbeat();
 		if (requested >= 0 || messageGateway.getHeartbeat() >= 0) {
 			int heartbeat = Math.max(requested, messageGateway.getHeartbeat());
 			message.getHeader().setHeartbeat(heartbeat, header.getOutgoingHeartbeat());
 			message.getHeader().setSession(Long.toString(session.getId()));
 		}
-		
+
 		getMessageGateway().sendMessage(message, hostPort);
 	}
 

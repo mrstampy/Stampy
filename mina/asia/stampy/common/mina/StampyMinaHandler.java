@@ -41,6 +41,7 @@ import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
+import asia.stampy.server.message.error.ErrorMessage;
 
 /**
  * This class is an abstract implementation of a MINA IoHandler for the receipt
@@ -248,6 +249,26 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
 	protected void errorHandle(StampyMessage<?> message, Exception e, IoSession session, HostPort hostPort)
 			throws Exception {
 		log.error("Unexpected exception", e);
+	}
+
+	/**
+	 * Error handle. Logs the error.
+	 * 
+	 * @param message
+	 *          the message
+	 * @param e
+	 *          the e
+	 * @param session
+	 *          the session
+	 * @param hostPort
+	 *          the host port
+	 * @throws Exception
+	 *           the exception
+	 */
+	protected void errorHandle(Exception e, IoSession session, HostPort hostPort) throws Exception {
+		ErrorMessage message = new ErrorMessage("n/a");
+		message.getHeader().setMessageHeader(e.getMessage());
+		getMessageGateway().sendMessage(message.toStompMessage(true), hostPort);
 	}
 
 	/**

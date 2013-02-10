@@ -74,12 +74,16 @@ public class SystemServerInitializer {
 		transaction.setGateway(gateway);
 		handler.addMessageListener(transaction);
 		
+		SystemAcknowledgementHandler sys = new SystemAcknowledgementHandler();
+		
 		MessageInterceptor mi = new MessageInterceptor();
 		mi.setGateway(gateway);
+		mi.setHandler(sys);
+		mi.setAckTimeoutMillis(50);
 		gateway.addOutgoingMessageInterceptor(mi);
 		
 		AcknowledgementListener acknowledgement = new AcknowledgementListener();
-		acknowledgement.setHandler(new SystemAcknowledgementHandler());
+		acknowledgement.setHandler(sys);
 		acknowledgement.setInterceptor(mi);
 		handler.addMessageListener(acknowledgement);
 

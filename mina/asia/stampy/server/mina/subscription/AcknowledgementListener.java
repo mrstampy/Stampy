@@ -1,5 +1,7 @@
 package asia.stampy.server.mina.subscription;
 
+import javax.annotation.Resource;
+
 import org.apache.mina.core.session.IoSession;
 
 import asia.stampy.client.message.ack.AckHeader;
@@ -11,6 +13,7 @@ import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 
+@Resource
 public class AcknowledgementListener implements StampyMinaMessageListener {
 	private static final StompMessageType[] TYPES = { StompMessageType.ACK, StompMessageType.NACK };
 

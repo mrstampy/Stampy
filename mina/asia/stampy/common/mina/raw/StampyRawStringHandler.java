@@ -46,7 +46,8 @@ import asia.stampy.common.mina.StampyMinaHandler;
  * successfully in simple cases it has not (yet) been battle-tested. Use at your
  * own risk.
  */
-public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMessageGateway> extends StampyMinaHandler<ASMG> {
+public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMessageGateway> extends
+		StampyMinaHandler<ASMG> {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private Map<HostPort, String> messageParts = new ConcurrentHashMap<>();
@@ -116,7 +117,12 @@ public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMess
 				processMessage(concat, session, hostPort);
 			}
 		} catch (Exception e) {
-			log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
+			try {
+				errorHandle(e, session, hostPort);
+			} catch (Exception e1) {
+				log.error("Unexpected exception sending error message " + msg + " for " + hostPort, e1);
+				log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
+			}
 		}
 	}
 
@@ -156,15 +162,28 @@ public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMess
 		processMessage(partMessage, session, hostPort);
 	}
 
-	private void processStompMessage(String msg, IoSession session, HostPort hostPort) throws UnparseableException,
-			Exception {
+	private void processStompMessage(String msg, IoSession session, HostPort hostPort) {
 		securityCheck(msg, session);
 		messageParts.remove(hostPort);
-		StampyMessage<?> sm = getParser().parseMessage(msg);
-		if (isValidMessage(sm)) {
-			securityCheck(sm, session);
-			notifyListeners(sm, session, hostPort);
-			sendResponseIfRequired(sm, session, hostPort);
+		StampyMessage<?> sm = null;
+		try {
+			sm = getParser().parseMessage(msg);
+			if (isValidMessage(sm)) {
+				securityCheck(sm, session);
+				notifyListeners(sm, session, hostPort);
+				sendResponseIfRequired(sm, session, hostPort);
+			}
+		} catch (Exception e) {
+			try {
+				if (sm == null) {
+					errorHandle(e, session, hostPort);
+				} else {
+					errorHandle(sm, e, session, hostPort);
+				}
+			} catch (Exception e1) {
+				log.error("Unexpected exception sending error message " + msg + " for " + hostPort, e1);
+				log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
+			}
 		}
 	}
 

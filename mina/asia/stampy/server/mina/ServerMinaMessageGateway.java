@@ -53,7 +53,7 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 
 	private StampyServiceAdapter serviceAdapter = new StampyServiceAdapter();
 	private StampyMinaHandler<ServerMinaMessageGateway> handler;
-	private NioSocketAcceptor acceptor;
+	private NioSocketAcceptor acceptor = new NioSocketAcceptor();
 	private int maxMessageSize = Integer.MAX_VALUE;
 	private int port;
 
@@ -62,8 +62,6 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		
 		serviceAdapter.setGateway(this);
 		serviceAdapter.setAutoShutdown(isAutoShutdown());
-		
-		acceptor = new NioSocketAcceptor();
 
 		acceptor.setReuseAddress(true);
 		acceptor.setCloseOnDeactivation(true);
@@ -108,7 +106,12 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	 */
 	@Override
 	public void connect() throws Exception {
-		if (acceptor == null || acceptor.isDisposed()) init();
+		if (acceptor == null || acceptor.isDisposed()) {
+			acceptor = new NioSocketAcceptor();
+		}
+		
+		if(! acceptor.isActive()) init();
+		
 		acceptor.bind(new InetSocketAddress(getPort()));
 		log.info("connect() invoked, bound to port {}", getPort());
 	}

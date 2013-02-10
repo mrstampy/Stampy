@@ -81,8 +81,12 @@ public class SystemServer {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		SystemServer server = new SystemServer();
+		try {
+			server.init();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -51,7 +51,7 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 
 	private StampyServiceAdapter serviceAdapter = new StampyServiceAdapter();
 	private StampyMinaHandler<ClientMinaMessageGateway> handler;
-	private NioSocketConnector connector;
+	private NioSocketConnector connector = new NioSocketConnector();
 	private int maxMessageSize = Integer.MAX_VALUE;
 	private String host;
 	private int port;
@@ -61,8 +61,6 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		serviceAdapter.setAutoShutdown(isAutoShutdown());
 		
 		log.trace("Initializing Stampy MINA connector");
-
-		connector = new NioSocketConnector();
 
 		connector.setHandler(handler);
 
@@ -84,7 +82,11 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	 */
 	public void connect() throws Exception {
 		log.trace("connect() invoked");
-		if (connector == null || connector.isDisposed()) init();
+		if (connector == null || connector.isDisposed()) {
+			connector = new NioSocketConnector();
+		}
+		
+		if(! connector.isActive()) init();
 
 		ConnectFuture cf = connector.connect(new InetSocketAddress(getHost(), getPort()));
 

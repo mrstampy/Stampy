@@ -101,7 +101,7 @@ public class HostPort implements Serializable {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return getHost() + ":" + getPort();
+		return getHost() + "-" + getPort();
 	}
 
 }

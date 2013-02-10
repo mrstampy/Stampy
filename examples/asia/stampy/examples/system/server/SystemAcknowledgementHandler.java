@@ -15,4 +15,9 @@ public class SystemAcknowledgementHandler implements StampyAcknowledgementHandle
 
 	}
 
+	@Override
+	public void noAcknowledgementReceived(String id) {
+		System.out.println("No acknowledgement received for " + id);
+	}
+
 }
