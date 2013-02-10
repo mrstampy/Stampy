@@ -112,6 +112,13 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	 */
 	@Override
 	public void connect() throws Exception {
+		log.trace("connect() invoked");
+		
+		if(acceptor != null && acceptor.isActive()) {
+			log.warn("connect invoked when already connected");
+			return;
+		}
+		
 		if (acceptor == null || acceptor.isDisposed()) {
 			acceptor = new NioSocketAcceptor();
 		}
