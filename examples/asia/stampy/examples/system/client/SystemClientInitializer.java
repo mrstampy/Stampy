@@ -22,8 +22,10 @@ import asia.stampy.client.AutoTerminatingClientGateway;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.mina.RawClientMinaHandler;
 import asia.stampy.client.mina.connected.ConnectedMessageListener;
+import asia.stampy.client.mina.disconnect.DisconnectListenerAndInterceptor;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class programmatically initializes the Stampy classes required for this
  * example. It is expected that a DI framework such as <a
@@ -54,6 +56,12 @@ public class SystemClientInitializer {
 		cml.setHeartbeatContainer(heartbeatContainer);
 		cml.setMessageGateway(gateway);
 		handler.addMessageListener(cml);
+		
+		DisconnectListenerAndInterceptor disconnect = new DisconnectListenerAndInterceptor();
+		disconnect.setCloseOnDisconnectMessage(false);
+		handler.addMessageListener(disconnect);
+		gateway.addOutgoingMessageInterceptor(disconnect);
+		disconnect.setGateway(gateway);
 
 		gateway.setHandler(handler);
 

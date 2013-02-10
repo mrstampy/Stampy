@@ -19,6 +19,7 @@
 package asia.stampy.common;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Thrown when the object type has been determined to be invalid.
  */

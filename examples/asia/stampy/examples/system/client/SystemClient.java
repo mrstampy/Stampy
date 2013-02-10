@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2013 Burton Alexander
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 
+ */
 package asia.stampy.examples.system.client;
 
 import static asia.stampy.common.message.StompMessageType.ABORT;
@@ -13,6 +31,7 @@ import asia.stampy.client.message.abort.AbortMessage;
 import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.client.message.connect.ConnectMessage;
+import asia.stampy.client.message.disconnect.DisconnectMessage;
 import asia.stampy.client.message.nack.NackMessage;
 import asia.stampy.client.message.send.SendMessage;
 import asia.stampy.client.message.stomp.StompMessage;
@@ -26,8 +45,15 @@ import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.system.server.SystemLoginHandler;
 import asia.stampy.server.message.error.ErrorMessage;
+import asia.stampy.server.message.receipt.ReceiptMessage;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SystemClient.
+ */
 public class SystemClient {
+
+	private static final String CANNOT_BE_LOGGED_IN = "cannot be logged in";
 
 	private static final String IS_ALREADY_LOGGED_IN = "is already logged in";
 
@@ -42,6 +68,8 @@ public class SystemClient {
 	private ClientMinaMessageGateway gateway;
 
 	private ErrorMessage error;
+
+	private ReceiptMessage receipt;
 
 	private Object waiter = new Object();
 
@@ -71,6 +99,8 @@ public class SystemClient {
 				case MESSAGE:
 					break;
 				case RECEIPT:
+					setReceipt((ReceiptMessage) message);
+					wakeup();
 					break;
 				default:
 					break;
@@ -92,6 +122,11 @@ public class SystemClient {
 		gateway.connect();
 	}
 
+	/**
+	 * Test connect.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void testConnect() throws Exception {
 		for (int i = 0; i < CLIENT_TYPES.length; i++) {
 			sendMessage(CLIENT_TYPES[i], Integer.toString(i));
@@ -124,6 +159,53 @@ public class SystemClient {
 		getGateway().broadcastMessage(message);
 		sleep();
 		evaluateError(IS_ALREADY_LOGGED_IN);
+
+		sendDisconnect("Dissing");
+		sleep();
+		evaluateReceipt("Dissing");
+		connected = false;
+	}
+
+	/**
+	 * Test login.
+	 *
+	 * @throws Exception the exception
+	 */
+	public void testLogin() throws Exception {
+		badConnect();
+		sleep();
+		evaluateError(CANNOT_BE_LOGGED_IN);
+		
+		goodConnect();
+		sleep();
+		evaluateConnect();
+	}
+
+	private void evaluateReceipt(String id) {
+		String receiptId = receipt.getHeader().getReceiptId();
+		boolean expected = id.equals(receiptId);
+
+		System.out.println("Expected receipt id ? " + expected);
+		System.out.println();
+		receipt = null;
+	}
+
+	private void goodConnect() throws InterceptException {
+		ConnectMessage message = new ConnectMessage("burt.alexander");
+		message.getHeader().setLogin(SystemLoginHandler.GOOD_USER);
+		message.getHeader().setPasscode("pass");
+		message.getHeader().setHeartbeat(50, 50);
+
+		getGateway().broadcastMessage(message);
+	}
+
+	private void badConnect() throws InterceptException {
+		ConnectMessage message = new ConnectMessage("burt.alexander");
+		message.getHeader().setLogin(SystemLoginHandler.BAD_USER);
+		message.getHeader().setPasscode("pass");
+		message.getHeader().setHeartbeat(50, 50);
+
+		getGateway().broadcastMessage(message);
 	}
 
 	private void evaluateConnect() {
@@ -133,10 +215,10 @@ public class SystemClient {
 
 	private void evaluateError(String messagePart) {
 		String msg = error.getHeader().getMessageHeader();
-		if(msg.contains(messagePart)) {
+		if (msg.contains(messagePart)) {
 			System.out.println("Expected error message received");
 		} else {
-			System.out.println("Unexpected error message received");
+			System.err.println("Unexpected error message received");
 		}
 		System.out.println(error.toStompMessage(false));
 		System.out.println();
@@ -204,9 +286,10 @@ public class SystemClient {
 		getGateway().broadcastMessage(message);
 	}
 
-	private void sendDisconnect(String id) {
-		// TODO Auto-generated method stub
-
+	private void sendDisconnect(String id) throws InterceptException {
+		DisconnectMessage message = new DisconnectMessage();
+		message.getHeader().setReceipt(id);
+		getGateway().broadcastMessage(message);
 	}
 
 	private void sendConnect(String id) throws InterceptException {
@@ -246,24 +329,46 @@ public class SystemClient {
 		}
 	}
 
+	/**
+	 * Gets the error.
+	 *
+	 * @return the error
+	 */
 	public ErrorMessage getError() {
 		return error;
 	}
 
+	/**
+	 * Sets the error.
+	 *
+	 * @param error the new error
+	 */
 	public void setError(ErrorMessage error) {
 		this.error = error;
 	}
 
+	/**
+	 * Gets the gateway.
+	 *
+	 * @return the gateway
+	 */
 	public ClientMinaMessageGateway getGateway() {
 		return gateway;
 	}
 
+	/**
+	 * Sets the gateway.
+	 *
+	 * @param gateway the new gateway
+	 */
 	public void setGateway(ClientMinaMessageGateway gateway) {
 		this.gateway = gateway;
 	}
 
 	/**
-	 * @param args
+	 * The main method.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		SystemClient client = new SystemClient();
@@ -271,10 +376,29 @@ public class SystemClient {
 		try {
 			client.init();
 			client.testConnect();
+			client.testLogin();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Gets the receipt.
+	 *
+	 * @return the receipt
+	 */
+	public ReceiptMessage getReceipt() {
+		return receipt;
+	}
+
+	/**
+	 * Sets the receipt.
+	 *
+	 * @param receipt the new receipt
+	 */
+	public void setReceipt(ReceiptMessage receipt) {
+		this.receipt = receipt;
 	}
 
 }

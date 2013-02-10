@@ -21,6 +21,7 @@ package asia.stampy.client.message.nack;
 import asia.stampy.client.message.AbstractClientMessageHeader;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class NackHeader.
  */

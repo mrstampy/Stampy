@@ -21,6 +21,7 @@ package asia.stampy.server.message.error;
 import asia.stampy.common.message.AbstractBodyMessageHeader;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ErrorHeader.
  */

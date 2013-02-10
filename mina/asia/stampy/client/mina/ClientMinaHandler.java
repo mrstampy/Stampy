@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.mina.StampyMinaHandler;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ClientMinaHandler.
  */

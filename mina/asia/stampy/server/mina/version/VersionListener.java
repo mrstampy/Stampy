@@ -34,6 +34,18 @@ import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The listener interface for receiving version events.
+ * The class that is interested in processing a version
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addVersionListener<code> method. When
+ * the version event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see VersionEvent
+ */
 @Resource
 public class VersionListener implements StampyMinaMessageListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -42,16 +54,25 @@ public class VersionListener implements StampyMinaMessageListener {
 
 	private static final String VERSION = "1.2";
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+	 */
 	@Override
 	public StompMessageType[] getMessageTypes() {
 		return TYPES;
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
+	 */
 	@Override
 	public boolean isForMessage(StampyMessage<?> message) {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+	 */
 	@Override
 	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
 		switch (message.getMessageType()) {

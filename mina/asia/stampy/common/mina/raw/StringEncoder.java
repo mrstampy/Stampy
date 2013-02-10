@@ -26,6 +26,7 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 import asia.stampy.common.mina.StampyMinaHandler;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class StringEncoder.
  */

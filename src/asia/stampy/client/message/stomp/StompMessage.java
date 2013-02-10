@@ -26,6 +26,7 @@ import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class StompMessage.
  */

@@ -21,6 +21,7 @@ package asia.stampy.client.mina;
 import asia.stampy.common.message.StampyMessage;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ClientHandlerAdapter.
  */

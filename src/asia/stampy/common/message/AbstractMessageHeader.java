@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+// TODO: Auto-generated Javadoc
 /**
  * Abstract implementation of a {@link StampyMessageHeader}.
  */
@@ -67,6 +68,9 @@ public abstract class AbstractMessageHeader implements StampyMessageHeader {
 	 * <br>
 	 * If addHeader is invoked when the key specified is already in use the value
 	 * is NOT updated. To replace an existing key-value, first use the
+	 *
+	 * @param key the key
+	 * @param value the value
 	 * {@link AbstractMessageHeader#removeHeader(String)} method.
 	 */
 	public void addHeader(String key, String value) {

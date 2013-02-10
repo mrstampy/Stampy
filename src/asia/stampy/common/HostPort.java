@@ -24,6 +24,7 @@ import java.net.InetSocketAddress;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+// TODO: Auto-generated Javadoc
 /**
  * A HostPort is a simple bean encapsulating which host and port has made a
  * connection. Useful on the server side to keep track of who is connected,

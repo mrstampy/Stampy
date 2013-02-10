@@ -20,8 +20,15 @@ package asia.stampy.client;
 
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AutoTerminatingClientGateway.
+ */
 public class AutoTerminatingClientGateway extends ClientMinaMessageGateway {
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.client.mina.ClientMinaMessageGateway#shutdown()
+	 */
 	public void shutdown() throws Exception {
 		super.shutdown();
 		System.exit(0);

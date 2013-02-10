@@ -39,8 +39,17 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The listener interface for receiving heartbeat events.
+ * The class that is interested in processing a heartbeat
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addHeartbeatListener<code> method. When
+ * the heartbeat event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see HeartbeatEvent
  */
 @Resource
 public class HeartbeatListener implements StampyMinaMessageListener {

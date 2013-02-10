@@ -22,6 +22,7 @@ import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.examples.loadtest.server.TestServer;
 
+// TODO: Auto-generated Javadoc
 /**
  * Run the {@link TestServer} prior to running this client.
  */

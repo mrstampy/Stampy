@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import asia.stampy.common.HostPort;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class keeps track of all connections and disconnections and is the
  * interface for sending messages to remote hosts.
@@ -97,12 +98,9 @@ public class StampyServiceAdapter extends MinaServiceAdapter {
 
 	/**
 	 * Gets the session.
-	 * 
-	 * @param hostPort
-	 *          the host port
+	 *
+	 * @param hostPort the host port
 	 * @return the session
-	 * @throws IllegalArgumentException
-	 *           if no active session
 	 */
 	public IoSession getSession(HostPort hostPort) {
 		IoSession session = sessions.get(hostPort);
@@ -139,18 +137,38 @@ public class StampyServiceAdapter extends MinaServiceAdapter {
 		log.debug("Sent message {} to {}", stompMessage, hostPort);
 	}
 
+	/**
+	 * Checks if is auto shutdown.
+	 *
+	 * @return true, if is auto shutdown
+	 */
 	public boolean isAutoShutdown() {
 		return autoShutdown;
 	}
 
+	/**
+	 * Sets the auto shutdown.
+	 *
+	 * @param autoClose the new auto shutdown
+	 */
 	public void setAutoShutdown(boolean autoClose) {
 		this.autoShutdown = autoClose;
 	}
 
+	/**
+	 * Gets the gateway.
+	 *
+	 * @return the gateway
+	 */
 	public AbstractStampyMinaMessageGateway getGateway() {
 		return gateway;
 	}
 
+	/**
+	 * Sets the gateway.
+	 *
+	 * @param gateway the new gateway
+	 */
 	public void setGateway(AbstractStampyMinaMessageGateway gateway) {
 		this.gateway = gateway;
 	}

@@ -18,10 +18,19 @@
  */
 package asia.stampy.server.mina.version;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StompVersionException.
+ */
 public class StompVersionException extends Exception {
 
 	private static final long serialVersionUID = -1584172715727930804L;
 
+	/**
+	 * Instantiates a new stomp version exception.
+	 *
+	 * @param msg the msg
+	 */
 	public StompVersionException(String msg) {
 		super(msg);
 	}

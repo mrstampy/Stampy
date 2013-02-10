@@ -34,9 +34,12 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.loadtest.server.TestServer;
 import asia.stampy.server.message.error.ErrorMessage;
 
+// TODO: Auto-generated Javadoc
 /**
  * This listener sends a bunch of messages to the {@link TestServer} to load
  * test.
+ *
+ * @see TestClientMessageEvent
  */
 public class TestClientMessageListener implements StampyMinaMessageListener {
 	private ClientMinaMessageGateway gateway;
@@ -112,11 +115,10 @@ public class TestClientMessageListener implements StampyMinaMessageListener {
 	}
 
 	/**
-	 * Disconnect, not a method one would normally see in an implementation of
+	 * Disconnect, not a method one would normally see in an implementation of.
+	 *
+	 * @throws Exception the exception
 	 * {@link StampyMinaMessageListener}
-	 * 
-	 * @throws Exception
-	 *           the exception
 	 */
 	public void disconnect() throws Exception {
 		synchronized (waiter) {

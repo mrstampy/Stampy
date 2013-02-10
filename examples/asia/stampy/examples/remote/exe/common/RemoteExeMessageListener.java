@@ -27,8 +27,11 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
+// TODO: Auto-generated Javadoc
 /**
  * Processes SEND messages with {@link Remoteable} bodies.
+ *
+ * @see RemoteExeMessageEvent
  */
 public class RemoteExeMessageListener implements StampyMinaMessageListener {
 	private ServerMinaMessageGateway gateway;

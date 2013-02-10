@@ -29,6 +29,7 @@ import asia.stampy.server.mina.subscription.MessageInterceptor;
 import asia.stampy.server.mina.transaction.TransactionListener;
 import asia.stampy.server.mina.version.VersionListener;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class programmatically initializes the Stampy classes required for this
  * example. It is expected that a DI framework such as <a

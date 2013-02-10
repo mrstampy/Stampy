@@ -24,6 +24,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import asia.stampy.common.StompMessageParser;
 
+// TODO: Auto-generated Javadoc
 /**
  * Abstract implementation of a {@link StampyMessage}.
  * 

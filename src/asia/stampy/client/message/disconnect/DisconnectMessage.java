@@ -22,6 +22,7 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.StompMessageType;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class DisconnectMessage.
  */

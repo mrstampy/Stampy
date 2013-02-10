@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
-import asia.stampy.common.message.interceptor.InterceptException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Sends heartbeats to a remote connection as specified by the STOMP
  * specification.
@@ -38,7 +38,7 @@ public class PaceMaker {
 
 	private long timeInMillis;
 	private TimerTask stopwatch;
-	private Timer timer = new Timer("PaceMaker", true);
+	private Timer timer = new Timer("Stampy PaceMaker", true);
 
 	private AbstractStampyMessageGateway messageGateway;
 
@@ -106,7 +106,7 @@ public class PaceMaker {
 				log.debug("Sent heartbeat");
 				start();
 				heartbeatCount++;
-			} catch (InterceptException e) {
+			} catch (Exception e) {
 				log.error("Could not send heartbeat", e);
 			}
 		}

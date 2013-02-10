@@ -35,8 +35,17 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.connected.ConnectedMessage;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
+ * The listener interface for receiving connectedMessage events.
+ * The class that is interested in processing a connectedMessage
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addConnectedMessageListener<code> method. When
+ * the connectedMessage event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see ConnectedMessageEvent
  */
 @Resource
 public class ConnectedMessageListener implements StampyMinaMessageListener {

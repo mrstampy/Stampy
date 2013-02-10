@@ -42,6 +42,7 @@ import asia.stampy.common.mina.StampyMinaHandler;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.common.mina.StampyServiceAdapter;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ClientMinaMessageGateway.
  */
@@ -135,13 +136,12 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 
 	/**
 	 * Send message. Use
+	 *
+	 * @param message the message
+	 * @param hostPort the host port
+	 * @throws InterceptException the intercept exception
 	 * {@link ClientMinaMessageGateway#broadcastMessage(StampyMessage)} in
 	 * preference.
-	 * 
-	 * @param stompMessage
-	 *          the stomp message
-	 * @param hostPort
-	 *          the host port
 	 */
 	@Override
 	public void sendMessage(String message, HostPort hostPort) throws InterceptException {
@@ -170,6 +170,9 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		connector.broadcast(message);
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.AbstractStampyMessageGateway#getConnectedHostPorts()
+	 */
 	@Override
 	public Set<HostPort> getConnectedHostPorts() {
 		return serviceAdapter.getHostPorts();
@@ -223,11 +226,17 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		getHandler().setListeners(listeners);
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addServiceListener(org.apache.mina.core.service.IoServiceListener)
+	 */
 	@Override
 	public void addServiceListener(IoServiceListener listener) {
 		connector.addListener(listener);
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.AbstractStampyMinaMessageGateway#removeServiceListener(org.apache.mina.core.service.IoServiceListener)
+	 */
 	@Override
 	public void removeServiceListener(IoServiceListener listener) {
 		connector.removeListener(listener);

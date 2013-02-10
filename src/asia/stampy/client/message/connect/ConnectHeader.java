@@ -21,6 +21,7 @@ package asia.stampy.client.message.connect;
 import asia.stampy.common.message.AbstractMessageHeader;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ConnectHeader.
  */

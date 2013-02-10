@@ -38,6 +38,7 @@ import asia.stampy.server.message.connected.ConnectedMessage;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ServerHandlerAdapter.
  */
@@ -77,14 +78,11 @@ class ServerHandlerAdapter {
 
 	/**
 	 * Error handle.
-	 * 
-	 * @param message
-	 *          the message
-	 * @param e
-	 *          the e
-	 * @param hostPort
-	 *          the host port
-	 * @throws InterceptException
+	 *
+	 * @param message the message
+	 * @param e the e
+	 * @param hostPort the host port
+	 * @throws InterceptException the intercept exception
 	 */
 	void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws InterceptException {
 		log.error("Handling error, sending error message to " + hostPort, e);
@@ -98,14 +96,11 @@ class ServerHandlerAdapter {
 
 	/**
 	 * Send response if required.
-	 * 
-	 * @param message
-	 *          the message
-	 * @param session
-	 *          the session
-	 * @param hostPort
-	 *          the host port
-	 * @throws InterceptException
+	 *
+	 * @param message the message
+	 * @param session the session
+	 * @param hostPort the host port
+	 * @throws InterceptException the intercept exception
 	 */
 	void sendResponseIfRequired(StampyMessage<?> message, IoSession session, HostPort hostPort) throws InterceptException {
 		if (isConnectMessage(message)) {
@@ -117,12 +112,6 @@ class ServerHandlerAdapter {
 		if (isStompMessage(message)) {
 			sendConnected(((StompMessage) message).getHeader(), session, hostPort);
 			log.debug("Sent CONNECTED message to {}", hostPort);
-			return;
-		}
-
-		if (isDisconnectMessage(message)) {
-			log.info("Disconnect message received, closing session", hostPort);
-			session.close(false);
 			return;
 		}
 

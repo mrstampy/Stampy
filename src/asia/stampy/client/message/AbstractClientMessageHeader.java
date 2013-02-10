@@ -21,6 +21,7 @@ package asia.stampy.client.message;
 import asia.stampy.common.message.AbstractMessageHeader;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractClientMessageHeader.
  */

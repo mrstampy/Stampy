@@ -24,6 +24,7 @@ import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * A codec factory to process raw (non-MINA terminated) strings.
  */

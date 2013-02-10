@@ -44,6 +44,7 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.common.mina.StampyServiceAdapter;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ServerMinaMessageGateway.
  */
@@ -81,18 +82,23 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	/**
 	 * Sends a {@link StampyMessage} to the specified {@link HostPort}. Use this
 	 * method for all STOMP messages.
-	 * 
-	 * @param message
-	 *          the message
-	 * @param hostPort
-	 *          the host port
-	 * @throws InterceptException 
+	 *
+	 * @param message the message
+	 * @param hostPort the host port
+	 * @throws InterceptException the intercept exception
 	 */
 	public void sendMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
 		interceptOutgoingMessage(message, hostPort);
 		sendMessage(message.toStompMessage(true), hostPort);
 	}
 
+	/**
+	 * Intercept outgoing message.
+	 *
+	 * @param message the message
+	 * @param hostPort the host port
+	 * @throws InterceptException the intercept exception
+	 */
 	protected void interceptOutgoingMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
 		for (StampyOutgoingMessageInterceptor interceptor : interceptors) {
 			if (isForType(interceptor.getMessageTypes(), message.getMessageType()) && interceptor.isForMessage(message)) {
@@ -124,6 +130,9 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		return serviceAdapter.hasSession(hostPort) && acceptor.isActive();
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.AbstractStampyMessageGateway#sendMessage(java.lang.String, asia.stampy.common.HostPort)
+	 */
 	public void sendMessage(String message, HostPort hostPort) throws InterceptException {
 		if (!isConnected(hostPort)) {
 			log.warn("Attempting to send message {} to {} when the acceptor is not active", message, hostPort);
@@ -177,16 +186,25 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 		init();
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.AbstractStampyMessageGateway#getConnectedHostPorts()
+	 */
 	@Override
 	public Set<HostPort> getConnectedHostPorts() {
 		return serviceAdapter.getHostPorts();
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addServiceListener(org.apache.mina.core.service.IoServiceListener)
+	 */
 	@Override
 	public void addServiceListener(IoServiceListener listener) {
 		acceptor.addListener(listener);
 	}
 
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.AbstractStampyMinaMessageGateway#removeServiceListener(org.apache.mina.core.service.IoServiceListener)
+	 */
 	@Override
 	public void removeServiceListener(IoServiceListener listener) {
 		acceptor.removeListener(listener);

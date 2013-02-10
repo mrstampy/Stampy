@@ -21,6 +21,7 @@ package asia.stampy.server.message.receipt;
 import asia.stampy.common.message.AbstractMessageHeader;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ReceiptHeader.
  */

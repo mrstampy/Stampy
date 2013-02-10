@@ -40,11 +40,14 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.StampyMinaHandler;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class uses its own message parsing to piece together STOMP messages. In
  * non-Stampy STOMP environments subclasses are to be used. While tested
  * successfully in simple cases it has not (yet) been battle-tested. Use at your
  * own risk.
+ *
+ * @param <ASMG> the generic type
  */
 public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMessageGateway> extends
 		StampyMinaHandler<ASMG> {

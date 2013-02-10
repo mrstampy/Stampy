@@ -24,6 +24,7 @@ import asia.stampy.client.mina.RawClientMinaHandler;
 import asia.stampy.client.mina.connected.ConnectedMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class programmatically initializes the Stampy classes required for this
  * example. It is expected that a DI framework such as <a

@@ -24,6 +24,7 @@ import org.apache.mina.core.service.IoServiceListener;
 
 import asia.stampy.common.AbstractStampyMessageGateway;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractStampyMinaMessageGateway.
  */
@@ -53,11 +54,10 @@ public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMes
 	/**
 	 * Sets the listeners. Specified for DI frameworks; programmatic usage should
 	 * invoke the
+	 *
+	 * @param listeners the new listeners
 	 * {@link AbstractStampyMinaMessageGateway#addMessageListener(StampyMinaMessageListener)}
 	 * method to specify {@link StampyMinaMessageListener}s.
-	 * 
-	 * @param listeners
-	 *          the new listeners
 	 */
 	public abstract void setListeners(Queue<StampyMinaMessageListener> listeners);
 

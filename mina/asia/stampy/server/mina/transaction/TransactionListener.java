@@ -36,8 +36,17 @@ import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The listener interface for receiving transaction events.
+ * The class that is interested in processing a transaction
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addTransactionListener<code> method. When
+ * the transaction event occurs, that object's appropriate
+ * method is invoked.
  *
+ * @see TransactionEvent
  */
 @Resource
 public class TransactionListener implements StampyMinaMessageListener {

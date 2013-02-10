@@ -25,8 +25,11 @@ import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 
+// TODO: Auto-generated Javadoc
 /**
  * Simple implementation which prints any messages received.
+ *
+ * @see TestClientMessageEvent
  */
 public class TestClientMessageListener implements StampyMinaMessageListener {
 

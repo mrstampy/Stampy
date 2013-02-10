@@ -43,6 +43,7 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
 import asia.stampy.server.message.error.ErrorMessage;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class is an abstract implementation of a MINA IoHandler for the receipt
  * of STOMP messages. It uses a MINA prefixed message payload to determine
@@ -54,7 +55,8 @@ import asia.stampy.server.message.error.ErrorMessage;
  * all-Stampy environment.<br>
  * <br>
  * Subclasses are singletons, wire in appropriately.
- * 
+ *
+ * @param <ASMG> the generic type
  * @see StampyRawStringHandler
  */
 public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGateway> extends IoHandlerAdapter {
@@ -72,7 +74,7 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
 
 	private Executor executor = Executors.newSingleThreadExecutor();
 
-	/** <i>The default encoding for STOMP is UTF-8</i> */
+	/** <i>The default encoding for STOMP is UTF-8</i>. */
 	public static Charset CHARSET = Charset.forName("UTF-8");
 
 	/*
@@ -253,17 +255,11 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
 
 	/**
 	 * Error handle. Logs the error.
-	 * 
-	 * @param message
-	 *          the message
-	 * @param e
-	 *          the e
-	 * @param session
-	 *          the session
-	 * @param hostPort
-	 *          the host port
-	 * @throws Exception
-	 *           the exception
+	 *
+	 * @param e the e
+	 * @param session the session
+	 * @param hostPort the host port
+	 * @throws Exception the exception
 	 */
 	protected void errorHandle(Exception e, IoSession session, HostPort hostPort) throws Exception {
 		ErrorMessage message = new ErrorMessage("n/a");

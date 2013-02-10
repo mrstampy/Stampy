@@ -28,6 +28,7 @@ import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
+// TODO: Auto-generated Javadoc
 /**
  * Executes a {@link Remoteable} object and if a receipt has been specified,
  * returns a RECEIPT message. An ERROR message is returned to the client should

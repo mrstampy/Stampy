@@ -44,7 +44,15 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 // TODO: Auto-generated Javadoc
 /**
- * 
+ * The listener interface for receiving loginMessage events.
+ * The class that is interested in processing a loginMessage
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addLoginMessageListener<code> method. When
+ * the loginMessage event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see LoginMessageEvent
  */
 @Resource
 public class LoginMessageListener implements StampyMinaMessageListener {

@@ -21,6 +21,7 @@ package asia.stampy.common.message;
 import java.io.Serializable;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * All Stampy implementations of STOMP messages must implement this interface.
  *
@@ -51,7 +52,7 @@ public interface StampyMessage<HDR extends StampyMessageHeader> extends Serializ
 	StompMessageType getMessageType();
 	
 	/**
-	 * Performs validation on the message
+	 * Performs validation on the message.
 	 */
 	void validate();
 

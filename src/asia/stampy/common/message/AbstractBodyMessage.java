@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import asia.stampy.common.serialization.SerializationUtils;
 
+// TODO: Auto-generated Javadoc
 /**
  * Abstract class representing STOMP messages with a body. Binary bodies are
  * catered for, provided they are Java objects.

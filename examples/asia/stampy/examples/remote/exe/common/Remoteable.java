@@ -21,6 +21,7 @@ package asia.stampy.examples.remote.exe.common;
 import java.io.Serializable;
 import java.util.Map;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface Remoteable.
  */

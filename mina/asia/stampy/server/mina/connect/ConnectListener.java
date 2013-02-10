@@ -36,8 +36,17 @@ import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The listener interface for receiving connect events.
+ * The class that is interested in processing a connect
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addConnectListener<code> method. When
+ * the connect event occurs, that object's appropriate
+ * method is invoked.
  *
+ * @see ConnectEvent
  */
 @Resource
 public class ConnectListener implements StampyMinaMessageListener {
