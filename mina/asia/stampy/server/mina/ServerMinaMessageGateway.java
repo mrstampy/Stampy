@@ -182,8 +182,8 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 	@Override
 	public void shutdown() throws Exception {
 		log.info("shutdown() invoked, disposing the acceptor");
+		serviceAdapter.closeAllSessions();
 		acceptor.dispose(false);
-		init();
 	}
 
 	/* (non-Javadoc)
