@@ -18,8 +18,6 @@
  */
 package asia.stampy.common.mina;
 
-import java.util.EventListener;
-
 import org.apache.mina.core.session.IoSession;
 
 import asia.stampy.common.HostPort;
@@ -31,7 +29,7 @@ import asia.stampy.common.message.StompMessageType;
  * 
  * @see AbstractStampyMinaMessageGateway
  */
-public interface StampyMinaMessageListener extends EventListener {
+public interface StampyMinaMessageListener {
 
 	/**
 	 * Gets the message types of which the implementation is interested.
