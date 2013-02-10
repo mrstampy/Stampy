@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,21 +51,23 @@ import asia.stampy.server.message.message.MessageMessage;
 
 // TODO: Auto-generated Javadoc
 /**
- * The listener interface for receiving acknowledgement events.
- * The class that is interested in processing a acknowledgement
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addAcknowledgementListener<code> method. When
+ * The listener interface for receiving acknowledgement events. The class that
+ * is interested in processing a acknowledgement event implements this
+ * interface, and the object created with that class is registered with a
+ * component using the component's
+ * <code>addAcknowledgementListener<code> method. When
  * the acknowledgement event occurs, that object's appropriate
  * method is invoked.
- *
+ * 
  * @see AcknowledgementEvent
  */
 @Resource
-public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessageInterceptor implements StampyMinaMessageListener {
+public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessageInterceptor implements
+		StampyMinaMessageListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private static final StompMessageType[] TYPES = { StompMessageType.ACK, StompMessageType.NACK };
-	
+	private static final StompMessageType[] TYPES = { StompMessageType.ACK, StompMessageType.NACK,
+			StompMessageType.MESSAGE };
+
 	private StampyAcknowledgementHandler handler;
 
 	private Map<HostPort, Queue<String>> messages = new ConcurrentHashMap<>();
@@ -73,7 +76,9 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
 
 	private long ackTimeoutMillis = 60000;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
 	 */
 	@Override
@@ -81,16 +86,33 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
 		return TYPES;
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+	 * .common.message.StampyMessage)
 	 */
 	@Override
 	public boolean isForMessage(StampyMessage<?> message) {
-		return true;
+		switch (message.getMessageType()) {
+		case MESSAGE:
+			return StringUtils.isNotEmpty(((MessageMessage) message).getHeader().getAck());
+		case ACK:
+		case NACK:
+			return true;
+		default:
+			return false;
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+	 * stampy.common.message.StampyMessage,
+	 * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
 	 */
 	@Override
 	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
@@ -107,8 +129,13 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor#interceptMessage(asia.stampy.common.message.StampyMessage, asia.stampy.common.HostPort)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor
+	 * #interceptMessage(asia.stampy.common.message.StampyMessage,
+	 * asia.stampy.common.HostPort)
 	 */
 	@Override
 	public void interceptMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
@@ -138,56 +165,8 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
 				q.remove(ack);
 			}
 		};
-		
+
 		ackTimer.schedule(task, getAckTimeoutMillis());
-	}
-	private boolean hasMessageAck(String messageId, HostPort hostPort) {
-		Queue<String> ids = messages.get(hostPort);
-		if (ids == null || ids.isEmpty()) return false;
-
-		return ids.contains(messageId);
-	}
-
-	private void clearMessageAck(String messageId, HostPort hostPort) {
-		Queue<String> ids = messages.get(hostPort);
-		if (ids == null) return;
-
-		ids.remove(messageId);
-	}
-
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.interceptor.AbstractOutgoingMessageInterceptor#setGateway(asia.stampy.common.AbstractStampyMessageGateway)
-	 */
-	public void setGateway(AbstractStampyMessageGateway gateway) {
-		super.setGateway(gateway);
-		((AbstractStampyMinaMessageGateway) gateway).addServiceListener(new MinaServiceAdapter() {
-
-			public void sessionDestroyed(IoSession session) throws Exception {
-				HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
-				if (messages.containsKey(hostPort)) {
-					log.debug("{} session terminated, cleaning up message interceptor", hostPort);
-					messages.remove(hostPort);
-				}
-			}
-		});
-	}
-
-	/**
-	 * Gets the ack timeout millis.
-	 *
-	 * @return the ack timeout millis
-	 */
-	public long getAckTimeoutMillis() {
-		return ackTimeoutMillis;
-	}
-
-	/**
-	 * Sets the ack timeout millis.
-	 *
-	 * @param ackTimeoutMillis the new ack timeout millis
-	 */
-	public void setAckTimeoutMillis(long ackTimeoutMillis) {
-		this.ackTimeoutMillis = ackTimeoutMillis;
 	}
 
 	private void evaluateNack(NackHeader header, HostPort hostPort) throws Exception {
@@ -212,9 +191,63 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
 		}
 	}
 
+	private boolean hasMessageAck(String messageId, HostPort hostPort) {
+		Queue<String> ids = messages.get(hostPort);
+		if (ids == null || ids.isEmpty()) return false;
+
+		return ids.contains(messageId);
+	}
+
+	private void clearMessageAck(String messageId, HostPort hostPort) {
+		Queue<String> ids = messages.get(hostPort);
+		if (ids == null) return;
+
+		ids.remove(messageId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * asia.stampy.common.message.interceptor.AbstractOutgoingMessageInterceptor
+	 * #setGateway(asia.stampy.common.AbstractStampyMessageGateway)
+	 */
+	public void setGateway(AbstractStampyMessageGateway gateway) {
+		super.setGateway(gateway);
+		((AbstractStampyMinaMessageGateway) gateway).addServiceListener(new MinaServiceAdapter() {
+
+			public void sessionDestroyed(IoSession session) throws Exception {
+				HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
+				if (messages.containsKey(hostPort)) {
+					log.debug("{} session terminated, cleaning up message interceptor", hostPort);
+					messages.remove(hostPort);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Gets the ack timeout millis.
+	 * 
+	 * @return the ack timeout millis
+	 */
+	public long getAckTimeoutMillis() {
+		return ackTimeoutMillis;
+	}
+
+	/**
+	 * Sets the ack timeout millis.
+	 * 
+	 * @param ackTimeoutMillis
+	 *          the new ack timeout millis
+	 */
+	public void setAckTimeoutMillis(long ackTimeoutMillis) {
+		this.ackTimeoutMillis = ackTimeoutMillis;
+	}
+
 	/**
 	 * Gets the handler.
-	 *
+	 * 
 	 * @return the handler
 	 */
 	public StampyAcknowledgementHandler getHandler() {
@@ -223,8 +256,9 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
 
 	/**
 	 * Sets the handler.
-	 *
-	 * @param adapter the new handler
+	 * 
+	 * @param adapter
+	 *          the new handler
 	 */
 	public void setHandler(StampyAcknowledgementHandler adapter) {
 		this.handler = adapter;
