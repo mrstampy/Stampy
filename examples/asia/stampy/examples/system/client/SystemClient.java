@@ -18,17 +18,18 @@
  */
 package asia.stampy.examples.system.client;
 
-import static asia.stampy.common.message.StompMessageType.ABORT;
 import static asia.stampy.common.message.StompMessageType.ACK;
 import static asia.stampy.common.message.StompMessageType.NACK;
 import static asia.stampy.common.message.StompMessageType.SEND;
-import static asia.stampy.common.message.StompMessageType.SUBSCRIBE;
-import static asia.stampy.common.message.StompMessageType.UNSUBSCRIBE;
+
+import java.util.Random;
 
 import org.apache.mina.core.session.IoSession;
 
 import asia.stampy.client.message.abort.AbortMessage;
 import asia.stampy.client.message.ack.AckMessage;
+import asia.stampy.client.message.begin.BeginMessage;
+import asia.stampy.client.message.commit.CommitMessage;
 import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.message.disconnect.DisconnectMessage;
@@ -63,7 +64,7 @@ public class SystemClient {
 
 	private static final String NOT_LOGGED_IN = "Not logged in";
 
-	private static final StompMessageType[] CLIENT_TYPES = { ABORT, ACK, NACK, SEND, SUBSCRIBE, UNSUBSCRIBE };
+	private static final StompMessageType[] CLIENT_TYPES = { ACK, NACK, SEND };
 
 	private ClientMinaMessageGateway gateway;
 
@@ -74,6 +75,8 @@ public class SystemClient {
 	private Object waiter = new Object();
 
 	private boolean connected;
+
+	private Random rand = new Random(System.currentTimeMillis());
 
 	/**
 	 * Inits the.
@@ -124,8 +127,9 @@ public class SystemClient {
 
 	/**
 	 * Test connect.
-	 *
-	 * @throws Exception the exception
+	 * 
+	 * @throws Exception
+	 *           the exception
 	 */
 	public void testConnect() throws Exception {
 		for (int i = 0; i < CLIENT_TYPES.length; i++) {
@@ -168,17 +172,50 @@ public class SystemClient {
 
 	/**
 	 * Test login.
-	 *
-	 * @throws Exception the exception
+	 * 
+	 * @throws Exception
+	 *           the exception
 	 */
 	public void testLogin() throws Exception {
 		badConnect();
 		sleep();
 		evaluateError(CANNOT_BE_LOGGED_IN);
-		
+
 		goodConnect();
 		sleep();
 		evaluateConnect();
+
+		sendDisconnect("login");
+		sleep();
+		evaluateReceipt("login");
+		connected = false;
+	}
+
+	public void testTransaction() throws Exception {
+		goodConnect();
+		sleep();
+		evaluateConnect();
+
+		sendAbort("id");
+		sleep();
+		evaluateError("Transaction not started");
+
+		sendCommit("id");
+		sleep();
+		evaluateError("Transaction not started");
+
+		sendBegin("begin");
+		sleep();
+		evaluateReceipt("begin");
+
+		for (int i = 0; i < 10000; i++) {
+			int idx = rand.nextInt(CLIENT_TYPES.length);
+			sendMessage(CLIENT_TYPES[idx], Integer.toString(i));
+		}
+
+		sendCommit("commit");
+		sleep();
+		evaluateReceipt("commit");
 	}
 
 	private void evaluateReceipt(String id) {
@@ -297,9 +334,10 @@ public class SystemClient {
 		getGateway().broadcastMessage(message);
 	}
 
-	private void sendCommit(String id) {
-		// TODO Auto-generated method stub
-
+	private void sendCommit(String id) throws InterceptException {
+		CommitMessage message = new CommitMessage(id);
+		message.getHeader().setReceipt(id);
+		getGateway().broadcastMessage(message);
 	}
 
 	private void sendNack(String id) throws InterceptException {
@@ -314,6 +352,13 @@ public class SystemClient {
 
 	private void sendAbort(String id) throws InterceptException {
 		AbortMessage message = new AbortMessage(id);
+		message.getHeader().setReceipt(id);
+		getGateway().broadcastMessage(message);
+	}
+
+	private void sendBegin(String id) throws InterceptException {
+		BeginMessage message = new BeginMessage(id);
+		message.getHeader().setReceipt(id);
 		getGateway().broadcastMessage(message);
 	}
 
@@ -331,7 +376,7 @@ public class SystemClient {
 
 	/**
 	 * Gets the error.
-	 *
+	 * 
 	 * @return the error
 	 */
 	public ErrorMessage getError() {
@@ -340,8 +385,9 @@ public class SystemClient {
 
 	/**
 	 * Sets the error.
-	 *
-	 * @param error the new error
+	 * 
+	 * @param error
+	 *          the new error
 	 */
 	public void setError(ErrorMessage error) {
 		this.error = error;
@@ -349,7 +395,7 @@ public class SystemClient {
 
 	/**
 	 * Gets the gateway.
-	 *
+	 * 
 	 * @return the gateway
 	 */
 	public ClientMinaMessageGateway getGateway() {
@@ -358,8 +404,9 @@ public class SystemClient {
 
 	/**
 	 * Sets the gateway.
-	 *
-	 * @param gateway the new gateway
+	 * 
+	 * @param gateway
+	 *          the new gateway
 	 */
 	public void setGateway(ClientMinaMessageGateway gateway) {
 		this.gateway = gateway;
@@ -367,8 +414,9 @@ public class SystemClient {
 
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *          the arguments
 	 */
 	public static void main(String[] args) {
 		SystemClient client = new SystemClient();
@@ -377,6 +425,7 @@ public class SystemClient {
 			client.init();
 			client.testConnect();
 			client.testLogin();
+			client.testTransaction();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -385,7 +434,7 @@ public class SystemClient {
 
 	/**
 	 * Gets the receipt.
-	 *
+	 * 
 	 * @return the receipt
 	 */
 	public ReceiptMessage getReceipt() {
@@ -394,8 +443,9 @@ public class SystemClient {
 
 	/**
 	 * Sets the receipt.
-	 *
-	 * @param receipt the new receipt
+	 * 
+	 * @param receipt
+	 *          the new receipt
 	 */
 	public void setReceipt(ReceiptMessage receipt) {
 		this.receipt = receipt;

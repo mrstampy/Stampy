@@ -20,7 +20,9 @@ package asia.stampy.server.mina.transaction;
 
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.annotation.Resource;
@@ -29,6 +31,9 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.client.message.abort.AbortMessage;
+import asia.stampy.client.message.begin.BeginMessage;
+import asia.stampy.client.message.commit.CommitMessage;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
@@ -52,7 +57,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
 public class TransactionListener implements StampyMinaMessageListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private Queue<HostPort> activeTransactions = new ConcurrentLinkedQueue<>();
+	private Map<HostPort, Queue<String>> activeTransactions = new ConcurrentHashMap<>();
 	private ServerMinaMessageGateway gateway;
 
 	private static StompMessageType[] TYPES = { StompMessageType.ABORT, StompMessageType.BEGIN, StompMessageType.COMMIT,
@@ -81,13 +86,13 @@ public class TransactionListener implements StampyMinaMessageListener {
 	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
 		switch (message.getMessageType()) {
 		case ABORT:
-			abort(hostPort);
+			abort(hostPort, ((AbortMessage)message).getHeader().getTransaction());
 			break;
 		case BEGIN:
-			begin(hostPort);
+			begin(hostPort, ((BeginMessage)message).getHeader().getTransaction());
 			break;
 		case COMMIT:
-			commit(hostPort);
+			commit(hostPort, ((CommitMessage)message).getHeader().getTransaction());
 			break;
 		case DISCONNECT:
 			activeTransactions.remove(hostPort);
@@ -99,23 +104,25 @@ public class TransactionListener implements StampyMinaMessageListener {
 
 	}
 
-	private void commit(HostPort hostPort) throws TransactionNotStartedException {
-		removeActiveTransaction(hostPort, "committed");
+	private void commit(HostPort hostPort, String transaction) throws TransactionNotStartedException {
+		removeActiveTransaction(hostPort, transaction, "committed");
 	}
 
-	private void abort(HostPort hostPort) throws TransactionNotStartedException {
-		removeActiveTransaction(hostPort, "aborted");
+	private void abort(HostPort hostPort, String transaction) throws TransactionNotStartedException {
+		removeActiveTransaction(hostPort, transaction, "aborted");
 	}
 
-	private void begin(HostPort hostPort) throws TransactionAlreadyStartedException {
-		if (isNoTransaction(hostPort)) {
-			log.info("Starting transaction for {}", hostPort);
-			activeTransactions.add(hostPort);
+	private void begin(HostPort hostPort, String transaction) throws TransactionAlreadyStartedException {
+		if (isNoTransaction(hostPort, transaction)) {
+			log.info("Starting transaction {} for {}", transaction, hostPort);
+			Queue<String> q = getTransactions(hostPort);
+			q.add(transaction);
 		}
 	}
 
-	private boolean isNoTransaction(HostPort hostPort) throws TransactionAlreadyStartedException {
-		if (activeTransactions.contains(hostPort)) {
+	private boolean isNoTransaction(HostPort hostPort, String transaction) throws TransactionAlreadyStartedException {
+		Queue<String> q = getTransactions(hostPort);
+		if (q.contains(transaction)) {
 			String error = "Transaction already started";
 			throw new TransactionAlreadyStartedException(error);
 		}
@@ -123,15 +130,28 @@ public class TransactionListener implements StampyMinaMessageListener {
 		return true;
 	}
 
-	private void removeActiveTransaction(HostPort hostPort, String function) throws TransactionNotStartedException {
-		if (isTransactionStarted(hostPort)) {
-			log.info("Transaction for {} {}", hostPort, function);
-			activeTransactions.remove(hostPort);
+	private void removeActiveTransaction(HostPort hostPort, String transaction, String function) throws TransactionNotStartedException {
+		if (isTransactionStarted(hostPort, transaction)) {
+			Object[] parms = {transaction, hostPort, function};
+			log.info("Transaction id {} for {} {}", parms);
+			Queue<String> q = getTransactions(hostPort);
+			q.remove(transaction);
 		}
 	}
+	
+	private Queue<String> getTransactions(HostPort hostPort) {
+		Queue<String> transactions = activeTransactions.get(hostPort);
+		if(transactions == null) {
+			transactions = new ConcurrentLinkedQueue<>();
+			activeTransactions.put(hostPort, transactions);
+		}
+		
+		return transactions;
+	}
 
-	private boolean isTransactionStarted(HostPort hostPort) throws TransactionNotStartedException {
-		if (!activeTransactions.contains(hostPort)) {
+	private boolean isTransactionStarted(HostPort hostPort, String transaction) throws TransactionNotStartedException {
+		Queue<String> q = getTransactions(hostPort);
+		if (!q.contains(hostPort)) {
 			String error = "Transaction not started";
 			log.error(error);
 			throw new TransactionNotStartedException(error);
@@ -161,7 +181,7 @@ public class TransactionListener implements StampyMinaMessageListener {
 
 			public void sessionDestroyed(IoSession session) throws Exception {
 				HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
-				if (activeTransactions.contains(hostPort)) {
+				if (activeTransactions.containsKey(hostPort)) {
 					log.debug("{} session terminated with outstanding transaction, cleaning up", hostPort);
 					activeTransactions.remove(hostPort);
 				}

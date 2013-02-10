@@ -24,8 +24,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
 import asia.stampy.server.mina.connect.ConnectListener;
 import asia.stampy.server.mina.heartbeat.HeartbeatListener;
 import asia.stampy.server.mina.login.LoginMessageListener;
-import asia.stampy.server.mina.subscription.AcknowledgementListener;
-import asia.stampy.server.mina.subscription.MessageInterceptor;
+import asia.stampy.server.mina.subscription.AcknowledgementListenerAndInterceptor;
 import asia.stampy.server.mina.transaction.TransactionListener;
 import asia.stampy.server.mina.version.VersionListener;
 
@@ -74,19 +73,14 @@ public class SystemServerInitializer {
 		TransactionListener transaction = new TransactionListener();
 		transaction.setGateway(gateway);
 		handler.addMessageListener(transaction);
-		
+
 		SystemAcknowledgementHandler sys = new SystemAcknowledgementHandler();
-		
-		MessageInterceptor mi = new MessageInterceptor();
-		mi.setGateway(gateway);
-		mi.setHandler(sys);
-		mi.setAckTimeoutMillis(50);
-		gateway.addOutgoingMessageInterceptor(mi);
-		
-		AcknowledgementListener acknowledgement = new AcknowledgementListener();
+
+		AcknowledgementListenerAndInterceptor acknowledgement = new AcknowledgementListenerAndInterceptor();
 		acknowledgement.setHandler(sys);
-		acknowledgement.setInterceptor(mi);
+		acknowledgement.setGateway(gateway);
 		handler.addMessageListener(acknowledgement);
+		gateway.addOutgoingMessageInterceptor(acknowledgement);
 
 		gateway.setHandler(handler);
 

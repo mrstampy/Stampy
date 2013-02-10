@@ -29,11 +29,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.client.message.ack.AckHeader;
+import asia.stampy.client.message.ack.AckMessage;
+import asia.stampy.client.message.nack.NackHeader;
+import asia.stampy.client.message.nack.NackMessage;
 import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
@@ -42,27 +45,36 @@ import asia.stampy.common.message.interceptor.AbstractOutgoingMessageInterceptor
 import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.MinaServiceAdapter;
+import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.message.MessageMessage;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MessageInterceptor.
+ * The listener interface for receiving acknowledgement events.
+ * The class that is interested in processing a acknowledgement
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addAcknowledgementListener<code> method. When
+ * the acknowledgement event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see AcknowledgementEvent
  */
 @Resource
-public class MessageInterceptor extends AbstractOutgoingMessageInterceptor {
+public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessageInterceptor implements StampyMinaMessageListener {
 	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private static final StompMessageType[] TYPES = { StompMessageType.MESSAGE };
+	private static final StompMessageType[] TYPES = { StompMessageType.ACK, StompMessageType.NACK };
+	
+	private StampyAcknowledgementHandler handler;
 
 	private Map<HostPort, Queue<String>> messages = new ConcurrentHashMap<>();
-
-	private StampyAcknowledgementHandler handler;
 
 	private Timer ackTimer = new Timer("Stampy Acknowledgement Timer", true);
 
 	private long ackTimeoutMillis = 60000;
 
 	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor#getMessageTypes()
+	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
 	 */
 	@Override
 	public StompMessageType[] getMessageTypes() {
@@ -70,13 +82,29 @@ public class MessageInterceptor extends AbstractOutgoingMessageInterceptor {
 	}
 
 	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor#isForMessage(asia.stampy.common.message.StampyMessage)
+	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
 	 */
 	@Override
 	public boolean isForMessage(StampyMessage<?> message) {
-		MessageMessage msg = (MessageMessage) message;
+		return true;
+	}
 
-		return StringUtils.isNotEmpty(msg.getHeader().getAck());
+	/* (non-Javadoc)
+	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+	 */
+	@Override
+	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+		switch (message.getMessageType()) {
+		case ACK:
+			evaluateAck(((AckMessage) message).getHeader(), hostPort);
+			break;
+		case NACK:
+			evaluateNack(((NackMessage) message).getHeader(), hostPort);
+			break;
+		default:
+			break;
+
+		}
 	}
 
 	/* (non-Javadoc)
@@ -113,28 +141,14 @@ public class MessageInterceptor extends AbstractOutgoingMessageInterceptor {
 		
 		ackTimer.schedule(task, getAckTimeoutMillis());
 	}
-
-	/**
-	 * Checks for message ack.
-	 *
-	 * @param messageId the message id
-	 * @param hostPort the host port
-	 * @return true, if successful
-	 */
-	public boolean hasMessageAck(String messageId, HostPort hostPort) {
+	private boolean hasMessageAck(String messageId, HostPort hostPort) {
 		Queue<String> ids = messages.get(hostPort);
 		if (ids == null || ids.isEmpty()) return false;
 
 		return ids.contains(messageId);
 	}
 
-	/**
-	 * Clear message ack.
-	 *
-	 * @param messageId the message id
-	 * @param hostPort the host port
-	 */
-	public void clearMessageAck(String messageId, HostPort hostPort) {
+	private void clearMessageAck(String messageId, HostPort hostPort) {
 		Queue<String> ids = messages.get(hostPort);
 		if (ids == null) return;
 
@@ -159,24 +173,6 @@ public class MessageInterceptor extends AbstractOutgoingMessageInterceptor {
 	}
 
 	/**
-	 * Gets the handler.
-	 *
-	 * @return the handler
-	 */
-	public StampyAcknowledgementHandler getHandler() {
-		return handler;
-	}
-
-	/**
-	 * Sets the handler.
-	 *
-	 * @param handler the new handler
-	 */
-	public void setHandler(StampyAcknowledgementHandler handler) {
-		this.handler = handler;
-	}
-
-	/**
 	 * Gets the ack timeout millis.
 	 *
 	 * @return the ack timeout millis
@@ -192,6 +188,46 @@ public class MessageInterceptor extends AbstractOutgoingMessageInterceptor {
 	 */
 	public void setAckTimeoutMillis(long ackTimeoutMillis) {
 		this.ackTimeoutMillis = ackTimeoutMillis;
+	}
+
+	private void evaluateNack(NackHeader header, HostPort hostPort) throws Exception {
+		String id = header.getId();
+		if (hasMessageAck(id, hostPort)) {
+			clearMessageAck(id, hostPort);
+			getHandler().nackReceived(id, header.getReceipt(), header.getTransaction());
+		} else {
+			throw new UnexpectedAcknowledgementException("No NACK message expected, yet received id " + id + " from "
+					+ hostPort);
+		}
+	}
+
+	private void evaluateAck(AckHeader header, HostPort hostPort) throws Exception {
+		String id = header.getId();
+		if (hasMessageAck(id, hostPort)) {
+			clearMessageAck(id, hostPort);
+			getHandler().ackReceived(id, header.getReceipt(), header.getTransaction());
+		} else {
+			throw new UnexpectedAcknowledgementException("No ACK message expected, yet received id " + id + " from "
+					+ hostPort);
+		}
+	}
+
+	/**
+	 * Gets the handler.
+	 *
+	 * @return the handler
+	 */
+	public StampyAcknowledgementHandler getHandler() {
+		return handler;
+	}
+
+	/**
+	 * Sets the handler.
+	 *
+	 * @param adapter the new handler
+	 */
+	public void setHandler(StampyAcknowledgementHandler adapter) {
+		this.handler = adapter;
 	}
 
 }
