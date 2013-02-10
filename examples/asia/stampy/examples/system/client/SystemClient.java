@@ -18,11 +18,14 @@
  */
 package asia.stampy.examples.system.client;
 
+import static asia.stampy.common.message.StompMessageType.ABORT;
 import static asia.stampy.common.message.StompMessageType.ACK;
+import static asia.stampy.common.message.StompMessageType.BEGIN;
+import static asia.stampy.common.message.StompMessageType.COMMIT;
 import static asia.stampy.common.message.StompMessageType.NACK;
 import static asia.stampy.common.message.StompMessageType.SEND;
-
-import java.util.Random;
+import static asia.stampy.common.message.StompMessageType.SUBSCRIBE;
+import static asia.stampy.common.message.StompMessageType.UNSUBSCRIBE;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -64,7 +67,8 @@ public class SystemClient {
 
 	private static final String NOT_LOGGED_IN = "Not logged in";
 
-	private static final StompMessageType[] CLIENT_TYPES = { ACK, NACK, SEND };
+	private static final StompMessageType[] CLIENT_TYPES = { ACK, NACK, SEND, ABORT, BEGIN, COMMIT, SUBSCRIBE,
+			UNSUBSCRIBE };
 
 	private ClientMinaMessageGateway gateway;
 
@@ -75,8 +79,6 @@ public class SystemClient {
 	private Object waiter = new Object();
 
 	private boolean connected;
-
-	private Random rand = new Random(System.currentTimeMillis());
 
 	/**
 	 * Inits the.
@@ -155,7 +157,7 @@ public class SystemClient {
 
 		message.getHeader().removeHeader(ConnectHeader.ACCEPT_VERSION);
 		message.getHeader().setAcceptVersion("1.2");
-		message.getHeader().setHeartbeat(50, 50);
+//		message.getHeader().setHeartbeat(50, 50);
 		getGateway().broadcastMessage(message);
 		sleep();
 		evaluateConnect();
@@ -208,14 +210,16 @@ public class SystemClient {
 		sleep();
 		evaluateReceipt("begin");
 
-		for (int i = 0; i < 10000; i++) {
-			int idx = rand.nextInt(CLIENT_TYPES.length);
-			sendMessage(CLIENT_TYPES[idx], Integer.toString(i));
+		for (int i = 0; i < 100; i++) {
+			String id = Integer.toString(i);
+			sendSend(id);
+			sleep();
+			evaluateReceipt(id);
 		}
 
-		sendCommit("commit");
+		sendCommit("begin");
 		sleep();
-		evaluateReceipt("commit");
+		evaluateReceipt("begin");
 	}
 
 	private void evaluateReceipt(String id) {
@@ -231,7 +235,7 @@ public class SystemClient {
 		ConnectMessage message = new ConnectMessage("burt.alexander");
 		message.getHeader().setLogin(SystemLoginHandler.GOOD_USER);
 		message.getHeader().setPasscode("pass");
-		message.getHeader().setHeartbeat(50, 50);
+//		message.getHeader().setHeartbeat(50, 50);
 
 		getGateway().broadcastMessage(message);
 	}
@@ -240,7 +244,7 @@ public class SystemClient {
 		ConnectMessage message = new ConnectMessage("burt.alexander");
 		message.getHeader().setLogin(SystemLoginHandler.BAD_USER);
 		message.getHeader().setPasscode("pass");
-		message.getHeader().setHeartbeat(50, 50);
+//		message.getHeader().setHeartbeat(50, 50);
 
 		getGateway().broadcastMessage(message);
 	}
@@ -320,6 +324,7 @@ public class SystemClient {
 
 	private void sendSend(String id) throws InterceptException {
 		SendMessage message = new SendMessage("over/there", id);
+		message.getHeader().setReceipt(id);
 		getGateway().broadcastMessage(message);
 	}
 

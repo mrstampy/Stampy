@@ -151,7 +151,7 @@ public class TransactionListener implements StampyMinaMessageListener {
 
 	private boolean isTransactionStarted(HostPort hostPort, String transaction) throws TransactionNotStartedException {
 		Queue<String> q = getTransactions(hostPort);
-		if (!q.contains(hostPort)) {
+		if (!q.contains(transaction)) {
 			String error = "Transaction not started";
 			log.error(error);
 			throw new TransactionNotStartedException(error);
