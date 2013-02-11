@@ -70,6 +70,7 @@ public class TestClientMessageListener implements StampyMinaMessageListener {
 		case CONNECTED:
 			connected = true;
 			start = System.nanoTime();
+			System.out.println("Sending " + times + " messages to the server, receipts requested...");
 			sendAcks(); // should be a threaded operation in prod
 			break;
 		case ERROR:
