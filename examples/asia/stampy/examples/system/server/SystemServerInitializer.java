@@ -79,6 +79,7 @@ public class SystemServerInitializer {
 		AcknowledgementListenerAndInterceptor acknowledgement = new AcknowledgementListenerAndInterceptor();
 		acknowledgement.setHandler(sys);
 		acknowledgement.setGateway(gateway);
+		acknowledgement.setAckTimeoutMillis(2000);
 		handler.addMessageListener(acknowledgement);
 		gateway.addOutgoingMessageInterceptor(acknowledgement);
 

@@ -39,6 +39,7 @@ import asia.stampy.client.message.disconnect.DisconnectMessage;
 import asia.stampy.client.message.nack.NackMessage;
 import asia.stampy.client.message.send.SendMessage;
 import asia.stampy.client.message.stomp.StompMessage;
+import asia.stampy.client.message.subscribe.SubscribeHeader.Ack;
 import asia.stampy.client.message.subscribe.SubscribeMessage;
 import asia.stampy.client.message.unsubscribe.UnsubscribeMessage;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
@@ -49,6 +50,7 @@ import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.system.server.SystemLoginHandler;
 import asia.stampy.server.message.error.ErrorMessage;
+import asia.stampy.server.message.message.MessageMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
 // TODO: Auto-generated Javadoc
@@ -80,6 +82,10 @@ public class SystemClient {
 
 	private boolean connected;
 
+	private int messageCount;
+	
+	private HostPort hostPort;
+
 	/**
 	 * Inits the.
 	 * 
@@ -92,6 +98,7 @@ public class SystemClient {
 
 			@Override
 			public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+				SystemClient.this.hostPort = hostPort;
 				switch (message.getMessageType()) {
 				case CONNECTED:
 					connected = true;
@@ -102,6 +109,7 @@ public class SystemClient {
 					wakeup();
 					break;
 				case MESSAGE:
+					onMessage((MessageMessage)message);
 					break;
 				case RECEIPT:
 					setReceipt((ReceiptMessage) message);
@@ -157,7 +165,7 @@ public class SystemClient {
 
 		message.getHeader().removeHeader(ConnectHeader.ACCEPT_VERSION);
 		message.getHeader().setAcceptVersion("1.2");
-//		message.getHeader().setHeartbeat(50, 50);
+		message.getHeader().setHeartbeat(500, 1000);
 		getGateway().broadcastMessage(message);
 		sleep();
 		evaluateConnect();
@@ -214,12 +222,58 @@ public class SystemClient {
 			String id = Integer.toString(i);
 			sendSend(id);
 			sleep();
-			evaluateReceipt(id);
+			String receiptId = receipt.getHeader().getReceiptId();
+			boolean expected = id.equals(receiptId);
+			if (!expected) {
+				System.err.println("Unexpected receipt id " + receiptId + ", expected " + id);
+			}
 		}
 
 		sendCommit("begin");
 		sleep();
 		evaluateReceipt("begin");
+	}
+	
+	public void testBadUser() throws Exception {
+		sendDisconnect("login");
+		sleep();
+		evaluateReceipt("login");
+		
+		badConnect();
+		sleep();
+		evaluateError(CANNOT_BE_LOGGED_IN);
+		
+		badConnect();
+		sleep();
+		evaluateError(SystemLoginHandler.SEE_THE_SYSTEM_ADMINISTRATOR);
+		
+		System.out.println("Session is open (should not be)? " + gateway.isConnected(hostPort));
+	}
+
+	public void testSubscription() throws Exception {
+		SubscribeMessage message = new SubscribeMessage("destination", "subscription");
+		message.getHeader().setAck(Ack.auto);
+		gateway.broadcastMessage(message);
+		synchronized (waiter) {
+			waiter.wait();
+		}
+	}
+
+	private void onMessage(MessageMessage message) throws InterceptException {
+		messageCount++;
+		if (messageCount < 100) {
+			AckMessage ack = new AckMessage(message.getHeader().getMessageId());
+			gateway.broadcastMessage(ack);
+		}
+		if (messageCount == 100) {
+			System.out.println("Received all expected messages from subscription");
+			sendUnsubscribe("subscription");
+			synchronized (waiter) {
+				waiter.notifyAll();
+			}
+		} else if (messageCount > 100) {
+			throw new IllegalArgumentException("Extra message received");
+		}
 	}
 
 	private void evaluateReceipt(String id) {
@@ -235,7 +289,7 @@ public class SystemClient {
 		ConnectMessage message = new ConnectMessage("burt.alexander");
 		message.getHeader().setLogin(SystemLoginHandler.GOOD_USER);
 		message.getHeader().setPasscode("pass");
-//		message.getHeader().setHeartbeat(50, 50);
+		message.getHeader().setHeartbeat(500, 1000);
 
 		getGateway().broadcastMessage(message);
 	}
@@ -244,7 +298,7 @@ public class SystemClient {
 		ConnectMessage message = new ConnectMessage("burt.alexander");
 		message.getHeader().setLogin(SystemLoginHandler.BAD_USER);
 		message.getHeader().setPasscode("pass");
-//		message.getHeader().setHeartbeat(50, 50);
+		message.getHeader().setHeartbeat(500, 1000);
 
 		getGateway().broadcastMessage(message);
 	}
@@ -261,7 +315,7 @@ public class SystemClient {
 		} else {
 			System.err.println("Unexpected error message received");
 		}
-		System.out.println(error.toStompMessage(false));
+		System.out.println(error);
 		System.out.println();
 		error = null;
 	}
@@ -431,6 +485,10 @@ public class SystemClient {
 			client.testConnect();
 			client.testLogin();
 			client.testTransaction();
+			client.testSubscription();
+			client.testBadUser();
+			client.getGateway().shutdown();
+			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

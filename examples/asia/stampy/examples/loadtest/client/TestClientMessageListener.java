@@ -54,7 +54,7 @@ public class TestClientMessageListener implements StampyMinaMessageListener {
 	private Object waiter = new Object();
 
 	// the number of messages to send.
-	private int times = 100000;
+	private int times = 1000000;
 
 	/*
 	 * (non-Javadoc)

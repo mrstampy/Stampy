@@ -159,7 +159,7 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
 			@Override
 			public void run() {
 				Queue<String> q = messages.get(hostPort);
-				if (!q.contains(ack)) return;
+				if (q == null || !q.contains(ack)) return;
 
 				getHandler().noAcknowledgementReceived(ack);
 				q.remove(ack);

@@ -40,7 +40,7 @@ public class PaceMaker {
 	private TimerTask stopwatch;
 	private Timer timer = new Timer("Stampy PaceMaker", true);
 
-	private AbstractStampyMessageGateway messageGateway;
+	private AbstractStampyMessageGateway gateway;
 
 	private HostPort hostPort;
 
@@ -77,7 +77,10 @@ public class PaceMaker {
 	 */
 	public void stop() {
 		log.trace("PaceMaker stop invoked");
-		if (stopwatch != null) stopwatch.cancel();
+		if (stopwatch != null) {
+			stopwatch.cancel();
+			timer.purge();
+		}
 	}
 
 	/**
@@ -99,13 +102,15 @@ public class PaceMaker {
 	private void executeHeartbeat() {
 		if (heartbeatCount >= 2) {
 			log.warn("No response after 2 heartbeats, closing connection");
-			messageGateway.closeConnection(getHostPort());
+			gateway.closeConnection(getHostPort());
 		} else {
 			try {
-				messageGateway.sendMessage(HB1, getHostPort());
-				log.debug("Sent heartbeat");
-				start();
-				heartbeatCount++;
+				if (gateway.isConnected(getHostPort())) {
+					gateway.sendMessage(HB1, getHostPort());
+					log.debug("Sent heartbeat");
+					start();
+					heartbeatCount++;
+				}
 			} catch (Exception e) {
 				log.error("Could not send heartbeat", e);
 			}
@@ -126,8 +131,8 @@ public class PaceMaker {
 	 * 
 	 * @return the message gateway
 	 */
-	public AbstractStampyMessageGateway getMessageGateway() {
-		return messageGateway;
+	public AbstractStampyMessageGateway getGateway() {
+		return gateway;
 	}
 
 	/**
@@ -136,8 +141,8 @@ public class PaceMaker {
 	 * @param messageGateway
 	 *          the new message gateway
 	 */
-	public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
-		this.messageGateway = messageGateway;
+	public void setGateway(AbstractStampyMessageGateway messageGateway) {
+		this.gateway = messageGateway;
 	}
 
 	/**

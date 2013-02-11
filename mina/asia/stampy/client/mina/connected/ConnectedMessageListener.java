@@ -101,7 +101,7 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
 		log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
 		PaceMaker paceMaker = new PaceMaker(heartbeat);
 		paceMaker.setHostPort(hostPort);
-		paceMaker.setMessageGateway(getMessageGateway());
+		paceMaker.setGateway(getMessageGateway());
 		paceMaker.start();
 		
 		getHeartbeatContainer().add(hostPort, paceMaker);

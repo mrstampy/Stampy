@@ -20,10 +20,13 @@ package asia.stampy.examples.system.server;
 
 import org.apache.mina.core.session.IoSession;
 
+import asia.stampy.client.message.subscribe.SubscribeMessage;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
+import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.StampyMinaMessageListener;
+import asia.stampy.server.message.message.MessageMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 // TODO: Auto-generated Javadoc
@@ -33,6 +36,8 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
 public class SystemServer {
 
 	private ServerMinaMessageGateway gateway;
+
+	private int ackCount;
 
 	/**
 	 * Inits.
@@ -51,6 +56,7 @@ public class SystemServer {
 				case ABORT:
 					break;
 				case ACK:
+					ackCount++;
 					break;
 				case BEGIN:
 					break;
@@ -67,8 +73,11 @@ public class SystemServer {
 				case STOMP:
 					break;
 				case SUBSCRIBE:
+					ackCount = 0;
+					sendMessages(((SubscribeMessage) message).getHeader().getId(), hostPort);
 					break;
 				case UNSUBSCRIBE:
+					System.out.println("Unsubscribe received, with " + ackCount + " acks");
 					break;
 				default:
 					break;
@@ -91,9 +100,18 @@ public class SystemServer {
 		System.out.println("Stampy system server started");
 	}
 
+	private void sendMessages(String id, HostPort hostPort) throws InterceptException {
+		for (int i = 0; i < 100; i++) {
+			String msgId = Integer.toString(i);
+			MessageMessage message = new MessageMessage("destination", msgId, id);
+			message.getHeader().setAck(msgId);
+			gateway.sendMessage(message, hostPort);
+		}
+	}
+
 	/**
 	 * Gets the gateway.
-	 *
+	 * 
 	 * @return the gateway
 	 */
 	public ServerMinaMessageGateway getGateway() {
@@ -102,8 +120,9 @@ public class SystemServer {
 
 	/**
 	 * Sets the gateway.
-	 *
-	 * @param gateway the new gateway
+	 * 
+	 * @param gateway
+	 *          the new gateway
 	 */
 	public void setGateway(ServerMinaMessageGateway gateway) {
 		this.gateway = gateway;
@@ -111,8 +130,9 @@ public class SystemServer {
 
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *          the arguments
 	 */
 	public static void main(String[] args) {
 		SystemServer server = new SystemServer();
