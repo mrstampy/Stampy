@@ -99,7 +99,7 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
 		final String msg = (String) message;
 
 		if (isHeartbeat(msg)) {
-			log.debug("Simple heartbeat received");
+			log.trace("Received heartbeat");
 			return;
 		}
 

@@ -110,6 +110,7 @@ public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMess
 			String existing = messageParts.get(hostPort);
 			if (StringUtils.isEmpty(existing)) {
 				if(isHeartbeat(msg)) {
+					log.trace("Received heartbeat");
 					return;
 				} else if (isStompMessage(msg)) {
 					processMessage(msg, session, hostPort);
