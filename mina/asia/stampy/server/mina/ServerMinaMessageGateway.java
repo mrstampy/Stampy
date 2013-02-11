@@ -44,7 +44,8 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.common.mina.StampyServiceAdapter;
 
 /**
- * The Class ServerMinaMessageGateway.
+ * This class is the reference implementation of a Stampy <a
+ * href="https://mina.apache.org">MINA</a> server gateway.
  */
 @Resource
 public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
