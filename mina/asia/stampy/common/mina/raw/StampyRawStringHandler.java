@@ -40,174 +40,175 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.StampyMinaHandler;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class uses its own message parsing to piece together STOMP messages. In
  * non-Stampy STOMP environments subclasses are to be used. While tested
  * successfully in simple cases it has not (yet) been battle-tested. Use at your
  * own risk.
- *
- * @param <ASMG> the generic type
+ * 
+ * @param <ASMG>
+ *          the generic type
  */
 public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMessageGateway> extends
-		StampyMinaHandler<ASMG> {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    StampyMinaHandler<ASMG> {
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private Map<HostPort, String> messageParts = new ConcurrentHashMap<>();
+  private Map<HostPort, String> messageParts = new ConcurrentHashMap<>();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.StampyMinaHandler#messageReceived(org.apache.mina
-	 * .core.session.IoSession, java.lang.Object)
-	 */
-	@Override
-	public void messageReceived(final IoSession session, Object message) throws Exception {
-		final HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
-		log.trace("Received raw message {} from {}", message, hostPort);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaHandler#messageReceived(org.apache.mina
+   * .core.session.IoSession, java.lang.Object)
+   */
+  @Override
+  public void messageReceived(final IoSession session, Object message) throws Exception {
+    final HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
+    log.trace("Received raw message {} from {}", message, hostPort);
 
-		resetHeartbeat(hostPort);
+    resetHeartbeat(hostPort);
 
-		if (!isValidObject(message)) {
-			log.error("Object {} is not a valid STOMP message, closing connection {}", message, hostPort);
-			illegalAccess(session);
-			return;
-		}
+    if (!isValidObject(message)) {
+      log.error("Object {} is not a valid STOMP message, closing connection {}", message, hostPort);
+      illegalAccess(session);
+      return;
+    }
 
-		final String msg = (String) message;
+    final String msg = (String) message;
 
-		Runnable runnable = new Runnable() {
+    Runnable runnable = new Runnable() {
 
-			@Override
-			public void run() {
-				asyncProcessing(session, hostPort, msg);
-			}
-		};
+      @Override
+      public void run() {
+        asyncProcessing(session, hostPort, msg);
+      }
+    };
 
-		getExecutor().execute(runnable);
-	}
+    getExecutor().execute(runnable);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see asia.stampy.common.mina.StampyMinaHandler#getFactory(int)
-	 */
-	@Override
-	public ProtocolCodecFactory getFactory(int maxMessageSize) {
-		return new StringCodecFactory(maxMessageSize);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.mina.StampyMinaHandler#getFactory(int)
+   */
+  @Override
+  public ProtocolCodecFactory getFactory(int maxMessageSize) {
+    return new StringCodecFactory(maxMessageSize);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.StampyMinaHandler#asyncProcessing(org.apache.mina
-	 * .core.session.IoSession, asia.stampy.common.HostPort, java.lang.String)
-	 */
-	protected void asyncProcessing(IoSession session, HostPort hostPort, String msg) {
-		try {
-			String existing = messageParts.get(hostPort);
-			if (StringUtils.isEmpty(existing)) {
-				if(isHeartbeat(msg)) {
-					log.trace("Received heartbeat");
-					return;
-				} else if (isStompMessage(msg)) {
-					processMessage(msg, session, hostPort);
-				} else {
-					log.error("Message {} is not a valid STOMP message, closing connection {}", msg, hostPort);
-					illegalAccess(session);
-				}
-			} else {
-				String concat = existing + msg;
-				processMessage(concat, session, hostPort);
-			}
-		} catch (Exception e) {
-			try {
-				errorHandle(e, session, hostPort);
-			} catch (Exception e1) {
-				log.error("Unexpected exception sending error message " + msg + " for " + hostPort, e1);
-				log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
-			}
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaHandler#asyncProcessing(org.apache.mina
+   * .core.session.IoSession, asia.stampy.common.HostPort, java.lang.String)
+   */
+  @Override
+  protected void asyncProcessing(IoSession session, HostPort hostPort, String msg) {
+    try {
+      String existing = messageParts.get(hostPort);
+      if (StringUtils.isEmpty(existing)) {
+        if (isHeartbeat(msg)) {
+          log.trace("Received heartbeat");
+          return;
+        } else if (isStompMessage(msg)) {
+          processMessage(msg, session, hostPort);
+        } else {
+          log.error("Message {} is not a valid STOMP message, closing connection {}", msg, hostPort);
+          illegalAccess(session);
+        }
+      } else {
+        String concat = existing + msg;
+        processMessage(concat, session, hostPort);
+      }
+    } catch (Exception e) {
+      try {
+        errorHandle(e, session, hostPort);
+      } catch (Exception e1) {
+        log.error("Unexpected exception sending error message " + msg + " for " + hostPort, e1);
+        log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
+      }
+    }
+  }
 
-	private void processMessage(String msg, IoSession session, HostPort hostPort) throws UnparseableException, Exception,
-			IOException {
-		if (isHeartbeat(msg)) {
-			log.debug("Simple heartbeat received");
-			return;
-		}
+  private void processMessage(String msg, IoSession session, HostPort hostPort) throws UnparseableException, Exception,
+      IOException {
+    if (isHeartbeat(msg)) {
+      log.debug("Simple heartbeat received");
+      return;
+    }
 
-		int length = msg.length();
-		int idx = msg.indexOf(StompMessageParser.EOM);
+    int length = msg.length();
+    int idx = msg.indexOf(StompMessageParser.EOM);
 
-		if (idx == length - 1) {
-			log.trace("Creating StampyMessage from {}", msg);
-			processStompMessage(msg, session, hostPort);
-		} else if (idx > 0) {
-			log.trace("Multiple messages detected, parsing {}", msg);
-			processMultiMessages(msg, session, hostPort);
-		} else {
-			messageParts.put(hostPort, msg);
-			log.trace("Message part {} stored for {}", msg, hostPort);
-		}
-	}
+    if (idx == length - 1) {
+      log.trace("Creating StampyMessage from {}", msg);
+      processStompMessage(msg, session, hostPort);
+    } else if (idx > 0) {
+      log.trace("Multiple messages detected, parsing {}", msg);
+      processMultiMessages(msg, session, hostPort);
+    } else {
+      messageParts.put(hostPort, msg);
+      log.trace("Message part {} stored for {}", msg, hostPort);
+    }
+  }
 
-	private void processMultiMessages(String msg, IoSession session, HostPort hostPort) throws UnparseableException,
-			Exception, IOException {
-		int idx = msg.indexOf(StompMessageParser.EOM);
-		String fullMessage = msg.substring(0, idx + 1);
-		String partMessage = msg.substring(idx);
-		if (partMessage.startsWith(StompMessageParser.EOM)) {
-			partMessage = partMessage.substring(1);
-		}
+  private void processMultiMessages(String msg, IoSession session, HostPort hostPort) throws UnparseableException,
+      Exception, IOException {
+    int idx = msg.indexOf(StompMessageParser.EOM);
+    String fullMessage = msg.substring(0, idx + 1);
+    String partMessage = msg.substring(idx);
+    if (partMessage.startsWith(StompMessageParser.EOM)) {
+      partMessage = partMessage.substring(1);
+    }
 
-		processStompMessage(fullMessage, session, hostPort);
+    processStompMessage(fullMessage, session, hostPort);
 
-		processMessage(partMessage, session, hostPort);
-	}
+    processMessage(partMessage, session, hostPort);
+  }
 
-	private void processStompMessage(String msg, IoSession session, HostPort hostPort) {
-		securityCheck(msg, session);
-		messageParts.remove(hostPort);
-		StampyMessage<?> sm = null;
-		try {
-			sm = getParser().parseMessage(msg);
-			if (isValidMessage(sm)) {
-				securityCheck(sm, session);
-				notifyListeners(sm, session, hostPort);
-				sendResponseIfRequired(sm, session, hostPort);
-			}
-		} catch (Exception e) {
-			try {
-				if (sm == null) {
-					errorHandle(e, session, hostPort);
-				} else {
-					errorHandle(sm, e, session, hostPort);
-				}
-			} catch (Exception e1) {
-				log.error("Unexpected exception sending error message " + msg + " for " + hostPort, e1);
-				log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
-			}
-		}
-	}
+  private void processStompMessage(String msg, IoSession session, HostPort hostPort) {
+    securityCheck(msg, session);
+    messageParts.remove(hostPort);
+    StampyMessage<?> sm = null;
+    try {
+      sm = getParser().parseMessage(msg);
+      if (isValidMessage(sm)) {
+        securityCheck(sm, session);
+        notifyListeners(sm, session, hostPort);
+        sendResponseIfRequired(sm, session, hostPort);
+      }
+    } catch (Exception e) {
+      try {
+        if (sm == null) {
+          errorHandle(e, session, hostPort);
+        } else {
+          errorHandle(sm, e, session, hostPort);
+        }
+      } catch (Exception e1) {
+        log.error("Unexpected exception sending error message " + msg + " for " + hostPort, e1);
+        log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
+      }
+    }
+  }
 
-	private boolean isStompMessage(String msg) throws IOException {
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new StringReader(msg));
-			String stompMessageType = reader.readLine();
+  private boolean isStompMessage(String msg) throws IOException {
+    BufferedReader reader = null;
+    try {
+      reader = new BufferedReader(new StringReader(msg));
+      String stompMessageType = reader.readLine();
 
-			StompMessageType type = StompMessageType.valueOf(stompMessageType);
-			return type != null;
-		} catch (Exception e) {
-			log.error("Unexpected exception parsing " + msg, e);
-		} finally {
-			if (reader != null) reader.close();
-		}
+      StompMessageType type = StompMessageType.valueOf(stompMessageType);
+      return type != null;
+    } catch (Exception e) {
+      log.error("Unexpected exception parsing " + msg, e);
+    } finally {
+      if (reader != null) reader.close();
+    }
 
-		return false;
-	}
+    return false;
+  }
 
 }

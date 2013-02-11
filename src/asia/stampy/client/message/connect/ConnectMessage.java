@@ -24,64 +24,69 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class ConnectMessage.
  */
 public class ConnectMessage extends AbstractMessage<ConnectHeader> {
 
-	private static final long serialVersionUID = 1164477258648698915L;
+  private static final long serialVersionUID = 1164477258648698915L;
 
-	/**
-	 * Instantiates a new connect message.
-	 *
-	 * @param acceptVersion the accept version
-	 * @param host the host
-	 */
-	public ConnectMessage(String acceptVersion, String host) {
-		this();
+  /**
+   * Instantiates a new connect message.
+   * 
+   * @param acceptVersion
+   *          the accept version
+   * @param host
+   *          the host
+   */
+  public ConnectMessage(String acceptVersion, String host) {
+    this();
 
-		getHeader().setAcceptVersion(acceptVersion);
-		getHeader().setHost(host);
-	}
-	
-	/**
-	 * Instantiates a new connect message.
-	 *
-	 * @param host the host
-	 */
-	public ConnectMessage(String host) {
-		this("1.2", host);
-	}
-	
-	/**
-	 * Instantiates a new connect message.
-	 */
-	public ConnectMessage() {
-		super(StompMessageType.CONNECT);
-	}
+    getHeader().setAcceptVersion(acceptVersion);
+    getHeader().setHost(host);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected ConnectHeader createNewHeader() {
-		return new ConnectHeader();
-	}
+  /**
+   * Instantiates a new connect message.
+   * 
+   * @param host
+   *          the host
+   */
+  public ConnectMessage(String host) {
+    this("1.2", host);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if(StringUtils.isEmpty(getHeader().getAcceptVersion())) {
-			throw new InvalidStompMessageException(ConnectHeader.ACCEPT_VERSION + " is required, 1.2 only");
-		}
-		
-		if(StringUtils.isEmpty(getHeader().getHost())) {
-			throw new InvalidStompMessageException(ConnectHeader.HOST + " is required");
-		}
-	}
+  /**
+   * Instantiates a new connect message.
+   */
+  public ConnectMessage() {
+    super(StompMessageType.CONNECT);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected ConnectHeader createNewHeader() {
+    return new ConnectHeader();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getAcceptVersion())) {
+      throw new InvalidStompMessageException(ConnectHeader.ACCEPT_VERSION + " is required, 1.2 only");
+    }
+
+    if (StringUtils.isEmpty(getHeader().getHost())) {
+      throw new InvalidStompMessageException(ConnectHeader.HOST + " is required");
+    }
+  }
 
 }

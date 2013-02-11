@@ -26,44 +26,54 @@ import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 
-// TODO: Auto-generated Javadoc
 /**
- * The listener interface for receiving testServerMessage events.
- * The class that is interested in processing a testServerMessage
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addTestServerMessageListener<code> method. When
+ * The listener interface for receiving testServerMessage events. The class that
+ * is interested in processing a testServerMessage event implements this
+ * interface, and the object created with that class is registered with a
+ * component using the component's
+ * <code>addTestServerMessageListener<code> method. When
  * the testServerMessage event occurs, that object's appropriate
  * method is invoked.
- *
+ * 
  * @see TestServerMessageEvent
  */
 public class TestServerMessageListener implements StampyMinaMessageListener {
-	private static StompMessageType[] TYPES = { StompMessageType.SEND };
+  private static StompMessageType[] TYPES = { StompMessageType.SEND };
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
-		Logger logger = Logger.getLogger("asia.stampy.examples.remote.exe.log4j.server");
-		System.out.println("Log level is " + logger.getLevel());
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage,
+   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   */
+  @Override
+  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+    Logger logger = Logger.getLogger("asia.stampy.examples.remote.exe.log4j.server");
+    System.out.println("Log level is " + logger.getLevel());
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
-	 */
-	@Override
-	public boolean isForMessage(StampyMessage<?> message) {
-		return true;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * .common.message.StampyMessage)
+   */
+  @Override
+  public boolean isForMessage(StampyMessage<?> message) {
+    return true;
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
-	 */
-	@Override
-	public StompMessageType[] getMessageTypes() {
-		return TYPES;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   */
+  @Override
+  public StompMessageType[] getMessageTypes() {
+    return TYPES;
+  }
 
 }

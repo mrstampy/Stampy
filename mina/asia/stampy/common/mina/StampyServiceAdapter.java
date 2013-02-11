@@ -34,160 +34,164 @@ import org.slf4j.LoggerFactory;
 
 import asia.stampy.common.HostPort;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class keeps track of all connections and disconnections and is the
  * interface for sending messages to remote hosts.
  */
 @Resource
 public class StampyServiceAdapter extends MinaServiceAdapter {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private Map<HostPort, IoSession> sessions = new ConcurrentHashMap<>();
+  private Map<HostPort, IoSession> sessions = new ConcurrentHashMap<>();
 
-	private boolean autoShutdown;
+  private boolean autoShutdown;
 
-	private AbstractStampyMinaMessageGateway gateway;
+  private AbstractStampyMinaMessageGateway gateway;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.apache.mina.core.service.IoServiceListener#sessionCreated(org.apache
-	 * .mina.core.session.IoSession)
-	 */
-	public void sessionCreated(IoSession session) throws Exception {
-		HostPort hostPort = createHostPort(session);
-		log.info("Stampy MINA session created for {}", hostPort);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.core.service.IoServiceListener#sessionCreated(org.apache
+   * .mina.core.session.IoSession)
+   */
+  @Override
+  public void sessionCreated(IoSession session) throws Exception {
+    HostPort hostPort = createHostPort(session);
+    log.info("Stampy MINA session created for {}", hostPort);
 
-		sessions.put(hostPort, session);
-	}
+    sessions.put(hostPort, session);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.apache.mina.core.service.IoServiceListener#sessionDestroyed(org.apache
-	 * .mina.core.session.IoSession)
-	 */
-	public void sessionDestroyed(IoSession session) throws Exception {
-		HostPort hostPort = createHostPort(session);
-		log.info("Stampy MINA session destroyed for {}", hostPort);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.core.service.IoServiceListener#sessionDestroyed(org.apache
+   * .mina.core.session.IoSession)
+   */
+  @Override
+  public void sessionDestroyed(IoSession session) throws Exception {
+    HostPort hostPort = createHostPort(session);
+    log.info("Stampy MINA session destroyed for {}", hostPort);
 
-		sessions.remove(hostPort);
+    sessions.remove(hostPort);
 
-		if (sessions.isEmpty() && isAutoShutdown()) {
-			log.info("No more sessions and auto shutdown is true, shutting down gateway");
-			gateway.shutdown();
-		}
-	}
-	
-	public void closeAllSessions() {
-		for(IoSession session : sessions.values()) {
-			CloseFuture cf = session.close(true);
-			cf.awaitUninterruptibly();
-		}
-		
-		sessions.clear();
-	}
-	
-	public void closeSession(HostPort hostPort) {
-		IoSession session = sessions.get(hostPort);
-		if(session != null) {
-			session.close(false);
-		}
-	}
+    if (sessions.isEmpty() && isAutoShutdown()) {
+      log.info("No more sessions and auto shutdown is true, shutting down gateway");
+      gateway.shutdown();
+    }
+  }
 
-	private HostPort createHostPort(IoSession session) {
-		return new HostPort((InetSocketAddress) session.getRemoteAddress());
-	}
+  public void closeAllSessions() {
+    for (IoSession session : sessions.values()) {
+      CloseFuture cf = session.close(true);
+      cf.awaitUninterruptibly();
+    }
 
-	/**
-	 * Returns true if the specified {@link HostPort} has an active session.
-	 * 
-	 * @param hostPort
-	 *          the host port
-	 * @return true, if successful
-	 */
-	public boolean hasSession(HostPort hostPort) {
-		return sessions.containsKey(hostPort);
-	}
+    sessions.clear();
+  }
 
-	/**
-	 * Gets the session.
-	 *
-	 * @param hostPort the host port
-	 * @return the session
-	 */
-	public IoSession getSession(HostPort hostPort) {
-		IoSession session = sessions.get(hostPort);
+  public void closeSession(HostPort hostPort) {
+    IoSession session = sessions.get(hostPort);
+    if (session != null) {
+      session.close(false);
+    }
+  }
 
-		if (session == null) throw new IllegalArgumentException(hostPort.toString() + " has no current session");
+  private HostPort createHostPort(IoSession session) {
+    return new HostPort((InetSocketAddress) session.getRemoteAddress());
+  }
 
-		return session;
-	}
+  /**
+   * Returns true if the specified {@link HostPort} has an active session.
+   * 
+   * @param hostPort
+   *          the host port
+   * @return true, if successful
+   */
+  public boolean hasSession(HostPort hostPort) {
+    return sessions.containsKey(hostPort);
+  }
 
-	/**
-	 * Gets the host ports.
-	 * 
-	 * @return the host ports
-	 */
-	public Set<HostPort> getHostPorts() {
-		return Collections.unmodifiableSet(sessions.keySet());
-	}
+  /**
+   * Gets the session.
+   * 
+   * @param hostPort
+   *          the host port
+   * @return the session
+   */
+  public IoSession getSession(HostPort hostPort) {
+    IoSession session = sessions.get(hostPort);
 
-	/**
-	 * Send message.
-	 * 
-	 * @param stompMessage
-	 *          the stomp message
-	 * @param hostPort
-	 *          the host port
-	 */
-	public void sendMessage(String stompMessage, HostPort hostPort) {
-		if (!hasSession(hostPort)) {
-			return;
-		}
+    if (session == null) throw new IllegalArgumentException(hostPort.toString() + " has no current session");
 
-		IoSession session = getSession(hostPort);
-		session.write(stompMessage);
-		log.trace("Sent message {} to {}", stompMessage, hostPort);
-	}
+    return session;
+  }
 
-	/**
-	 * Checks if is auto shutdown.
-	 *
-	 * @return true, if is auto shutdown
-	 */
-	public boolean isAutoShutdown() {
-		return autoShutdown;
-	}
+  /**
+   * Gets the host ports.
+   * 
+   * @return the host ports
+   */
+  public Set<HostPort> getHostPorts() {
+    return Collections.unmodifiableSet(sessions.keySet());
+  }
 
-	/**
-	 * Sets the auto shutdown.
-	 *
-	 * @param autoClose the new auto shutdown
-	 */
-	public void setAutoShutdown(boolean autoClose) {
-		this.autoShutdown = autoClose;
-	}
+  /**
+   * Send message.
+   * 
+   * @param stompMessage
+   *          the stomp message
+   * @param hostPort
+   *          the host port
+   */
+  public void sendMessage(String stompMessage, HostPort hostPort) {
+    if (!hasSession(hostPort)) {
+      return;
+    }
 
-	/**
-	 * Gets the gateway.
-	 *
-	 * @return the gateway
-	 */
-	public AbstractStampyMinaMessageGateway getGateway() {
-		return gateway;
-	}
+    IoSession session = getSession(hostPort);
+    session.write(stompMessage);
+    log.trace("Sent message {} to {}", stompMessage, hostPort);
+  }
 
-	/**
-	 * Sets the gateway.
-	 *
-	 * @param gateway the new gateway
-	 */
-	public void setGateway(AbstractStampyMinaMessageGateway gateway) {
-		this.gateway = gateway;
-	}
+  /**
+   * Checks if is auto shutdown.
+   * 
+   * @return true, if is auto shutdown
+   */
+  public boolean isAutoShutdown() {
+    return autoShutdown;
+  }
+
+  /**
+   * Sets the auto shutdown.
+   * 
+   * @param autoClose
+   *          the new auto shutdown
+   */
+  public void setAutoShutdown(boolean autoClose) {
+    this.autoShutdown = autoClose;
+  }
+
+  /**
+   * Gets the gateway.
+   * 
+   * @return the gateway
+   */
+  public AbstractStampyMinaMessageGateway getGateway() {
+    return gateway;
+  }
+
+  /**
+   * Sets the gateway.
+   * 
+   * @param gateway
+   *          the new gateway
+   */
+  public void setGateway(AbstractStampyMinaMessageGateway gateway) {
+    this.gateway = gateway;
+  }
 
 }

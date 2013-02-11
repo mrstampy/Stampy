@@ -25,36 +25,46 @@ import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 
-// TODO: Auto-generated Javadoc
 /**
  * Simple implementation which prints any messages received.
- *
+ * 
  * @see TestClientMessageEvent
  */
 public class TestClientMessageListener implements StampyMinaMessageListener {
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
-		System.out.println("Received message " + message);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage,
+   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   */
+  @Override
+  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+    System.out.println("Received message " + message);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
-	 */
-	@Override
-	public boolean isForMessage(StampyMessage<?> message) {
-		return true;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * .common.message.StampyMessage)
+   */
+  @Override
+  public boolean isForMessage(StampyMessage<?> message) {
+    return true;
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
-	 */
-	@Override
-	public StompMessageType[] getMessageTypes() {
-		return StompMessageType.values();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   */
+  @Override
+  public StompMessageType[] getMessageTypes() {
+    return StompMessageType.values();
+  }
 
 }

@@ -24,49 +24,52 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class CommitMessage.
  */
 public class CommitMessage extends AbstractMessage<CommitHeader> {
 
-	private static final long serialVersionUID = 3916270310464057075L;
+  private static final long serialVersionUID = 3916270310464057075L;
 
-	/**
-	 * Instantiates a new commit message.
-	 *
-	 * @param transaction the transaction
-	 */
-	public CommitMessage(String transaction) {
-		this();
+  /**
+   * Instantiates a new commit message.
+   * 
+   * @param transaction
+   *          the transaction
+   */
+  public CommitMessage(String transaction) {
+    this();
 
-		getHeader().setTransaction(transaction);
-	}
+    getHeader().setTransaction(transaction);
+  }
 
-	/**
-	 * Instantiates a new commit message.
-	 */
-	public CommitMessage() {
-		super(StompMessageType.COMMIT);
-	}
+  /**
+   * Instantiates a new commit message.
+   */
+  public CommitMessage() {
+    super(StompMessageType.COMMIT);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected CommitHeader createNewHeader() {
-		return new CommitHeader();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected CommitHeader createNewHeader() {
+    return new CommitHeader();
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if (StringUtils.isEmpty(getHeader().getTransaction())) {
-			throw new InvalidStompMessageException(CommitHeader.TRANSACTION + " is required");
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getTransaction())) {
+      throw new InvalidStompMessageException(CommitHeader.TRANSACTION + " is required");
+    }
+  }
 
 }

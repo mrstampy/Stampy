@@ -18,21 +18,21 @@
  */
 package asia.stampy.server.mina.subscription;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UnexpectedAcknowledgementException.
  */
 public class UnexpectedAcknowledgementException extends Exception {
 
-	private static final long serialVersionUID = 9160361992156988284L;
+  private static final long serialVersionUID = 9160361992156988284L;
 
-	/**
-	 * Instantiates a new unexpected acknowledgement exception.
-	 *
-	 * @param message the message
-	 */
-	public UnexpectedAcknowledgementException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new unexpected acknowledgement exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public UnexpectedAcknowledgementException(String message) {
+    super(message);
+  }
 
 }

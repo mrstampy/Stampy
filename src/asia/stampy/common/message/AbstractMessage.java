@@ -25,7 +25,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import asia.stampy.common.StompMessageParser;
 
-// TODO: Auto-generated Javadoc
 /**
  * Abstract implementation of a {@link StampyMessage}.
  * 
@@ -34,114 +33,121 @@ import asia.stampy.common.StompMessageParser;
  */
 public abstract class AbstractMessage<HDR extends StampyMessageHeader> implements StampyMessage<HDR> {
 
-	private static final long serialVersionUID = -577180637937320507L;
+  private static final long serialVersionUID = -577180637937320507L;
 
-	private HDR header;
-	private final StompMessageType messageType;
+  private HDR header;
+  private final StompMessageType messageType;
 
-	/**
-	 * Instantiates a new abstract message.
-	 * 
-	 * @param messageType
-	 *          the message type
-	 */
-	protected AbstractMessage(StompMessageType messageType) {
-		this.messageType = messageType;
-	}
+  /**
+   * Instantiates a new abstract message.
+   * 
+   * @param messageType
+   *          the message type
+   */
+  protected AbstractMessage(StompMessageType messageType) {
+    this.messageType = messageType;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see asia.stampy.common.message.StampyMessage#getHeader()
-	 */
-	public HDR getHeader() {
-		if (header == null) header = createNewHeader();
-		return header;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.StampyMessage#getHeader()
+   */
+  @Override
+  public HDR getHeader() {
+    if (header == null) header = createNewHeader();
+    return header;
+  }
 
-	/**
-	 * Creates the new header.
-	 * 
-	 * @return the hdr
-	 */
-	protected abstract HDR createNewHeader();
+  /**
+   * Creates the new header.
+   * 
+   * @return the hdr
+   */
+  protected abstract HDR createNewHeader();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see asia.stampy.common.message.StampyMessage#getMessageType()
-	 */
-	public StompMessageType getMessageType() {
-		return messageType;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.StampyMessage#getMessageType()
+   */
+  @Override
+  public StompMessageType getMessageType() {
+    return messageType;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see asia.stampy.common.message.StampyMessage#toStompMessage(boolean)
-	 */
-	public final String toStompMessage(boolean validate) {
-		if (validate) validate();
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.StampyMessage#toStompMessage(boolean)
+   */
+  @Override
+  public final String toStompMessage(boolean validate) {
+    if (validate) validate();
 
-		StringBuilder builder = new StringBuilder();
+    StringBuilder builder = new StringBuilder();
 
-		String body = postHeader();
+    String body = postHeader();
 
-		builder.append(getMessageType().name());
-		String header = getHeader().toMessageHeader();
-		if (StringUtils.isNotEmpty(header)) {
-			builder.append("\n");
-			builder.append(header);
-		}
-		builder.append("\n\n");
-		builder.append(body);
+    builder.append(getMessageType().name());
+    String header = getHeader().toMessageHeader();
+    if (StringUtils.isNotEmpty(header)) {
+      builder.append("\n");
+      builder.append(header);
+    }
+    builder.append("\n\n");
+    builder.append(body);
 
-		builder.append(StompMessageParser.EOM);
+    builder.append(StompMessageParser.EOM);
 
-		return builder.toString();
-	}
+    return builder.toString();
+  }
 
-	/**
-	 * Validates the message should {@link AbstractMessage#toStompMessage(true)}
-	 * be called.
-	 */
-	public abstract void validate();
+  /**
+   * Validates the message should {@link AbstractMessage#toStompMessage(true)}
+   * be called.
+   */
+  @Override
+  public abstract void validate();
 
-	/**
-	 * This method is used to create the body of the message, if applicable. The
-	 * default implementation returns null.
-	 * 
-	 * @return the string
-	 */
-	protected String postHeader() {
-		return null;
-	}
+  /**
+   * This method is used to create the body of the message, if applicable. The
+   * default implementation returns null.
+   * 
+   * @return the string
+   */
+  protected String postHeader() {
+    return null;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object o) {
-		return EqualsBuilder.reflectionEquals(this, o);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object o) {
+    return EqualsBuilder.reflectionEquals(this, o);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    return HashCodeBuilder.reflectionHashCode(this);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this);
+  }
 
 }

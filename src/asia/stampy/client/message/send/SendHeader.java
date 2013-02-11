@@ -20,54 +20,54 @@ package asia.stampy.client.message.send;
 
 import asia.stampy.client.message.AbstractClientBodyMessageHeader;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class SendHeader.
  */
 public class SendHeader extends AbstractClientBodyMessageHeader {
 
-	private static final long serialVersionUID = -4105777135779226205L;
-	
-	/** The Constant TRANSACTION. */
-	public static final String TRANSACTION = "transaction";
-	
-	/** The Constant DESTINATION. */
-	public static final String DESTINATION = "destination";
+  private static final long serialVersionUID = -4105777135779226205L;
 
-	/**
-	 * Sets the destination.
-	 *
-	 * @param destination the new destination
-	 */
-	public void setDestination(String destination) {
-		addHeader(DESTINATION, destination);
-	}
-	
-	/**
-	 * Gets the destination.
-	 *
-	 * @return the destination
-	 */
-	public String getDestination() {
-		return getHeaderValue(DESTINATION);
-	}
-	
-	/**
-	 * Sets the transaction.
-	 *
-	 * @param transaction the new transaction
-	 */
-	public void setTransaction(String transaction) {
-		addHeader(TRANSACTION, transaction);
-	}
-	
-	/**
-	 * Gets the transaction.
-	 *
-	 * @return the transaction
-	 */
-	public String getTransaction() {
-		return getHeaderValue(TRANSACTION);
-	}
+  /** The Constant TRANSACTION. */
+  public static final String TRANSACTION = "transaction";
+
+  /** The Constant DESTINATION. */
+  public static final String DESTINATION = "destination";
+
+  /**
+   * Sets the destination.
+   * 
+   * @param destination
+   *          the new destination
+   */
+  public void setDestination(String destination) {
+    addHeader(DESTINATION, destination);
+  }
+
+  /**
+   * Gets the destination.
+   * 
+   * @return the destination
+   */
+  public String getDestination() {
+    return getHeaderValue(DESTINATION);
+  }
+
+  /**
+   * Sets the transaction.
+   * 
+   * @param transaction
+   *          the new transaction
+   */
+  public void setTransaction(String transaction) {
+    addHeader(TRANSACTION, transaction);
+  }
+
+  /**
+   * Gets the transaction.
+   * 
+   * @return the transaction
+   */
+  public String getTransaction() {
+    return getHeaderValue(TRANSACTION);
+  }
 }

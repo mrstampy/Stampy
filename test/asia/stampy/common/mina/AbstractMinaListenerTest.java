@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2013 Burton Alexander
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 
+ */
 package asia.stampy.common.mina;
 
 import static junit.framework.Assert.assertEquals;
@@ -29,81 +47,81 @@ import asia.stampy.server.message.receipt.ReceiptMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 public abstract class AbstractMinaListenerTest {
-	protected HostPort hostPort = new HostPort("burt.alexander", 9999);
+  protected HostPort hostPort = new HostPort("burt.alexander", 9999);
 
-	@Mock
-	protected IoSession session;
+  @Mock
+  protected IoSession session;
 
-	@Mock
-	protected ClientMinaMessageGateway clientGateway;
+  @Mock
+  protected ClientMinaMessageGateway clientGateway;
 
-	@Mock
-	protected ServerMinaMessageGateway serverGateway;
+  @Mock
+  protected ServerMinaMessageGateway serverGateway;
 
-	protected void testTypes(StampyMinaMessageListener listener, StompMessageType[] expecteds) {
-		StompMessageType[] actuals = listener.getMessageTypes();
+  protected void testTypes(StampyMinaMessageListener listener, StompMessageType[] expecteds) {
+    StompMessageType[] actuals = listener.getMessageTypes();
 
-		testTypes(expecteds, actuals);
-	}
+    testTypes(expecteds, actuals);
+  }
 
-	protected void testTypes(StampyOutgoingMessageInterceptor interceptor, StompMessageType[] expecteds) {
-		StompMessageType[] actuals = interceptor.getMessageTypes();
+  protected void testTypes(StampyOutgoingMessageInterceptor interceptor, StompMessageType[] expecteds) {
+    StompMessageType[] actuals = interceptor.getMessageTypes();
 
-		testTypes(expecteds, actuals);
-	}
+    testTypes(expecteds, actuals);
+  }
 
-	protected StampyMessage<?> getMessage(StompMessageType type) {
-		switch (type) {
-		case ABORT:
-			return new AbortMessage("transaction");
-		case ACK:
-			return new AckMessage("id");
-		case BEGIN:
-			return new BeginMessage("transaction");
-		case COMMIT:
-			return new CommitMessage("transaction");
-		case NACK:
-			return new NackMessage("id");
-		case SEND:
-			return new SendMessage("destination", "receiptId");
-		case SUBSCRIBE:
-			return new SubscribeMessage("destination", "id");
-		case UNSUBSCRIBE:
-			return new UnsubscribeMessage("id");
-		case CONNECT:
-			return new ConnectMessage("host");
-		case CONNECTED:
-			return new ConnectedMessage("1.2");
-		case DISCONNECT:
-			return new DisconnectMessage();
-		case ERROR:
-			return new ErrorMessage("receiptId");
-		case MESSAGE:
-			return new MessageMessage("destination", "messageId", "subscription");
-		case RECEIPT:
-			return new ReceiptMessage("receiptId");
-		case STOMP:
-			return new StompMessage("host");
-		default:
-			throw new IllegalArgumentException(type + " is not recognized");
-		}
-	}
+  protected StampyMessage<?> getMessage(StompMessageType type) {
+    switch (type) {
+    case ABORT:
+      return new AbortMessage("transaction");
+    case ACK:
+      return new AckMessage("id");
+    case BEGIN:
+      return new BeginMessage("transaction");
+    case COMMIT:
+      return new CommitMessage("transaction");
+    case NACK:
+      return new NackMessage("id");
+    case SEND:
+      return new SendMessage("destination", "receiptId");
+    case SUBSCRIBE:
+      return new SubscribeMessage("destination", "id");
+    case UNSUBSCRIBE:
+      return new UnsubscribeMessage("id");
+    case CONNECT:
+      return new ConnectMessage("host");
+    case CONNECTED:
+      return new ConnectedMessage("1.2");
+    case DISCONNECT:
+      return new DisconnectMessage();
+    case ERROR:
+      return new ErrorMessage("receiptId");
+    case MESSAGE:
+      return new MessageMessage("destination", "messageId", "subscription");
+    case RECEIPT:
+      return new ReceiptMessage("receiptId");
+    case STOMP:
+      return new StompMessage("host");
+    default:
+      throw new IllegalArgumentException(type + " is not recognized");
+    }
+  }
 
-	private void testTypes(StompMessageType[] expecteds, StompMessageType[] actuals) {
-		assertEquals(expecteds.length, actuals.length);
+  private void testTypes(StompMessageType[] expecteds, StompMessageType[] actuals) {
+    assertEquals(expecteds.length, actuals.length);
 
-		for (StompMessageType expected : expecteds) {
-			testTypes(expected, actuals);
-		}
-	}
+    for (StompMessageType expected : expecteds) {
+      testTypes(expected, actuals);
+    }
+  }
 
-	private void testTypes(StompMessageType expected, StompMessageType[] actuals) {
-		boolean exists = false;
-		for (StompMessageType actual : actuals) {
-			if (actual.equals(expected)) exists = true;
-		}
+  private void testTypes(StompMessageType expected, StompMessageType[] actuals) {
+    boolean exists = false;
+    for (StompMessageType actual : actuals) {
+      if (actual.equals(expected)) exists = true;
+    }
 
-		assertTrue(exists);
-	}
+    assertTrue(exists);
+  }
 
 }

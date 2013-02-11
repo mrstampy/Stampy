@@ -20,33 +20,32 @@ package asia.stampy.client.message.commit;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class CommitHeader.
  */
 public class CommitHeader extends AbstractClientMessageHeader {
-	private static final long serialVersionUID = 503530501264860164L;
-	
-	/** The Constant TRANSACTION. */
-	public static final String TRANSACTION = "transaction";
-	
-	/**
-	 * Sets the transaction.
-	 *
-	 * @param transaction the new transaction
-	 */
-	public void setTransaction(String transaction) {
-		addHeader(TRANSACTION, transaction);
-	}
-	
-	/**
-	 * Gets the transaction.
-	 *
-	 * @return the transaction
-	 */
-	public String getTransaction() {
-		return getHeaderValue(TRANSACTION);
-	}
+  private static final long serialVersionUID = 503530501264860164L;
+
+  /** The Constant TRANSACTION. */
+  public static final String TRANSACTION = "transaction";
+
+  /**
+   * Sets the transaction.
+   * 
+   * @param transaction
+   *          the new transaction
+   */
+  public void setTransaction(String transaction) {
+    addHeader(TRANSACTION, transaction);
+  }
+
+  /**
+   * Gets the transaction.
+   * 
+   * @return the transaction
+   */
+  public String getTransaction() {
+    return getHeaderValue(TRANSACTION);
+  }
 
 }

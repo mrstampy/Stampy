@@ -22,64 +22,63 @@ import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.examples.loadtest.server.TestServer;
 
-// TODO: Auto-generated Javadoc
 /**
  * Run the {@link TestServer} prior to running this client.
  */
 public class TestClient {
-	private ClientMinaMessageGateway gateway;
-	private TestClientMessageListener listener;
+  private ClientMinaMessageGateway gateway;
+  private TestClientMessageListener listener;
 
-	/**
-	 * Inits the.
-	 * 
-	 * @throws Exception
-	 *           the exception
-	 */
-	public void init() throws Exception {
-		setGateway(Initializer.initialize());
-		listener = new TestClientMessageListener();
-		listener.setGateway(gateway);
-		gateway.addMessageListener(listener);
+  /**
+   * Inits the.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  public void init() throws Exception {
+    setGateway(Initializer.initialize());
+    listener = new TestClientMessageListener();
+    listener.setGateway(gateway);
+    gateway.addMessageListener(listener);
 
-		gateway.connect();
-		gateway.broadcastMessage(new ConnectMessage("localhost"));
-	}
+    gateway.connect();
+    gateway.broadcastMessage(new ConnectMessage("localhost"));
+  }
 
-	/**
-	 * Gets the gateway.
-	 * 
-	 * @return the gateway
-	 */
-	public ClientMinaMessageGateway getGateway() {
-		return gateway;
-	}
+  /**
+   * Gets the gateway.
+   * 
+   * @return the gateway
+   */
+  public ClientMinaMessageGateway getGateway() {
+    return gateway;
+  }
 
-	/**
-	 * Sets the gateway.
-	 * 
-	 * @param gateway
-	 *          the new gateway
-	 */
-	public void setGateway(ClientMinaMessageGateway gateway) {
-		this.gateway = gateway;
-	}
+  /**
+   * Sets the gateway.
+   * 
+   * @param gateway
+   *          the new gateway
+   */
+  public void setGateway(ClientMinaMessageGateway gateway) {
+    this.gateway = gateway;
+  }
 
-	/**
-	 * The main method.
-	 * 
-	 * @param args
-	 *          the arguments
-	 */
-	public static void main(String[] args) {
-		TestClient client = new TestClient();
-		try {
-			client.init();
-			client.listener.disconnect();
-			client.listener.stats();
-			client.getGateway().shutdown();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+  /**
+   * The main method.
+   * 
+   * @param args
+   *          the arguments
+   */
+  public static void main(String[] args) {
+    TestClient client = new TestClient();
+    try {
+      client.init();
+      client.listener.disconnect();
+      client.listener.stats();
+      client.getGateway().shutdown();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }

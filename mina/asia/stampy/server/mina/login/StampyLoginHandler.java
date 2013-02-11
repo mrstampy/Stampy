@@ -18,20 +18,23 @@
  */
 package asia.stampy.server.mina.login;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface StampyLoginHandler.
  */
 public interface StampyLoginHandler {
-	
-	/**
-	 * Login.
-	 *
-	 * @param username the username
-	 * @param password the password
-	 * @throws NotLoggedInException the not logged in exception
-	 * @throws TerminateSessionException the terminate session exception
-	 */
-	void login(String username, String password) throws NotLoggedInException, TerminateSessionException;
+
+  /**
+   * Login.
+   * 
+   * @param username
+   *          the username
+   * @param password
+   *          the password
+   * @throws NotLoggedInException
+   *           the not logged in exception
+   * @throws TerminateSessionException
+   *           the terminate session exception
+   */
+  void login(String username, String password) throws NotLoggedInException, TerminateSessionException;
 
 }

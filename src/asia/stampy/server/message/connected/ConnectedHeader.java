@@ -20,116 +20,119 @@ package asia.stampy.server.message.connected;
 
 import asia.stampy.common.message.AbstractMessageHeader;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class ConnectedHeader.
  */
 public class ConnectedHeader extends AbstractMessageHeader {
 
-	private static final long serialVersionUID = 1548982417648641349L;
-	
-	/** The Constant SESSION. */
-	public static final String SESSION = "session";
-	
-	/** The Constant SERVER. */
-	public static final String SERVER = "server";
-	
-	/** The Constant HEART_BEAT. */
-	public static final String HEART_BEAT = "heart-beat";
-	
-	/** The Constant VERSION. */
-	public static final String VERSION = "version";
+  private static final long serialVersionUID = 1548982417648641349L;
 
-	/**
-	 * Sets the version.
-	 *
-	 * @param version the new version
-	 */
-	public void setVersion(String version) {
-		addHeader(VERSION, version);
-	}
-	
-	/**
-	 * Gets the version.
-	 *
-	 * @return the version
-	 */
-	public String getVersion() {
-		return getHeaderValue(VERSION);
-	}
-	
-	/**
-	 * Sets the heartbeat.
-	 *
-	 * @param clientHBMillis the client hb millis
-	 * @param serverHBMillis the server hb millis
-	 */
-	public void setHeartbeat(int clientHBMillis, int serverHBMillis) {
-		addHeader(HEART_BEAT, Integer.toString(clientHBMillis) + "," + Integer.toString(serverHBMillis));
-	}
-	
-	/**
-	 * Gets the client heartbeat.
-	 *
-	 * @return the client heartbeat
-	 */
-	public int getOutgoingHeartbeat() {
-		return getHeartbeat(0);
-	}
-	
-	/**
-	 * Gets the server heartbeat.
-	 *
-	 * @return the server heartbeat
-	 */
-	public int getIncomingHeartbeat() {
-		return getHeartbeat(1);
-	}
-	
-	private int getHeartbeat(int pos) {
-		String hb = getHeaderValue(HEART_BEAT);
-		if(hb == null) return 0;
-		
-		String[] parts = hb.split(",");
-		
-		return Integer.parseInt(parts[pos]);
-	}
+  /** The Constant SESSION. */
+  public static final String SESSION = "session";
 
-	/**
-	 * Sets the server.
-	 *
-	 * @param server the new server
-	 */
-	public void setServer(String server) {
-		addHeader(SERVER, server);
-	}
-	
-	/**
-	 * Gets the server.
-	 *
-	 * @return the server
-	 */
-	public String getServer() {
-		return getHeaderValue(SERVER);
-	}
-	
-	/**
-	 * Sets the session.
-	 *
-	 * @param session the new session
-	 */
-	public void setSession(String session) {
-		addHeader(SESSION, session);
-	}
-	
-	/**
-	 * Gets the session.
-	 *
-	 * @return the session
-	 */
-	public String getSession() {
-		return getHeaderValue(SESSION);
-	}
-	
+  /** The Constant SERVER. */
+  public static final String SERVER = "server";
+
+  /** The Constant HEART_BEAT. */
+  public static final String HEART_BEAT = "heart-beat";
+
+  /** The Constant VERSION. */
+  public static final String VERSION = "version";
+
+  /**
+   * Sets the version.
+   * 
+   * @param version
+   *          the new version
+   */
+  public void setVersion(String version) {
+    addHeader(VERSION, version);
+  }
+
+  /**
+   * Gets the version.
+   * 
+   * @return the version
+   */
+  public String getVersion() {
+    return getHeaderValue(VERSION);
+  }
+
+  /**
+   * Sets the heartbeat.
+   * 
+   * @param clientHBMillis
+   *          the client hb millis
+   * @param serverHBMillis
+   *          the server hb millis
+   */
+  public void setHeartbeat(int clientHBMillis, int serverHBMillis) {
+    addHeader(HEART_BEAT, Integer.toString(clientHBMillis) + "," + Integer.toString(serverHBMillis));
+  }
+
+  /**
+   * Gets the client heartbeat.
+   * 
+   * @return the client heartbeat
+   */
+  public int getOutgoingHeartbeat() {
+    return getHeartbeat(0);
+  }
+
+  /**
+   * Gets the server heartbeat.
+   * 
+   * @return the server heartbeat
+   */
+  public int getIncomingHeartbeat() {
+    return getHeartbeat(1);
+  }
+
+  private int getHeartbeat(int pos) {
+    String hb = getHeaderValue(HEART_BEAT);
+    if (hb == null) return 0;
+
+    String[] parts = hb.split(",");
+
+    return Integer.parseInt(parts[pos]);
+  }
+
+  /**
+   * Sets the server.
+   * 
+   * @param server
+   *          the new server
+   */
+  public void setServer(String server) {
+    addHeader(SERVER, server);
+  }
+
+  /**
+   * Gets the server.
+   * 
+   * @return the server
+   */
+  public String getServer() {
+    return getHeaderValue(SERVER);
+  }
+
+  /**
+   * Sets the session.
+   * 
+   * @param session
+   *          the new session
+   */
+  public void setSession(String session) {
+    addHeader(SESSION, session);
+  }
+
+  /**
+   * Gets the session.
+   * 
+   * @return the session
+   */
+  public String getSession() {
+    return getHeaderValue(SESSION);
+  }
+
 }

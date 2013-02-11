@@ -21,30 +21,29 @@ package asia.stampy.examples.remote.exe.common;
 import java.io.Serializable;
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface Remoteable.
  */
 public interface Remoteable extends Serializable {
 
-	/**
-	 * Execute. Execute any bit of code on the server a client sends in a STOMP
-	 * SEND message. DO NOT do anything like this in a public facing server unless
-	 * you know what you are doing. Even then, don't do it.
-	 * 
-	 * @return true, if successful
-	 * @throws Exception
-	 *           the exception
-	 */
-	boolean execute() throws Exception;
+  /**
+   * Execute. Execute any bit of code on the server a client sends in a STOMP
+   * SEND message. DO NOT do anything like this in a public facing server unless
+   * you know what you are doing. Even then, don't do it.
+   * 
+   * @return true, if successful
+   * @throws Exception
+   *           the exception
+   */
+  boolean execute() throws Exception;
 
-	/**
-	 * Sets the properties.
-	 * 
-	 * @param properties
-	 *          the properties
-	 * @throws MissingPropertyException
-	 *           the missing propery exception
-	 */
-	void setProperties(Map<String, String> properties) throws MissingPropertyException;
+  /**
+   * Sets the properties.
+   * 
+   * @param properties
+   *          the properties
+   * @throws MissingPropertyException
+   *           the missing propery exception
+   */
+  void setProperties(Map<String, String> properties) throws MissingPropertyException;
 }

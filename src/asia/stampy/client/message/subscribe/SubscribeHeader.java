@@ -20,130 +20,133 @@ package asia.stampy.client.message.subscribe;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class SubscribeHeader.
  */
 public class SubscribeHeader extends AbstractClientMessageHeader {
-	private static final long serialVersionUID = 2321658220170938363L;
-	
-	/** The Constant ID. */
-	public static final String ID = "id";
-	
-	/** The Constant ACK. */
-	public static final String ACK = "ack";
-	
-	/** The Constant DESTINATION. */
-	public static final String DESTINATION = "destination";
-	
-	/**
-	 * The Enum Ack.
-	 */
-	public enum Ack {
-		
-		/** The auto. */
-		auto("auto"),
-		
-		/** The client. */
-		client("client"),
-		
-		/** The client individual. */
-		clientIndividual("client-individual");
-		
-		/** The ack value. */
-		String ackValue;
-		
-		/**
-		 * Instantiates a new ack.
-		 *
-		 * @param ackValue the ack value
-		 */
-		Ack(String ackValue) {
-			this.ackValue = ackValue;
-		}
-		
-		/**
-		 * Gets the ack value.
-		 *
-		 * @return the ack value
-		 */
-		public String getAckValue() {
-			return ackValue;
-		}
-		
-		/**
-		 * From string.
-		 *
-		 * @param s the s
-		 * @return the ack
-		 */
-		public static Ack fromString(String s) {
-			for(Ack ack : Ack.values()) {
-				if(ack.getAckValue().equals(s)) {
-					return ack;
-				}
-			}
-			
-			return null;
-		}
-	}
+  private static final long serialVersionUID = 2321658220170938363L;
 
-	/**
-	 * Sets the destination.
-	 *
-	 * @param destination the new destination
-	 */
-	public void setDestination(String destination) {
-		addHeader(DESTINATION, destination);
-	}
-	
-	/**
-	 * Gets the destination.
-	 *
-	 * @return the destination
-	 */
-	public String getDestination() {
-		return getHeaderValue(DESTINATION);
-	}
-	
-	/**
-	 * Sets the ack.
-	 *
-	 * @param ack the new ack
-	 */
-	public void setAck(Ack ack) {
-		addHeader(ACK, ack.getAckValue());
-	}
-	
-	/**
-	 * Gets the ack.
-	 *
-	 * @return the ack
-	 */
-	public Ack getAck() {
-		String s = getHeaderValue(ACK);
-		if(s == null) return null;
-		
-		return Ack.fromString(s);
-	}
-	
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the new id
-	 */
-	public void setId(String id) {
-		addHeader(ID, id);
-	}
-	
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public String getId() {
-		return getHeaderValue(ID);
-	}
+  /** The Constant ID. */
+  public static final String ID = "id";
+
+  /** The Constant ACK. */
+  public static final String ACK = "ack";
+
+  /** The Constant DESTINATION. */
+  public static final String DESTINATION = "destination";
+
+  /**
+   * The Enum Ack.
+   */
+  public enum Ack {
+
+    /** The auto. */
+    auto("auto"),
+
+    /** The client. */
+    client("client"),
+
+    /** The client individual. */
+    clientIndividual("client-individual");
+
+    /** The ack value. */
+    String ackValue;
+
+    /**
+     * Instantiates a new ack.
+     * 
+     * @param ackValue
+     *          the ack value
+     */
+    Ack(String ackValue) {
+      this.ackValue = ackValue;
+    }
+
+    /**
+     * Gets the ack value.
+     * 
+     * @return the ack value
+     */
+    public String getAckValue() {
+      return ackValue;
+    }
+
+    /**
+     * From string.
+     * 
+     * @param s
+     *          the s
+     * @return the ack
+     */
+    public static Ack fromString(String s) {
+      for (Ack ack : Ack.values()) {
+        if (ack.getAckValue().equals(s)) {
+          return ack;
+        }
+      }
+
+      return null;
+    }
+  }
+
+  /**
+   * Sets the destination.
+   * 
+   * @param destination
+   *          the new destination
+   */
+  public void setDestination(String destination) {
+    addHeader(DESTINATION, destination);
+  }
+
+  /**
+   * Gets the destination.
+   * 
+   * @return the destination
+   */
+  public String getDestination() {
+    return getHeaderValue(DESTINATION);
+  }
+
+  /**
+   * Sets the ack.
+   * 
+   * @param ack
+   *          the new ack
+   */
+  public void setAck(Ack ack) {
+    addHeader(ACK, ack.getAckValue());
+  }
+
+  /**
+   * Gets the ack.
+   * 
+   * @return the ack
+   */
+  public Ack getAck() {
+    String s = getHeaderValue(ACK);
+    if (s == null) return null;
+
+    return Ack.fromString(s);
+  }
+
+  /**
+   * Sets the id.
+   * 
+   * @param id
+   *          the new id
+   */
+  public void setId(String id) {
+    addHeader(ID, id);
+  }
+
+  /**
+   * Gets the id.
+   * 
+   * @return the id
+   */
+  public String getId() {
+    return getHeaderValue(ID);
+  }
 
 }

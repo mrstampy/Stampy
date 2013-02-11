@@ -23,45 +23,69 @@ import org.apache.mina.core.service.IoServiceListener;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MinaServiceAdapter.
  */
 public class MinaServiceAdapter implements IoServiceListener {
 
-	/* (non-Javadoc)
-	 * @see org.apache.mina.core.service.IoServiceListener#serviceActivated(org.apache.mina.core.service.IoService)
-	 */
-	public void serviceActivated(IoService service) throws Exception {
-		// blank
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.core.service.IoServiceListener#serviceActivated(org.apache
+   * .mina.core.service.IoService)
+   */
+  @Override
+  public void serviceActivated(IoService service) throws Exception {
+    // blank
+  }
 
-	/* (non-Javadoc)
-	 * @see org.apache.mina.core.service.IoServiceListener#serviceIdle(org.apache.mina.core.service.IoService, org.apache.mina.core.session.IdleStatus)
-	 */
-	public void serviceIdle(IoService service, IdleStatus idleStatus) throws Exception {
-		// blank
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.core.service.IoServiceListener#serviceIdle(org.apache.mina
+   * .core.service.IoService, org.apache.mina.core.session.IdleStatus)
+   */
+  @Override
+  public void serviceIdle(IoService service, IdleStatus idleStatus) throws Exception {
+    // blank
+  }
 
-	/* (non-Javadoc)
-	 * @see org.apache.mina.core.service.IoServiceListener#serviceDeactivated(org.apache.mina.core.service.IoService)
-	 */
-	public void serviceDeactivated(IoService service) throws Exception {
-		// blank
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.core.service.IoServiceListener#serviceDeactivated(org.apache
+   * .mina.core.service.IoService)
+   */
+  @Override
+  public void serviceDeactivated(IoService service) throws Exception {
+    // blank
+  }
 
-	/* (non-Javadoc)
-	 * @see org.apache.mina.core.service.IoServiceListener#sessionCreated(org.apache.mina.core.session.IoSession)
-	 */
-	public void sessionCreated(IoSession session) throws Exception {
-		// blank
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.core.service.IoServiceListener#sessionCreated(org.apache
+   * .mina.core.session.IoSession)
+   */
+  @Override
+  public void sessionCreated(IoSession session) throws Exception {
+    // blank
+  }
 
-	/* (non-Javadoc)
-	 * @see org.apache.mina.core.service.IoServiceListener#sessionDestroyed(org.apache.mina.core.session.IoSession)
-	 */
-	public void sessionDestroyed(IoSession session) throws Exception {
-		// blank
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.core.service.IoServiceListener#sessionDestroyed(org.apache
+   * .mina.core.session.IoSession)
+   */
+  @Override
+  public void sessionDestroyed(IoSession session) throws Exception {
+    // blank
+  }
 
 }

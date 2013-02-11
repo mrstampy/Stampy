@@ -26,45 +26,48 @@ import java.io.ObjectOutputStream;
 
 import org.apache.commons.codec.binary.Base64;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * Convenience class to encapsulate the serialize/deserialize functionality.
  */
 public class SerializationUtils {
 
-	/**
-	 * Serialize base64.
-	 *
-	 * @param o the o
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public static String serializeBase64(Object o) throws IOException {
-		if (o instanceof byte[]) return Base64.encodeBase64URLSafeString((byte[]) o);
+  /**
+   * Serialize base64.
+   * 
+   * @param o
+   *          the o
+   * @return the string
+   * @throws IOException
+   *           Signals that an I/O exception has occurred.
+   */
+  public static String serializeBase64(Object o) throws IOException {
+    if (o instanceof byte[]) return Base64.encodeBase64URLSafeString((byte[]) o);
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    ObjectOutputStream oos = new ObjectOutputStream(baos);
 
-		oos.writeObject(o);
+    oos.writeObject(o);
 
-		return Base64.encodeBase64String(baos.toByteArray());
-	}
+    return Base64.encodeBase64String(baos.toByteArray());
+  }
 
-	/**
-	 * Deserialize base64.
-	 *
-	 * @param s the s
-	 * @return the object
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ClassNotFoundException the class not found exception
-	 */
-	public static Object deserializeBase64(String s) throws IOException, ClassNotFoundException {
-		byte[] bytes = Base64.decodeBase64(s);
+  /**
+   * Deserialize base64.
+   * 
+   * @param s
+   *          the s
+   * @return the object
+   * @throws IOException
+   *           Signals that an I/O exception has occurred.
+   * @throws ClassNotFoundException
+   *           the class not found exception
+   */
+  public static Object deserializeBase64(String s) throws IOException, ClassNotFoundException {
+    byte[] bytes = Base64.decodeBase64(s);
 
-		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
 
-		return ois.readObject();
-	}
+    return ois.readObject();
+  }
 
 }

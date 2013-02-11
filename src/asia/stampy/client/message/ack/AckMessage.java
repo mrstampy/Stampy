@@ -24,49 +24,52 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class AckMessage.
  */
 public class AckMessage extends AbstractMessage<AckHeader> {
 
-	private static final long serialVersionUID = 1984356410866237324L;
+  private static final long serialVersionUID = 1984356410866237324L;
 
-	/**
-	 * Instantiates a new ack message.
-	 *
-	 * @param id the id
-	 */
-	public AckMessage(String id) {
-		this();
+  /**
+   * Instantiates a new ack message.
+   * 
+   * @param id
+   *          the id
+   */
+  public AckMessage(String id) {
+    this();
 
-		getHeader().setId(id);
-	}
+    getHeader().setId(id);
+  }
 
-	/**
-	 * Instantiates a new ack message.
-	 */
-	public AckMessage() {
-		super(StompMessageType.ACK);
-	}
+  /**
+   * Instantiates a new ack message.
+   */
+  public AckMessage() {
+    super(StompMessageType.ACK);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected AckHeader createNewHeader() {
-		return new AckHeader();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected AckHeader createNewHeader() {
+    return new AckHeader();
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if (StringUtils.isEmpty(getHeader().getId())) {
-			throw new InvalidStompMessageException(AckHeader.ID + " is required");
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getId())) {
+      throw new InvalidStompMessageException(AckHeader.ID + " is required");
+    }
+  }
 
 }

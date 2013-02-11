@@ -24,7 +24,6 @@ import asia.stampy.client.mina.RawClientMinaHandler;
 import asia.stampy.client.mina.connected.ConnectedMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class programmatically initializes the Stampy classes required for this
  * example. It is expected that a DI framework such as <a
@@ -34,31 +33,31 @@ import asia.stampy.common.heartbeat.HeartbeatContainer;
  */
 public class Initializer {
 
-	/**
-	 * Initialize.
-	 * 
-	 * @return the client mina message gateway
-	 */
-	public static ClientMinaMessageGateway initialize() {
-		HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
+  /**
+   * Initialize.
+   * 
+   * @return the client mina message gateway
+   */
+  public static ClientMinaMessageGateway initialize() {
+    HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-		AutoTerminatingClientGateway gateway = new AutoTerminatingClientGateway();
-		gateway.setAutoShutdown(true);
-		gateway.setPort(1234);
-		gateway.setHost("localhost");
+    AutoTerminatingClientGateway gateway = new AutoTerminatingClientGateway();
+    gateway.setAutoShutdown(true);
+    gateway.setPort(1234);
+    gateway.setHost("localhost");
 
-		RawClientMinaHandler handler = new RawClientMinaHandler();
-		handler.setHeartbeatContainer(heartbeatContainer);
-		handler.setMessageGateway(gateway);
+    RawClientMinaHandler handler = new RawClientMinaHandler();
+    handler.setHeartbeatContainer(heartbeatContainer);
+    handler.setMessageGateway(gateway);
 
-		ConnectedMessageListener cml = new ConnectedMessageListener();
-		cml.setHeartbeatContainer(heartbeatContainer);
-		cml.setMessageGateway(gateway);
-		handler.addMessageListener(cml);
+    ConnectedMessageListener cml = new ConnectedMessageListener();
+    cml.setHeartbeatContainer(heartbeatContainer);
+    cml.setMessageGateway(gateway);
+    handler.addMessageListener(cml);
 
-		gateway.setHandler(handler);
+    gateway.setHandler(handler);
 
-		return gateway;
+    return gateway;
 
-	}
+  }
 }

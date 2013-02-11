@@ -18,18 +18,16 @@
  */
 package asia.stampy.client.message;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Interface ClientMessageHeader.
  */
 public interface ClientMessageHeader {
-	
-	/**
-	 * Gets the receipt.
-	 *
-	 * @return the receipt
-	 */
-	String getReceipt();
-	
+
+  /**
+   * Gets the receipt.
+   * 
+   * @return the receipt
+   */
+  String getReceipt();
+
 }

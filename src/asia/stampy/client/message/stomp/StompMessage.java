@@ -25,54 +25,57 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class StompMessage.
  */
 public class StompMessage extends AbstractMessage<StompHeader> {
 
-	private static final long serialVersionUID = 4889982516009469738L;
+  private static final long serialVersionUID = 4889982516009469738L;
 
-	/**
-	 * Instantiates a new stomp message.
-	 *
-	 * @param host the host
-	 */
-	public StompMessage(String host) {
-		this();
+  /**
+   * Instantiates a new stomp message.
+   * 
+   * @param host
+   *          the host
+   */
+  public StompMessage(String host) {
+    this();
 
-		getHeader().setAcceptVersion("1.2");
-		getHeader().setHost(host);
-	}
-	
-	/**
-	 * Instantiates a new stomp message.
-	 */
-	public StompMessage() {
-		super(StompMessageType.STOMP);
-	}
+    getHeader().setAcceptVersion("1.2");
+    getHeader().setHost(host);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected StompHeader createNewHeader() {
-		return new StompHeader();
-	}
+  /**
+   * Instantiates a new stomp message.
+   */
+  public StompMessage() {
+    super(StompMessageType.STOMP);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if(StringUtils.isEmpty(getHeader().getAcceptVersion())) {
-			throw new InvalidStompMessageException(ConnectHeader.ACCEPT_VERSION + " is required, 1.2 only");
-		}
-		
-		if(StringUtils.isEmpty(getHeader().getHost())) {
-			throw new InvalidStompMessageException(ConnectHeader.HOST + " is required");
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected StompHeader createNewHeader() {
+    return new StompHeader();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getAcceptVersion())) {
+      throw new InvalidStompMessageException(ConnectHeader.ACCEPT_VERSION + " is required, 1.2 only");
+    }
+
+    if (StringUtils.isEmpty(getHeader().getHost())) {
+      throw new InvalidStompMessageException(ConnectHeader.HOST + " is required");
+    }
+  }
 
 }

@@ -20,35 +20,44 @@ package asia.stampy.examples.system.server;
 
 import asia.stampy.server.mina.subscription.StampyAcknowledgementHandler;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SystemAcknowledgementHandler.
  */
 public class SystemAcknowledgementHandler implements StampyAcknowledgementHandler {
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.server.mina.subscription.StampyAcknowledgementHandler#ackReceived(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void ackReceived(String id, String receipt, String transaction) throws Exception {
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.server.mina.subscription.StampyAcknowledgementHandler#ackReceived
+   * (java.lang.String, java.lang.String, java.lang.String)
+   */
+  @Override
+  public void ackReceived(String id, String receipt, String transaction) throws Exception {
 
-	}
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.server.mina.subscription.StampyAcknowledgementHandler#nackReceived(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void nackReceived(String id, String receipt, String transaction) throws Exception {
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.server.mina.subscription.StampyAcknowledgementHandler#nackReceived
+   * (java.lang.String, java.lang.String, java.lang.String)
+   */
+  @Override
+  public void nackReceived(String id, String receipt, String transaction) throws Exception {
 
+  }
 
-	}
-
-	/* (non-Javadoc)
-	 * @see asia.stampy.server.mina.subscription.StampyAcknowledgementHandler#noAcknowledgementReceived(java.lang.String)
-	 */
-	@Override
-	public void noAcknowledgementReceived(String id) {
-		System.out.println("No acknowledgement received for " + id);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.server.mina.subscription.StampyAcknowledgementHandler#
+   * noAcknowledgementReceived(java.lang.String)
+   */
+  @Override
+  public void noAcknowledgementReceived(String id) {
+    System.out.println("No acknowledgement received for " + id);
+  }
 
 }

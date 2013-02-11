@@ -20,54 +20,54 @@ package asia.stampy.client.message.ack;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class AckHeader.
  */
 public class AckHeader extends AbstractClientMessageHeader {
-	private static final long serialVersionUID = 5190052881939069233L;
-	
-	/** The Constant TRANSACTION. */
-	public static final String TRANSACTION = "transaction";
-	
-	/** The Constant ID. */
-	public static final String ID = "id";
-	
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the new id
-	 */
-	public void setId(String id) {
-		addHeader(ID, id);
-	}
-	
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public String getId() {
-		return getHeaderValue(ID);
-	}
-	
-	/**
-	 * Sets the transaction.
-	 *
-	 * @param transaction the new transaction
-	 */
-	public void setTransaction(String transaction) {
-		addHeader(TRANSACTION, transaction);
-	}
-	
-	/**
-	 * Gets the transaction.
-	 *
-	 * @return the transaction
-	 */
-	public String getTransaction() {
-		return getHeaderValue(TRANSACTION);
-	}
+  private static final long serialVersionUID = 5190052881939069233L;
+
+  /** The Constant TRANSACTION. */
+  public static final String TRANSACTION = "transaction";
+
+  /** The Constant ID. */
+  public static final String ID = "id";
+
+  /**
+   * Sets the id.
+   * 
+   * @param id
+   *          the new id
+   */
+  public void setId(String id) {
+    addHeader(ID, id);
+  }
+
+  /**
+   * Gets the id.
+   * 
+   * @return the id
+   */
+  public String getId() {
+    return getHeaderValue(ID);
+  }
+
+  /**
+   * Sets the transaction.
+   * 
+   * @param transaction
+   *          the new transaction
+   */
+  public void setTransaction(String transaction) {
+    addHeader(TRANSACTION, transaction);
+  }
+
+  /**
+   * Gets the transaction.
+   * 
+   * @return the transaction
+   */
+  public String getTransaction() {
+    return getHeaderValue(TRANSACTION);
+  }
 
 }

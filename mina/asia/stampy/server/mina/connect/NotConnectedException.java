@@ -18,22 +18,21 @@
  */
 package asia.stampy.server.mina.connect;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class TransactionAlreadyStartedException.
  */
 public class NotConnectedException extends Exception {
 
-	private static final long serialVersionUID = -255334241693552005L;
+  private static final long serialVersionUID = -255334241693552005L;
 
-	/**
-	 * Instantiates a new not connected exception.
-	 * 
-	 * @param message
-	 *          the message
-	 */
-	public NotConnectedException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new not connected exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public NotConnectedException(String message) {
+    super(message);
+  }
 
 }

@@ -25,55 +25,61 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
 import asia.stampy.common.mina.StampyMinaHandler;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class StringEncoder.
  */
 public class StringEncoder extends ProtocolEncoderAdapter {
 
-	private int maxDataLength = Integer.MAX_VALUE;
+  private int maxDataLength = Integer.MAX_VALUE;
 
-	/**
-	 * Instantiates a new string encoder.
-	 *
-	 * @param maxDataLength the max data length
-	 */
-	public StringEncoder(int maxDataLength) {
-		super();
-		setMaxDataLength(maxDataLength);
-	}
+  /**
+   * Instantiates a new string encoder.
+   * 
+   * @param maxDataLength
+   *          the max data length
+   */
+  public StringEncoder(int maxDataLength) {
+    super();
+    setMaxDataLength(maxDataLength);
+  }
 
-	/* (non-Javadoc)
-	 * @see org.apache.mina.filter.codec.ProtocolEncoder#encode(org.apache.mina.core.session.IoSession, java.lang.Object, org.apache.mina.filter.codec.ProtocolEncoderOutput)
-	 */
-	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
-		String value = (String) message;
-		IoBuffer buf = IoBuffer.allocate(value.length()).setAutoExpand(true);
-		buf.putString(value, StampyMinaHandler.CHARSET.newEncoder());
-		if (buf.position() > getMaxDataLength()) {
-			throw new IllegalArgumentException("Data length: " + buf.position());
-		}
-		buf.flip();
-		out.write(buf);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.filter.codec.ProtocolEncoder#encode(org.apache.mina.core
+   * .session.IoSession, java.lang.Object,
+   * org.apache.mina.filter.codec.ProtocolEncoderOutput)
+   */
+  @Override
+  public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
+    String value = (String) message;
+    IoBuffer buf = IoBuffer.allocate(value.length()).setAutoExpand(true);
+    buf.putString(value, StampyMinaHandler.CHARSET.newEncoder());
+    if (buf.position() > getMaxDataLength()) {
+      throw new IllegalArgumentException("Data length: " + buf.position());
+    }
+    buf.flip();
+    out.write(buf);
+  }
 
-	/**
-	 * Gets the max data length.
-	 *
-	 * @return the max data length
-	 */
-	public int getMaxDataLength() {
-		return maxDataLength;
-	}
+  /**
+   * Gets the max data length.
+   * 
+   * @return the max data length
+   */
+  public int getMaxDataLength() {
+    return maxDataLength;
+  }
 
-	/**
-	 * Sets the max data length.
-	 *
-	 * @param maxDataLength the new max data length
-	 */
-	public void setMaxDataLength(int maxDataLength) {
-		this.maxDataLength = maxDataLength;
-	}
+  /**
+   * Sets the max data length.
+   * 
+   * @param maxDataLength
+   *          the new max data length
+   */
+  public void setMaxDataLength(int maxDataLength) {
+    this.maxDataLength = maxDataLength;
+  }
 
 }

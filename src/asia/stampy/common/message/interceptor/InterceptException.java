@@ -18,31 +18,33 @@
  */
 package asia.stampy.common.message.interceptor;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class InterceptException.
  */
 public class InterceptException extends Exception {
 
-	private static final long serialVersionUID = 3708895403125259300L;
+  private static final long serialVersionUID = 3708895403125259300L;
 
-	/**
-	 * Instantiates a new intercept exception.
-	 *
-	 * @param message the message
-	 */
-	public InterceptException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new intercept exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public InterceptException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Instantiates a new intercept exception.
-	 *
-	 * @param message the message
-	 * @param cause the cause
-	 */
-	public InterceptException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Instantiates a new intercept exception.
+   * 
+   * @param message
+   *          the message
+   * @param cause
+   *          the cause
+   */
+  public InterceptException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
 }

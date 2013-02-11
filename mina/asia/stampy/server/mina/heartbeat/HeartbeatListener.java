@@ -38,126 +38,138 @@ import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 
-
-// TODO: Auto-generated Javadoc
 /**
- * The listener interface for receiving heartbeat events.
- * The class that is interested in processing a heartbeat
- * event implements this interface, and the object created
- * with that class is registered with a component using the
+ * The listener interface for receiving heartbeat events. The class that is
+ * interested in processing a heartbeat event implements this interface, and the
+ * object created with that class is registered with a component using the
  * component's <code>addHeartbeatListener<code> method. When
  * the heartbeat event occurs, that object's appropriate
  * method is invoked.
- *
+ * 
  * @see HeartbeatEvent
  */
 @Resource
 public class HeartbeatListener implements StampyMinaMessageListener {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP, StompMessageType.DISCONNECT };
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP,
+      StompMessageType.DISCONNECT };
 
-	private HeartbeatContainer heartbeatContainer;
+  private HeartbeatContainer heartbeatContainer;
 
-	private AbstractStampyMessageGateway messageGateway;
+  private AbstractStampyMessageGateway messageGateway;
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
-	 */
-	@Override
-	public StompMessageType[] getMessageTypes() {
-		return TYPES;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   */
+  @Override
+  public StompMessageType[] getMessageTypes() {
+    return TYPES;
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
-	 */
-	@Override
-	public boolean isForMessage(StampyMessage<?> message) {
-		return StringUtils.isNotEmpty(message.getHeader().getHeaderValue(ConnectHeader.HEART_BEAT))
-				|| isDisconnectMessage(message);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * .common.message.StampyMessage)
+   */
+  @Override
+  public boolean isForMessage(StampyMessage<?> message) {
+    return StringUtils.isNotEmpty(message.getHeader().getHeaderValue(ConnectHeader.HEART_BEAT))
+        || isDisconnectMessage(message);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
-		if (isDisconnectMessage(message)) {
-			getHeartbeatContainer().remove(hostPort);
-			return;
-		}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage,
+   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   */
+  @Override
+  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+    if (isDisconnectMessage(message)) {
+      getHeartbeatContainer().remove(hostPort);
+      return;
+    }
 
-		ConnectHeader header = getConnectHeader(message);
+    ConnectHeader header = getConnectHeader(message);
 
-		int requested = header.getIncomingHeartbeat();
-		if (getMessageGateway().getHeartbeat() <= 0 || requested <= 0) return;
-		
-		int heartbeat = Math.max(requested, getMessageGateway().getHeartbeat());
+    int requested = header.getIncomingHeartbeat();
+    if (getMessageGateway().getHeartbeat() <= 0 || requested <= 0) return;
 
-		log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
-		PaceMaker paceMaker = new PaceMaker(heartbeat);
-		paceMaker.setHostPort(hostPort);
-		paceMaker.setGateway(getMessageGateway());
-		paceMaker.start();
+    int heartbeat = Math.max(requested, getMessageGateway().getHeartbeat());
 
-		getHeartbeatContainer().add(hostPort, paceMaker);
-	}
+    log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
+    PaceMaker paceMaker = new PaceMaker(heartbeat);
+    paceMaker.setHostPort(hostPort);
+    paceMaker.setGateway(getMessageGateway());
+    paceMaker.start();
 
-	/**
-	 * Reset heartbeat.
-	 *
-	 * @param hostPort the host port
-	 */
-	public void resetHeartbeat(HostPort hostPort) {
-		getHeartbeatContainer().reset(hostPort);
-	}
+    getHeartbeatContainer().add(hostPort, paceMaker);
+  }
 
-	private ConnectHeader getConnectHeader(StampyMessage<?> message) {
-		return isConnectMessage(message) ? ((ConnectMessage) message).getHeader() : ((StompMessage) message).getHeader();
-	}
+  /**
+   * Reset heartbeat.
+   * 
+   * @param hostPort
+   *          the host port
+   */
+  public void resetHeartbeat(HostPort hostPort) {
+    getHeartbeatContainer().reset(hostPort);
+  }
 
-	private boolean isConnectMessage(StampyMessage<?> message) {
-		return StompMessageType.CONNECT.equals(message.getMessageType());
-	}
+  private ConnectHeader getConnectHeader(StampyMessage<?> message) {
+    return isConnectMessage(message) ? ((ConnectMessage) message).getHeader() : ((StompMessage) message).getHeader();
+  }
 
-	private boolean isDisconnectMessage(StampyMessage<?> message) {
-		return StompMessageType.DISCONNECT.equals(message.getMessageType());
-	}
+  private boolean isConnectMessage(StampyMessage<?> message) {
+    return StompMessageType.CONNECT.equals(message.getMessageType());
+  }
 
-	/**
-	 * Gets the heartbeat container.
-	 *
-	 * @return the heartbeat container
-	 */
-	public HeartbeatContainer getHeartbeatContainer() {
-		return heartbeatContainer;
-	}
+  private boolean isDisconnectMessage(StampyMessage<?> message) {
+    return StompMessageType.DISCONNECT.equals(message.getMessageType());
+  }
 
-	/**
-	 * Sets the heartbeat container.
-	 *
-	 * @param heartbeatContainer the new heartbeat container
-	 */
-	public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
-		this.heartbeatContainer = heartbeatContainer;
-	}
+  /**
+   * Gets the heartbeat container.
+   * 
+   * @return the heartbeat container
+   */
+  public HeartbeatContainer getHeartbeatContainer() {
+    return heartbeatContainer;
+  }
 
-	/**
-	 * Gets the message gateway.
-	 *
-	 * @return the message gateway
-	 */
-	public AbstractStampyMessageGateway getMessageGateway() {
-		return messageGateway;
-	}
+  /**
+   * Sets the heartbeat container.
+   * 
+   * @param heartbeatContainer
+   *          the new heartbeat container
+   */
+  public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
+    this.heartbeatContainer = heartbeatContainer;
+  }
 
-	/**
-	 * Sets the message gateway.
-	 *
-	 * @param messageGateway the new message gateway
-	 */
-	public void setGateway(AbstractStampyMessageGateway messageGateway) {
-		this.messageGateway = messageGateway;
-	}
+  /**
+   * Gets the message gateway.
+   * 
+   * @return the message gateway
+   */
+  public AbstractStampyMessageGateway getMessageGateway() {
+    return messageGateway;
+  }
+
+  /**
+   * Sets the message gateway.
+   * 
+   * @param messageGateway
+   *          the new message gateway
+   */
+  public void setGateway(AbstractStampyMessageGateway messageGateway) {
+    this.messageGateway = messageGateway;
+  }
 
 }

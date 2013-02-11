@@ -21,7 +21,6 @@ package asia.stampy.common.message.interceptor;
 import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 
-// TODO: Auto-generated Javadoc
 /**
  * This interface is implemented to intercept specified messages to capture the
  * state of any outgoing messages.
@@ -32,21 +31,26 @@ import asia.stampy.common.HostPort;
  */
 public interface StampyOutgoingTextInterceptor {
 
-	/**
-	 * Intercepts the outgoing message for capturing state etc.
-	 *
-	 * @param message the message
-	 * @throws InterceptException if the outgoing message is to be aborted
-	 */
-	void interceptMessage(String message) throws InterceptException;
+  /**
+   * Intercepts the outgoing message for capturing state etc.
+   * 
+   * @param message
+   *          the message
+   * @throws InterceptException
+   *           if the outgoing message is to be aborted
+   */
+  void interceptMessage(String message) throws InterceptException;
 
-	/**
-	 * Intercepts the outgoing message for capturing state etc.
-	 *
-	 * @param message the message
-	 * @param hostPort the host port
-	 * @throws InterceptException if the outgoing message is to be aborted
-	 */
-	void interceptMessage(String message, HostPort hostPort) throws InterceptException;
+  /**
+   * Intercepts the outgoing message for capturing state etc.
+   * 
+   * @param message
+   *          the message
+   * @param hostPort
+   *          the host port
+   * @throws InterceptException
+   *           if the outgoing message is to be aborted
+   */
+  void interceptMessage(String message, HostPort hostPort) throws InterceptException;
 
 }

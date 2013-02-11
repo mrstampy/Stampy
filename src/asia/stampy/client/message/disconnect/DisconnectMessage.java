@@ -21,38 +21,40 @@ package asia.stampy.client.message.disconnect;
 import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class DisconnectMessage.
  */
 public class DisconnectMessage extends AbstractMessage<DisconnectHeader> {
-	
-	private static final long serialVersionUID = -7353329342186049989L;
 
-	/**
-	 * Instantiates a new disconnect message.
-	 */
-	public DisconnectMessage() {
-		super(StompMessageType.DISCONNECT);
-		getHeader();
-	}
+  private static final long serialVersionUID = -7353329342186049989L;
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected DisconnectHeader createNewHeader() {
-		return new DisconnectHeader();
-	}
+  /**
+   * Instantiates a new disconnect message.
+   */
+  public DisconnectMessage() {
+    super(StompMessageType.DISCONNECT);
+    getHeader();
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		// TODO Auto-generated method stub
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected DisconnectHeader createNewHeader() {
+    return new DisconnectHeader();
+  }
 
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    // TODO Auto-generated method stub
+
+  }
 
 }

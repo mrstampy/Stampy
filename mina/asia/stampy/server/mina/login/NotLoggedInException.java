@@ -18,21 +18,21 @@
  */
 package asia.stampy.server.mina.login;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NotLoggedInException.
  */
 public class NotLoggedInException extends Exception {
 
-	private static final long serialVersionUID = 6115947456180110688L;
+  private static final long serialVersionUID = 6115947456180110688L;
 
-	/**
-	 * Instantiates a new not logged in exception.
-	 *
-	 * @param message the message
-	 */
-	public NotLoggedInException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new not logged in exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public NotLoggedInException(String message) {
+    super(message);
+  }
 
 }

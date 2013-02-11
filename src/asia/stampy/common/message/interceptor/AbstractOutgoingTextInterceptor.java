@@ -21,40 +21,43 @@ package asia.stampy.common.message.interceptor;
 import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractOutgoingTextInterceptor.
  */
 public abstract class AbstractOutgoingTextInterceptor implements StampyOutgoingTextInterceptor {
 
-	private AbstractStampyMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.interceptor.StampyOutgoingTextInterceptor#interceptMessage(java.lang.String)
-	 */
-	@Override
-	public void interceptMessage(String message) throws InterceptException {
-		for (HostPort hostPort : getGateway().getConnectedHostPorts()) {
-			interceptMessage(message, hostPort);
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.interceptor.StampyOutgoingTextInterceptor#
+   * interceptMessage(java.lang.String)
+   */
+  @Override
+  public void interceptMessage(String message) throws InterceptException {
+    for (HostPort hostPort : getGateway().getConnectedHostPorts()) {
+      interceptMessage(message, hostPort);
+    }
+  }
 
-	/**
-	 * Gets the gateway.
-	 *
-	 * @return the gateway
-	 */
-	public AbstractStampyMessageGateway getGateway() {
-		return gateway;
-	}
+  /**
+   * Gets the gateway.
+   * 
+   * @return the gateway
+   */
+  public AbstractStampyMessageGateway getGateway() {
+    return gateway;
+  }
 
-	/**
-	 * Sets the gateway.
-	 *
-	 * @param gateway the new gateway
-	 */
-	public void setGateway(AbstractStampyMessageGateway gateway) {
-		this.gateway = gateway;
-	}
+  /**
+   * Sets the gateway.
+   * 
+   * @param gateway
+   *          the new gateway
+   */
+  public void setGateway(AbstractStampyMessageGateway gateway) {
+    this.gateway = gateway;
+  }
 
 }

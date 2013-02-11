@@ -27,72 +27,71 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
-// TODO: Auto-generated Javadoc
 /**
  * Processes SEND messages with {@link Remoteable} bodies.
- *
+ * 
  * @see RemoteExeMessageEvent
  */
 public class RemoteExeMessageListener implements StampyMinaMessageListener {
-	private ServerMinaMessageGateway gateway;
-	private static StompMessageType[] TYPES = { StompMessageType.SEND };
+  private ServerMinaMessageGateway gateway;
+  private static StompMessageType[] TYPES = { StompMessageType.SEND };
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
-	 */
-	@Override
-	public StompMessageType[] getMessageTypes() {
-		return TYPES;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   */
+  @Override
+  public StompMessageType[] getMessageTypes() {
+    return TYPES;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
-	 * .common.message.StampyMessage)
-	 */
-	@Override
-	public boolean isForMessage(StampyMessage<?> message) {
-		SendMessage msg = (SendMessage) message;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * .common.message.StampyMessage)
+   */
+  @Override
+  public boolean isForMessage(StampyMessage<?> message) {
+    SendMessage msg = (SendMessage) message;
 
-		return msg.getBody() instanceof Remoteable;
-	}
+    return msg.getBody() instanceof Remoteable;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
-	 * stampy.common.message.StampyMessage,
-	 * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
-		RemoteExecutor executor = new RemoteExecutor();
-		executor.setGateway(getGateway());
-		executor.processStompMessage((SendMessage) message, hostPort);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage,
+   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   */
+  @Override
+  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+    RemoteExecutor executor = new RemoteExecutor();
+    executor.setGateway(getGateway());
+    executor.processStompMessage((SendMessage) message, hostPort);
+  }
 
-	/**
-	 * Gets the gateway.
-	 * 
-	 * @return the gateway
-	 */
-	public ServerMinaMessageGateway getGateway() {
-		return gateway;
-	}
+  /**
+   * Gets the gateway.
+   * 
+   * @return the gateway
+   */
+  public ServerMinaMessageGateway getGateway() {
+    return gateway;
+  }
 
-	/**
-	 * Sets the gateway.
-	 * 
-	 * @param gateway
-	 *          the new gateway
-	 */
-	public void setGateway(ServerMinaMessageGateway gateway) {
-		this.gateway = gateway;
-	}
+  /**
+   * Sets the gateway.
+   * 
+   * @param gateway
+   *          the new gateway
+   */
+  public void setGateway(ServerMinaMessageGateway gateway) {
+    this.gateway = gateway;
+  }
 
 }

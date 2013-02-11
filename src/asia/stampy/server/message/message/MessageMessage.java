@@ -24,61 +24,66 @@ import asia.stampy.common.message.AbstractBodyMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class MessageMessage.
  */
 public class MessageMessage extends AbstractBodyMessage<MessageHeader> {
 
-	private static final long serialVersionUID = 5351072786156865214L;
+  private static final long serialVersionUID = 5351072786156865214L;
 
-	/**
-	 * Instantiates a new message message.
-	 *
-	 * @param destination the destination
-	 * @param messageId the message id
-	 * @param subscription the subscription
-	 */
-	public MessageMessage(String destination, String messageId, String subscription) {
-		this();
-		
-		getHeader().setDestination(destination);
-		getHeader().setMessageId(messageId);
-		getHeader().setSubscription(subscription);
-	}
-	
-	/**
-	 * Instantiates a new message message.
-	 */
-	public MessageMessage() {
-		super(StompMessageType.MESSAGE);
-	}
+  /**
+   * Instantiates a new message message.
+   * 
+   * @param destination
+   *          the destination
+   * @param messageId
+   *          the message id
+   * @param subscription
+   *          the subscription
+   */
+  public MessageMessage(String destination, String messageId, String subscription) {
+    this();
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected MessageHeader createNewHeader() {
-		return new MessageHeader();
-	}
+    getHeader().setDestination(destination);
+    getHeader().setMessageId(messageId);
+    getHeader().setSubscription(subscription);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if (StringUtils.isEmpty(getHeader().getDestination())) {
-			throw new InvalidStompMessageException(MessageHeader.DESTINATION + " is required");
-		}
-		
-		if (StringUtils.isEmpty(getHeader().getMessageId())) {
-			throw new InvalidStompMessageException(MessageHeader.MESSAGE_ID + " is required");
-		}
-		
-		if (StringUtils.isEmpty(getHeader().getSubscription())) {
-			throw new InvalidStompMessageException(MessageHeader.SUBSCRIPTION + " is required");
-		}
-	}
+  /**
+   * Instantiates a new message message.
+   */
+  public MessageMessage() {
+    super(StompMessageType.MESSAGE);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected MessageHeader createNewHeader() {
+    return new MessageHeader();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getDestination())) {
+      throw new InvalidStompMessageException(MessageHeader.DESTINATION + " is required");
+    }
+
+    if (StringUtils.isEmpty(getHeader().getMessageId())) {
+      throw new InvalidStompMessageException(MessageHeader.MESSAGE_ID + " is required");
+    }
+
+    if (StringUtils.isEmpty(getHeader().getSubscription())) {
+      throw new InvalidStompMessageException(MessageHeader.SUBSCRIPTION + " is required");
+    }
+  }
 
 }

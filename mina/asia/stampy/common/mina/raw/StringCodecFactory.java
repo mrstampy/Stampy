@@ -23,37 +23,46 @@ import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * A codec factory to process raw (non-MINA terminated) strings.
  */
 public class StringCodecFactory implements ProtocolCodecFactory {
-	private ProtocolEncoder encoder;
-	private ProtocolDecoder decoder;
+  private ProtocolEncoder encoder;
+  private ProtocolDecoder decoder;
 
-	/**
-	 * Instantiates a new string codec factory.
-	 *
-	 * @param maxSize the max size
-	 */
-	public StringCodecFactory(int maxSize) {
-		encoder = new StringEncoder(maxSize);
-		decoder = new StringDecoder(maxSize);
-	}
+  /**
+   * Instantiates a new string codec factory.
+   * 
+   * @param maxSize
+   *          the max size
+   */
+  public StringCodecFactory(int maxSize) {
+    encoder = new StringEncoder(maxSize);
+    decoder = new StringDecoder(maxSize);
+  }
 
-	/* (non-Javadoc)
-	 * @see org.apache.mina.filter.codec.ProtocolCodecFactory#getEncoder(org.apache.mina.core.session.IoSession)
-	 */
-	public ProtocolEncoder getEncoder(IoSession session) throws Exception {
-		return encoder;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.filter.codec.ProtocolCodecFactory#getEncoder(org.apache
+   * .mina.core.session.IoSession)
+   */
+  @Override
+  public ProtocolEncoder getEncoder(IoSession session) throws Exception {
+    return encoder;
+  }
 
-	/* (non-Javadoc)
-	 * @see org.apache.mina.filter.codec.ProtocolCodecFactory#getDecoder(org.apache.mina.core.session.IoSession)
-	 */
-	public ProtocolDecoder getDecoder(IoSession session) throws Exception {
-		return decoder;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.filter.codec.ProtocolCodecFactory#getDecoder(org.apache
+   * .mina.core.session.IoSession)
+   */
+  @Override
+  public ProtocolDecoder getDecoder(IoSession session) throws Exception {
+    return decoder;
+  }
 
 }

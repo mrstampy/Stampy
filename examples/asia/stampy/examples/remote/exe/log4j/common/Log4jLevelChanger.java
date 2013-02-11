@@ -27,72 +27,79 @@ import org.apache.log4j.Logger;
 import asia.stampy.examples.remote.exe.common.MissingPropertyException;
 import asia.stampy.examples.remote.exe.common.Remoteable;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Log4jLevelChanger.
  */
 public class Log4jLevelChanger implements Remoteable {
-	private static final long serialVersionUID = -8963468052541849253L;
+  private static final long serialVersionUID = -8963468052541849253L;
 
-	/** The Constant LEVEL. */
-	public static final String LEVEL = "level";
-	
-	/** The Constant LOGGER. */
-	public static final String LOGGER = "logger";
+  /** The Constant LEVEL. */
+  public static final String LEVEL = "level";
 
-	private final String loggerName;
-	private final Level level;
+  /** The Constant LOGGER. */
+  public static final String LOGGER = "logger";
 
-	/**
-	 * Instantiates a new log4j level changer.
-	 *
-	 * @param loggerName the logger name
-	 * @param level the level
-	 */
-	public Log4jLevelChanger(String loggerName, Level level) {
-		this.level = level;
-		this.loggerName = loggerName;
-	}
+  private final String loggerName;
+  private final Level level;
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.examples.remote.exe.common.Remoteable#setProperties(java.util.Map)
-	 */
-	@Override
-	public void setProperties(Map<String, String> properties) throws MissingPropertyException {
-		// unimplemented
-	}
+  /**
+   * Instantiates a new log4j level changer.
+   * 
+   * @param loggerName
+   *          the logger name
+   * @param level
+   *          the level
+   */
+  public Log4jLevelChanger(String loggerName, Level level) {
+    this.level = level;
+    this.loggerName = loggerName;
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.examples.remote.exe.common.Remoteable#execute()
-	 */
-	@Override
-	public boolean execute() throws Exception {
-		Logger logger = getLogger();
-		logger.setLevel(getLevel());
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.examples.remote.exe.common.Remoteable#setProperties(java.util
+   * .Map)
+   */
+  @Override
+  public void setProperties(Map<String, String> properties) throws MissingPropertyException {
+    // unimplemented
+  }
 
-		return true;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.examples.remote.exe.common.Remoteable#execute()
+   */
+  @Override
+  public boolean execute() throws Exception {
+    Logger logger = getLogger();
+    logger.setLevel(getLevel());
 
-	private Logger getLogger() {
-		return StringUtils.isEmpty(getLoggerName()) ? Logger.getRootLogger() : Logger.getLogger(getLoggerName());
-	}
+    return true;
+  }
 
-	/**
-	 * Gets the level.
-	 *
-	 * @return the level
-	 */
-	public Level getLevel() {
-		return level;
-	}
+  private Logger getLogger() {
+    return StringUtils.isEmpty(getLoggerName()) ? Logger.getRootLogger() : Logger.getLogger(getLoggerName());
+  }
 
-	/**
-	 * Gets the logger name.
-	 *
-	 * @return the logger name
-	 */
-	public String getLoggerName() {
-		return loggerName;
-	}
+  /**
+   * Gets the level.
+   * 
+   * @return the level
+   */
+  public Level getLevel() {
+    return level;
+  }
+
+  /**
+   * Gets the logger name.
+   * 
+   * @return the logger name
+   */
+  public String getLoggerName() {
+    return loggerName;
+  }
 
 }

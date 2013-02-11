@@ -28,95 +28,94 @@ import asia.stampy.common.message.AbstractBodyMessage;
 import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.examples.remote.exe.log4j.common.Log4jLevelChanger;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Log4jLevelChangerTestClient.
  */
 public class Log4jLevelChangerTestClient {
-	private ClientMinaMessageGateway gateway;
+  private ClientMinaMessageGateway gateway;
 
-	/**
-	 * Inits the.
-	 * 
-	 * @throws Exception
-	 *           the exception
-	 */
-	public void init() throws Exception {
-		setGateway(Initializer.initialize());
-		gateway.addMessageListener(new TestClientMessageListener());
-		gateway.connect();
-		gateway.broadcastMessage(new ConnectMessage("1.2", "localhost"));
-	}
+  /**
+   * Inits the.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  public void init() throws Exception {
+    setGateway(Initializer.initialize());
+    gateway.addMessageListener(new TestClientMessageListener());
+    gateway.connect();
+    gateway.broadcastMessage(new ConnectMessage("1.2", "localhost"));
+  }
 
-	/**
-	 * Disconnect.
-	 * 
-	 * @throws Exception
-	 *           the exception
-	 */
-	public void disconnect() throws Exception {
-		gateway.broadcastMessage(new DisconnectMessage());
-	}
+  /**
+   * Disconnect.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  public void disconnect() throws Exception {
+    gateway.broadcastMessage(new DisconnectMessage());
+  }
 
-	private void sendSendMessage(Log4jLevelChanger levelChanger) throws InterceptException {
-		SendMessage message = new SendMessage("over/there", "blah");
-		message.getHeader().setContentType(AbstractBodyMessage.JAVA_BASE64_MIME_TYPE);
-		message.setBody(levelChanger);
-		getGateway().broadcastMessage(message);
-	}
+  private void sendSendMessage(Log4jLevelChanger levelChanger) throws InterceptException {
+    SendMessage message = new SendMessage("over/there", "blah");
+    message.getHeader().setContentType(AbstractBodyMessage.JAVA_BASE64_MIME_TYPE);
+    message.setBody(levelChanger);
+    getGateway().broadcastMessage(message);
+  }
 
-	private Log4jLevelChanger createLevelChanger(String logger, Level level) {
-		return new Log4jLevelChanger(logger, level);
-	}
+  private Log4jLevelChanger createLevelChanger(String logger, Level level) {
+    return new Log4jLevelChanger(logger, level);
+  }
 
-	/**
-	 * Gets the gateway.
-	 * 
-	 * @return the gateway
-	 */
-	public ClientMinaMessageGateway getGateway() {
-		return gateway;
-	}
+  /**
+   * Gets the gateway.
+   * 
+   * @return the gateway
+   */
+  public ClientMinaMessageGateway getGateway() {
+    return gateway;
+  }
 
-	/**
-	 * Sets the gateway.
-	 * 
-	 * @param gateway
-	 *          the new gateway
-	 */
-	public void setGateway(ClientMinaMessageGateway gateway) {
-		this.gateway = gateway;
-	}
+  /**
+   * Sets the gateway.
+   * 
+   * @param gateway
+   *          the new gateway
+   */
+  public void setGateway(ClientMinaMessageGateway gateway) {
+    this.gateway = gateway;
+  }
 
-	/**
-	 * The main method.
-	 * 
-	 * @param args
-	 *          the arguments
-	 */
-	public static void main(String[] args) {
-		Log4jLevelChangerTestClient client = new Log4jLevelChangerTestClient();
-		try {
-			client.init();
-			sendMessage(client, Level.ALL);
-			sendMessage(client, Level.TRACE);
-			sendMessage(client, Level.DEBUG);
-			sendMessage(client, Level.INFO);
-			sendMessage(client, Level.WARN);
-			sendMessage(client, Level.ERROR);
-			sendMessage(client, Level.FATAL);
-			sendMessage(client, Level.OFF);
-			client.disconnect();
-			client.getGateway().shutdown();
-			System.exit(0);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+  /**
+   * The main method.
+   * 
+   * @param args
+   *          the arguments
+   */
+  public static void main(String[] args) {
+    Log4jLevelChangerTestClient client = new Log4jLevelChangerTestClient();
+    try {
+      client.init();
+      sendMessage(client, Level.ALL);
+      sendMessage(client, Level.TRACE);
+      sendMessage(client, Level.DEBUG);
+      sendMessage(client, Level.INFO);
+      sendMessage(client, Level.WARN);
+      sendMessage(client, Level.ERROR);
+      sendMessage(client, Level.FATAL);
+      sendMessage(client, Level.OFF);
+      client.disconnect();
+      client.getGateway().shutdown();
+      System.exit(0);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 
-	private static void sendMessage(Log4jLevelChangerTestClient client, Level level) throws InterruptedException,
-			InterceptException {
-		client.sendSendMessage(client.createLevelChanger("asia.stampy.examples.remote.exe.log4j.server", level));
-		Thread.sleep(500);
-	}
+  private static void sendMessage(Log4jLevelChangerTestClient client, Level level) throws InterruptedException,
+      InterceptException {
+    client.sendSendMessage(client.createLevelChanger("asia.stampy.examples.remote.exe.log4j.server", level));
+    Thread.sleep(500);
+  }
 }

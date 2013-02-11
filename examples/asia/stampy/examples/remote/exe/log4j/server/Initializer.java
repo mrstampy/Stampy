@@ -23,7 +23,6 @@ import asia.stampy.examples.remote.exe.common.RemoteExeMessageListener;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class programmatically initializes the Stampy classes required for this
  * example. It is expected that a DI framework such as <a
@@ -33,28 +32,28 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  */
 public class Initializer {
 
-	/**
-	 * Initialize.
-	 * 
-	 * @return the server mina message gateway
-	 */
-	public static ServerMinaMessageGateway initialize() {
-		HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
+  /**
+   * Initialize.
+   * 
+   * @return the server mina message gateway
+   */
+  public static ServerMinaMessageGateway initialize() {
+    HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-		ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();
-		gateway.setPort(1234);
+    ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();
+    gateway.setPort(1234);
 
-		RawServerMinaHandler handler = new RawServerMinaHandler();
-		handler.setHeartbeatContainer(heartbeatContainer);
-		handler.setMessageGateway(gateway);
+    RawServerMinaHandler handler = new RawServerMinaHandler();
+    handler.setHeartbeatContainer(heartbeatContainer);
+    handler.setMessageGateway(gateway);
 
-		RemoteExeMessageListener remoteExe = new RemoteExeMessageListener();
-		remoteExe.setGateway(gateway);
-		handler.addMessageListener(remoteExe);
+    RemoteExeMessageListener remoteExe = new RemoteExeMessageListener();
+    remoteExe.setGateway(gateway);
+    handler.addMessageListener(remoteExe);
 
-		gateway.setHandler(handler);
+    gateway.setHandler(handler);
 
-		return gateway;
-	}
+    return gateway;
+  }
 
 }

@@ -35,114 +35,113 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.connected.ConnectedMessage;
 
-// TODO: Auto-generated Javadoc
 /**
- * The listener interface for receiving connectedMessage events.
- * The class that is interested in processing a connectedMessage
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addConnectedMessageListener<code> method. When
+ * The listener interface for receiving connectedMessage events. The class that
+ * is interested in processing a connectedMessage event implements this
+ * interface, and the object created with that class is registered with a
+ * component using the component's
+ * <code>addConnectedMessageListener<code> method. When
  * the connectedMessage event occurs, that object's appropriate
  * method is invoked.
- *
+ * 
  * @see ConnectedMessageEvent
  */
 @Resource
 public class ConnectedMessageListener implements StampyMinaMessageListener {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private static StompMessageType[] TYPES = { StompMessageType.CONNECTED };
+  private static StompMessageType[] TYPES = { StompMessageType.CONNECTED };
 
-	private HeartbeatContainer heartbeatContainer;
+  private HeartbeatContainer heartbeatContainer;
 
-	private AbstractStampyMessageGateway messageGateway;
+  private AbstractStampyMessageGateway messageGateway;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
-	 */
-	@Override
-	public StompMessageType[] getMessageTypes() {
-		return TYPES;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   */
+  @Override
+  public StompMessageType[] getMessageTypes() {
+    return TYPES;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
-	 * .common.message.StampyMessage)
-	 */
-	@Override
-	public boolean isForMessage(StampyMessage<?> message) {
-		return true;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * .common.message.StampyMessage)
+   */
+  @Override
+  public boolean isForMessage(StampyMessage<?> message) {
+    return true;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
-	 * stampy.common.message.StampyMessage,
-	 * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
-		log.debug("Received connect message {} from {}", message, hostPort);
-		ConnectedMessage cm = (ConnectedMessage) message;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage,
+   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   */
+  @Override
+  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+    log.debug("Received connect message {} from {}", message, hostPort);
+    ConnectedMessage cm = (ConnectedMessage) message;
 
-		int requested = cm.getHeader().getIncomingHeartbeat();
+    int requested = cm.getHeader().getIncomingHeartbeat();
 
-		if (requested <= 0 || messageGateway.getHeartbeat() <= 0) return;
+    if (requested <= 0 || messageGateway.getHeartbeat() <= 0) return;
 
-		int heartbeat = Math.max(requested, messageGateway.getHeartbeat());
+    int heartbeat = Math.max(requested, messageGateway.getHeartbeat());
 
-		log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
-		PaceMaker paceMaker = new PaceMaker(heartbeat);
-		paceMaker.setHostPort(hostPort);
-		paceMaker.setGateway(getMessageGateway());
-		paceMaker.start();
-		
-		getHeartbeatContainer().add(hostPort, paceMaker);
-	}
+    log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
+    PaceMaker paceMaker = new PaceMaker(heartbeat);
+    paceMaker.setHostPort(hostPort);
+    paceMaker.setGateway(getMessageGateway());
+    paceMaker.start();
 
-	/**
-	 * Gets the heartbeat container.
-	 * 
-	 * @return the heartbeat container
-	 */
-	public HeartbeatContainer getHeartbeatContainer() {
-		return heartbeatContainer;
-	}
+    getHeartbeatContainer().add(hostPort, paceMaker);
+  }
 
-	/**
-	 * Sets the heartbeat container.
-	 * 
-	 * @param heartbeatContainer
-	 *          the new heartbeat container
-	 */
-	public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
-		this.heartbeatContainer = heartbeatContainer;
-	}
+  /**
+   * Gets the heartbeat container.
+   * 
+   * @return the heartbeat container
+   */
+  public HeartbeatContainer getHeartbeatContainer() {
+    return heartbeatContainer;
+  }
 
-	/**
-	 * Gets the message gateway.
-	 * 
-	 * @return the message gateway
-	 */
-	public AbstractStampyMessageGateway getMessageGateway() {
-		return messageGateway;
-	}
+  /**
+   * Sets the heartbeat container.
+   * 
+   * @param heartbeatContainer
+   *          the new heartbeat container
+   */
+  public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
+    this.heartbeatContainer = heartbeatContainer;
+  }
 
-	/**
-	 * Sets the message gateway.
-	 * 
-	 * @param messageGateway
-	 *          the new message gateway
-	 */
-	public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
-		this.messageGateway = messageGateway;
-	}
+  /**
+   * Gets the message gateway.
+   * 
+   * @return the message gateway
+   */
+  public AbstractStampyMessageGateway getMessageGateway() {
+    return messageGateway;
+  }
+
+  /**
+   * Sets the message gateway.
+   * 
+   * @param messageGateway
+   *          the new message gateway
+   */
+  public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
+    this.messageGateway = messageGateway;
+  }
 
 }

@@ -29,7 +29,6 @@ import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor;
 import asia.stampy.common.message.interceptor.StampyOutgoingTextInterceptor;
 
-// TODO: Auto-generated Javadoc
 /**
  * A StampyMessageGateway is the interface between the technology used to
  * connect to a STOMP implementation and the Stampy library. It is the class
@@ -38,225 +37,246 @@ import asia.stampy.common.message.interceptor.StampyOutgoingTextInterceptor;
  * Subclasses are singletons; wire into the system appropriately.
  */
 public abstract class AbstractStampyMessageGateway {
-	
-	/** The interceptors. */
-	protected Queue<StampyOutgoingMessageInterceptor> interceptors = new ConcurrentLinkedQueue<>();
-	
-	/** The text interceptors. */
-	protected Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<>();
 
-	private boolean autoShutdown;
-	
-	private int heartbeat;
+  /** The interceptors. */
+  protected Queue<StampyOutgoingMessageInterceptor> interceptors = new ConcurrentLinkedQueue<>();
 
-	/**
-	 * Broadcasts a {@link StampyMessage} to all connected clients from the server
-	 * or to the server from a client. Use this method for all STOMP messages.
-	 *
-	 * @param message the message
-	 * @throws InterceptException the intercept exception
-	 */
-	public void broadcastMessage(StampyMessage<?> message) throws InterceptException {
-		interceptOutgoingMessage(message);
-		broadcastMessage(message.toStompMessage(true));
-	}
+  /** The text interceptors. */
+  protected Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<>();
 
-	/**
-	 * Adds the specified outgoing message interceptor.
-	 *
-	 * @param interceptor the interceptor
-	 * @see StampyOutgoingMessageInterceptor
-	 */
-	public void addOutgoingMessageInterceptor(StampyOutgoingMessageInterceptor interceptor) {
-		interceptors.add(interceptor);
-	}
+  private boolean autoShutdown;
 
-	/**
-	 * Removes the specified outgoing message interceptor.
-	 *
-	 * @param interceptor the interceptor
-	 * @see StampyOutgoingMessageInterceptor
-	 */
-	public void removeOutgoingMessageInterceptor(StampyOutgoingMessageInterceptor interceptor) {
-		interceptors.remove(interceptor);
-	}
+  private int heartbeat;
 
-	/**
-	 * Adds the specified outgoing message interceptors. For use by DI frameworks.
-	 *
-	 * @param interceptors the new outgoing message interceptors
-	 * @see StampyOutgoingMessageInterceptor
-	 */
-	public void setOutgoingMessageInterceptors(Collection<StampyOutgoingMessageInterceptor> interceptors) {
-		this.interceptors.addAll(interceptors);
-	}
+  /**
+   * Broadcasts a {@link StampyMessage} to all connected clients from the server
+   * or to the server from a client. Use this method for all STOMP messages.
+   * 
+   * @param message
+   *          the message
+   * @throws InterceptException
+   *           the intercept exception
+   */
+  public void broadcastMessage(StampyMessage<?> message) throws InterceptException {
+    interceptOutgoingMessage(message);
+    broadcastMessage(message.toStompMessage(true));
+  }
 
-	/**
-	 * Adds the specified outgoing message interceptor.
-	 *
-	 * @param interceptor the interceptor
-	 * @see StampyOutgoingMessageInterceptor
-	 */
-	public void addOutgoingTextInterceptor(StampyOutgoingTextInterceptor interceptor) {
-		textInterceptors.add(interceptor);
-	}
+  /**
+   * Adds the specified outgoing message interceptor.
+   * 
+   * @param interceptor
+   *          the interceptor
+   * @see StampyOutgoingMessageInterceptor
+   */
+  public void addOutgoingMessageInterceptor(StampyOutgoingMessageInterceptor interceptor) {
+    interceptors.add(interceptor);
+  }
 
-	/**
-	 * Removes the specified outgoing message interceptor.
-	 *
-	 * @param interceptor the interceptor
-	 * @see StampyOutgoingMessageInterceptor
-	 */
-	public void removeOutgoingTextInterceptor(StampyOutgoingTextInterceptor interceptor) {
-		textInterceptors.remove(interceptor);
-	}
+  /**
+   * Removes the specified outgoing message interceptor.
+   * 
+   * @param interceptor
+   *          the interceptor
+   * @see StampyOutgoingMessageInterceptor
+   */
+  public void removeOutgoingMessageInterceptor(StampyOutgoingMessageInterceptor interceptor) {
+    interceptors.remove(interceptor);
+  }
 
-	/**
-	 * Adds the specified outgoing message interceptors. For use by DI frameworks.
-	 *
-	 * @param interceptors the new outgoing text interceptors
-	 * @see StampyOutgoingMessageInterceptor
-	 */
-	public void setOutgoingTextInterceptors(Collection<StampyOutgoingTextInterceptor> interceptors) {
-		this.textInterceptors.addAll(interceptors);
-	}
+  /**
+   * Adds the specified outgoing message interceptors. For use by DI frameworks.
+   * 
+   * @param interceptors
+   *          the new outgoing message interceptors
+   * @see StampyOutgoingMessageInterceptor
+   */
+  public void setOutgoingMessageInterceptors(Collection<StampyOutgoingMessageInterceptor> interceptors) {
+    this.interceptors.addAll(interceptors);
+  }
 
-	/**
-	 * Intercept outgoing message.
-	 *
-	 * @param message the message
-	 * @throws InterceptException the intercept exception
-	 */
-	protected void interceptOutgoingMessage(StampyMessage<?> message) throws InterceptException {
-		for (StampyOutgoingMessageInterceptor interceptor : interceptors) {
-			if (isForType(interceptor.getMessageTypes(), message.getMessageType()) && interceptor.isForMessage(message)) {
-				interceptor.interceptMessage(message);
-			}
-		}
-	}
+  /**
+   * Adds the specified outgoing message interceptor.
+   * 
+   * @param interceptor
+   *          the interceptor
+   * @see StampyOutgoingMessageInterceptor
+   */
+  public void addOutgoingTextInterceptor(StampyOutgoingTextInterceptor interceptor) {
+    textInterceptors.add(interceptor);
+  }
 
-	/**
-	 * Intercept outgoing message.
-	 *
-	 * @param message the message
-	 * @throws InterceptException the intercept exception
-	 */
-	protected void interceptOutgoingMessage(String message) throws InterceptException {
-		for (StampyOutgoingTextInterceptor interceptor : textInterceptors) {
-			interceptor.interceptMessage(message);
-		}
-	}
+  /**
+   * Removes the specified outgoing message interceptor.
+   * 
+   * @param interceptor
+   *          the interceptor
+   * @see StampyOutgoingMessageInterceptor
+   */
+  public void removeOutgoingTextInterceptor(StampyOutgoingTextInterceptor interceptor) {
+    textInterceptors.remove(interceptor);
+  }
 
-	/**
-	 * Checks if is for type.
-	 *
-	 * @param messageTypes the message types
-	 * @param messageType the message type
-	 * @return true, if is for type
-	 */
-	protected boolean isForType(StompMessageType[] messageTypes, StompMessageType messageType) {
-		for (StompMessageType type : messageTypes) {
-			if (type.equals(messageType)) return true;
-		}
+  /**
+   * Adds the specified outgoing message interceptors. For use by DI frameworks.
+   * 
+   * @param interceptors
+   *          the new outgoing text interceptors
+   * @see StampyOutgoingMessageInterceptor
+   */
+  public void setOutgoingTextInterceptors(Collection<StampyOutgoingTextInterceptor> interceptors) {
+    this.textInterceptors.addAll(interceptors);
+  }
 
-		return false;
-	}
+  /**
+   * Intercept outgoing message.
+   * 
+   * @param message
+   *          the message
+   * @throws InterceptException
+   *           the intercept exception
+   */
+  protected void interceptOutgoingMessage(StampyMessage<?> message) throws InterceptException {
+    for (StampyOutgoingMessageInterceptor interceptor : interceptors) {
+      if (isForType(interceptor.getMessageTypes(), message.getMessageType()) && interceptor.isForMessage(message)) {
+        interceptor.interceptMessage(message);
+      }
+    }
+  }
 
-	/**
-	 * Broadcasts the specified String to all connections. Included for STOMP
-	 * implementations which accept custom message types. Use for all non-STOMP
-	 * messages.
-	 *
-	 * @param stompMessage the stomp message
-	 * @throws InterceptException the intercept exception
-	 */
-	public abstract void broadcastMessage(String stompMessage) throws InterceptException;
+  /**
+   * Intercept outgoing message.
+   * 
+   * @param message
+   *          the message
+   * @throws InterceptException
+   *           the intercept exception
+   */
+  protected void interceptOutgoingMessage(String message) throws InterceptException {
+    for (StampyOutgoingTextInterceptor interceptor : textInterceptors) {
+      interceptor.interceptMessage(message);
+    }
+  }
 
-	/**
-	 * Sends the specified String to the specified {@link HostPort}. Included for
-	 * STOMP implementations which accept custom message types. Use for all
-	 * non-STOMP messages.
-	 *
-	 * @param stompMessage the stomp message
-	 * @param hostPort the host port
-	 * @throws InterceptException the intercept exception
-	 */
-	public abstract void sendMessage(String stompMessage, HostPort hostPort) throws InterceptException;
+  /**
+   * Checks if is for type.
+   * 
+   * @param messageTypes
+   *          the message types
+   * @param messageType
+   *          the message type
+   * @return true, if is for type
+   */
+  protected boolean isForType(StompMessageType[] messageTypes, StompMessageType messageType) {
+    for (StompMessageType type : messageTypes) {
+      if (type.equals(messageType)) return true;
+    }
 
-	/**
-	 * Closes the connection to the STOMP server or client.
-	 * 
-	 * @param hostPort
-	 *          the host port
-	 */
-	public abstract void closeConnection(HostPort hostPort);
+    return false;
+  }
 
-	/**
-	 * Connects to a STOMP server or client as specified by configuration.
-	 * 
-	 * @throws Exception
-	 *           the exception
-	 */
-	public abstract void connect() throws Exception;
+  /**
+   * Broadcasts the specified String to all connections. Included for STOMP
+   * implementations which accept custom message types. Use for all non-STOMP
+   * messages.
+   * 
+   * @param stompMessage
+   *          the stomp message
+   * @throws InterceptException
+   *           the intercept exception
+   */
+  public abstract void broadcastMessage(String stompMessage) throws InterceptException;
 
-	/**
-	 * Shuts down the underlying connection technology.
-	 * 
-	 * @throws Exception
-	 *           the exception
-	 */
-	public abstract void shutdown() throws Exception;
+  /**
+   * Sends the specified String to the specified {@link HostPort}. Included for
+   * STOMP implementations which accept custom message types. Use for all
+   * non-STOMP messages.
+   * 
+   * @param stompMessage
+   *          the stomp message
+   * @param hostPort
+   *          the host port
+   * @throws InterceptException
+   *           the intercept exception
+   */
+  public abstract void sendMessage(String stompMessage, HostPort hostPort) throws InterceptException;
 
-	/**
-	 * Returns true if a connection exists and is active.
-	 * 
-	 * @param hostPort
-	 *          the host port
-	 * @return true, if is connected
-	 */
-	public abstract boolean isConnected(HostPort hostPort);
-	
-	/**
-	 * Gets the connected host ports.
-	 *
-	 * @return the connected host ports
-	 */
-	public abstract Set<HostPort> getConnectedHostPorts();
+  /**
+   * Closes the connection to the STOMP server or client.
+   * 
+   * @param hostPort
+   *          the host port
+   */
+  public abstract void closeConnection(HostPort hostPort);
 
-	/**
-	 * If true the gateway will shut down when all sessions are terminated.
-	 * Typically clients will be set to true, servers to false (the default).
-	 *
-	 * @return true, if is auto shutdown
-	 */
-	public boolean isAutoShutdown() {
-		return autoShutdown;
-	}
+  /**
+   * Connects to a STOMP server or client as specified by configuration.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  public abstract void connect() throws Exception;
 
-	/**
-	 * Sets the auto shutdown.
-	 *
-	 * @param autoShutdown the new auto shutdown
-	 */
-	public void setAutoShutdown(boolean autoShutdown) {
-		this.autoShutdown = autoShutdown;
-	}
+  /**
+   * Shuts down the underlying connection technology.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  public abstract void shutdown() throws Exception;
 
-	/**
-	 * Gets the heartbeat.
-	 *
-	 * @return the heartbeat
-	 */
-	public int getHeartbeat() {
-		return heartbeat;
-	}
+  /**
+   * Returns true if a connection exists and is active.
+   * 
+   * @param hostPort
+   *          the host port
+   * @return true, if is connected
+   */
+  public abstract boolean isConnected(HostPort hostPort);
 
-	/**
-	 * Sets the heartbeat.
-	 *
-	 * @param heartbeat the new heartbeat
-	 */
-	public void setHeartbeat(int heartbeat) {
-		this.heartbeat = heartbeat;
-	}
+  /**
+   * Gets the connected host ports.
+   * 
+   * @return the connected host ports
+   */
+  public abstract Set<HostPort> getConnectedHostPorts();
+
+  /**
+   * If true the gateway will shut down when all sessions are terminated.
+   * Typically clients will be set to true, servers to false (the default).
+   * 
+   * @return true, if is auto shutdown
+   */
+  public boolean isAutoShutdown() {
+    return autoShutdown;
+  }
+
+  /**
+   * Sets the auto shutdown.
+   * 
+   * @param autoShutdown
+   *          the new auto shutdown
+   */
+  public void setAutoShutdown(boolean autoShutdown) {
+    this.autoShutdown = autoShutdown;
+  }
+
+  /**
+   * Gets the heartbeat.
+   * 
+   * @return the heartbeat
+   */
+  public int getHeartbeat() {
+    return heartbeat;
+  }
+
+  /**
+   * Sets the heartbeat.
+   * 
+   * @param heartbeat
+   *          the new heartbeat
+   */
+  public void setHeartbeat(int heartbeat) {
+    this.heartbeat = heartbeat;
+  }
 }

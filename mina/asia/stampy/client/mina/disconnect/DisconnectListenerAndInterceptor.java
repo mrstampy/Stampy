@@ -36,146 +36,145 @@ import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DisconnectListenerAndInterceptor.
  */
 @Resource
 public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInterceptor implements
-		StampyMinaMessageListener {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    StampyMinaMessageListener {
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private static StompMessageType[] TYPES = { StompMessageType.DISCONNECT, StompMessageType.RECEIPT };
+  private static StompMessageType[] TYPES = { StompMessageType.DISCONNECT, StompMessageType.RECEIPT };
 
-	private boolean closeOnDisconnectMessage = true;
-	private String receiptId;
+  private boolean closeOnDisconnectMessage = true;
+  private String receiptId;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor
-	 * #getMessageTypes()
-	 */
-	@Override
-	public StompMessageType[] getMessageTypes() {
-		return TYPES;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor
+   * #getMessageTypes()
+   */
+  @Override
+  public StompMessageType[] getMessageTypes() {
+    return TYPES;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor
-	 * #isForMessage(asia.stampy.common.message.StampyMessage)
-	 */
-	@Override
-	public boolean isForMessage(StampyMessage<?> message) {
-		switch (message.getMessageType()) {
-		case DISCONNECT:
-			boolean absent = StringUtils.isEmpty(getReceiptId());
-			
-			if (!absent) {
-				log.warn("Outstanding receipt id {} in DisconnectListenerAndInterceptor, resetting", getReceiptId());
-				setReceiptId((String) null);
-			}
-			
-			return StringUtils.isNotEmpty(((DisconnectMessage)message).getHeader().getReceipt());
-		case RECEIPT:
-			ReceiptMessage receipt = (ReceiptMessage) message;
-			return StringUtils.isNotEmpty(getReceiptId()) && getReceiptId().equals(receipt.getHeader().getReceiptId());
-		default:
-			return false;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor
+   * #isForMessage(asia.stampy.common.message.StampyMessage)
+   */
+  @Override
+  public boolean isForMessage(StampyMessage<?> message) {
+    switch (message.getMessageType()) {
+    case DISCONNECT:
+      boolean absent = StringUtils.isEmpty(getReceiptId());
 
-		}
-	}
+      if (!absent) {
+        log.warn("Outstanding receipt id {} in DisconnectListenerAndInterceptor, resetting", getReceiptId());
+        setReceiptId((String) null);
+      }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor
-	 * #interceptMessage(asia.stampy.common.message.StampyMessage,
-	 * asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void interceptMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
-		switch (message.getMessageType()) {
-		case DISCONNECT:
-			setReceiptId((DisconnectMessage) message);
-			break;
-		default:
-			return;
+      return StringUtils.isNotEmpty(((DisconnectMessage) message).getHeader().getReceipt());
+    case RECEIPT:
+      ReceiptMessage receipt = (ReceiptMessage) message;
+      return StringUtils.isNotEmpty(getReceiptId()) && getReceiptId().equals(receipt.getHeader().getReceiptId());
+    default:
+      return false;
 
-		}
-	}
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
-	 * stampy.common.message.StampyMessage,
-	 * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
-		switch (message.getMessageType()) {
-		case RECEIPT:
-			setReceiptId((String) null);
-			if (isCloseOnDisconnectMessage()) {
-				log.info("Receipt for disconnect message received, disconnecting");
-				session.close(false);
-			}
-			break;
-		default:
-			return;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor
+   * #interceptMessage(asia.stampy.common.message.StampyMessage,
+   * asia.stampy.common.HostPort)
+   */
+  @Override
+  public void interceptMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
+    switch (message.getMessageType()) {
+    case DISCONNECT:
+      setReceiptId((DisconnectMessage) message);
+      break;
+    default:
+      return;
 
-		}
-	}
+    }
+  }
 
-	private void setReceiptId(DisconnectMessage message) {
-		String id = message.getHeader().getReceipt();
-		log.info("Disconnect message intercepted, receipt id {}", id);
-		setReceiptId(id);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage,
+   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   */
+  @Override
+  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+    switch (message.getMessageType()) {
+    case RECEIPT:
+      setReceiptId((String) null);
+      if (isCloseOnDisconnectMessage()) {
+        log.info("Receipt for disconnect message received, disconnecting");
+        session.close(false);
+      }
+      break;
+    default:
+      return;
 
-	/**
-	 * Checks if is close on disconnect message.
-	 * 
-	 * @return true, if is close on disconnect message
-	 */
-	public boolean isCloseOnDisconnectMessage() {
-		return closeOnDisconnectMessage;
-	}
+    }
+  }
 
-	/**
-	 * Sets the close on disconnect message.
-	 * 
-	 * @param closeOnDisconnectMessage
-	 *          the new close on disconnect message
-	 */
-	public void setCloseOnDisconnectMessage(boolean closeOnDisconnectMessage) {
-		this.closeOnDisconnectMessage = closeOnDisconnectMessage;
-	}
+  private void setReceiptId(DisconnectMessage message) {
+    String id = message.getHeader().getReceipt();
+    log.info("Disconnect message intercepted, receipt id {}", id);
+    setReceiptId(id);
+  }
 
-	/**
-	 * Gets the receipt id.
-	 * 
-	 * @return the receipt id
-	 */
-	public String getReceiptId() {
-		return receiptId;
-	}
+  /**
+   * Checks if is close on disconnect message.
+   * 
+   * @return true, if is close on disconnect message
+   */
+  public boolean isCloseOnDisconnectMessage() {
+    return closeOnDisconnectMessage;
+  }
 
-	/**
-	 * Sets the receipt id.
-	 * 
-	 * @param receiptId
-	 *          the new receipt id
-	 */
-	public void setReceiptId(String receiptId) {
-		this.receiptId = receiptId;
-	}
+  /**
+   * Sets the close on disconnect message.
+   * 
+   * @param closeOnDisconnectMessage
+   *          the new close on disconnect message
+   */
+  public void setCloseOnDisconnectMessage(boolean closeOnDisconnectMessage) {
+    this.closeOnDisconnectMessage = closeOnDisconnectMessage;
+  }
+
+  /**
+   * Gets the receipt id.
+   * 
+   * @return the receipt id
+   */
+  public String getReceiptId() {
+    return receiptId;
+  }
+
+  /**
+   * Sets the receipt id.
+   * 
+   * @param receiptId
+   *          the new receipt id
+   */
+  public void setReceiptId(String receiptId) {
+    this.receiptId = receiptId;
+  }
 
 }

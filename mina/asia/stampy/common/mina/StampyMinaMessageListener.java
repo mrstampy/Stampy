@@ -24,7 +24,6 @@ import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 
-// TODO: Auto-generated Javadoc
 /**
  * Implement to process specified {@link StampyMessage}s.
  * 
@@ -32,34 +31,34 @@ import asia.stampy.common.message.StompMessageType;
  */
 public interface StampyMinaMessageListener {
 
-	/**
-	 * Gets the message types of which the implementation is interested.
-	 * 
-	 * @return the message types
-	 */
-	StompMessageType[] getMessageTypes();
+  /**
+   * Gets the message types of which the implementation is interested.
+   * 
+   * @return the message types
+   */
+  StompMessageType[] getMessageTypes();
 
-	/**
-	 * Returns true if the message should be processed by the implementation.
-	 * 
-	 * @param message
-	 *          the message
-	 * @return true, if is for message
-	 */
-	boolean isForMessage(StampyMessage<?> message);
+  /**
+   * Returns true if the message should be processed by the implementation.
+   * 
+   * @param message
+   *          the message
+   * @return true, if is for message
+   */
+  boolean isForMessage(StampyMessage<?> message);
 
-	/**
-	 * Invoked when the type and the message are to be processed by the
-	 * implementation.
-	 * 
-	 * @param message
-	 *          the message
-	 * @param session
-	 *          the session
-	 * @param hostPort
-	 *          the host port
-	 * @throws Exception
-	 *           the exception
-	 */
-	void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception;
+  /**
+   * Invoked when the type and the message are to be processed by the
+   * implementation.
+   * 
+   * @param message
+   *          the message
+   * @param session
+   *          the session
+   * @param hostPort
+   *          the host port
+   * @throws Exception
+   *           the exception
+   */
+  void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception;
 }

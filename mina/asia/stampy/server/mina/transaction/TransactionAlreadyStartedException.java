@@ -18,21 +18,21 @@
  */
 package asia.stampy.server.mina.transaction;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class TransactionAlreadyStartedException.
  */
 public class TransactionAlreadyStartedException extends Exception {
 
-	private static final long serialVersionUID = 4327171405667138826L;
+  private static final long serialVersionUID = 4327171405667138826L;
 
-	/**
-	 * Instantiates a new transaction already started exception.
-	 *
-	 * @param message the message
-	 */
-	public TransactionAlreadyStartedException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new transaction already started exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public TransactionAlreadyStartedException(String message) {
+    super(message);
+  }
 
 }

@@ -18,37 +18,45 @@
  */
 package asia.stampy.server.mina.subscription;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface StampyAcknowledgementHandler.
  */
 public interface StampyAcknowledgementHandler {
-	
-	/**
-	 * Ack received.
-	 *
-	 * @param id the id
-	 * @param receipt the receipt
-	 * @param transaction the transaction
-	 * @throws Exception the exception
-	 */
-	void ackReceived(String id, String receipt, String transaction) throws Exception;
-	
-	/**
-	 * Nack received.
-	 *
-	 * @param id the id
-	 * @param receipt the receipt
-	 * @param transaction the transaction
-	 * @throws Exception the exception
-	 */
-	void nackReceived(String id, String receipt, String transaction) throws Exception;
-	
-	/**
-	 * No acknowledgement received.
-	 *
-	 * @param id the id
-	 */
-	void noAcknowledgementReceived(String id);
+
+  /**
+   * Ack received.
+   * 
+   * @param id
+   *          the id
+   * @param receipt
+   *          the receipt
+   * @param transaction
+   *          the transaction
+   * @throws Exception
+   *           the exception
+   */
+  void ackReceived(String id, String receipt, String transaction) throws Exception;
+
+  /**
+   * Nack received.
+   * 
+   * @param id
+   *          the id
+   * @param receipt
+   *          the receipt
+   * @param transaction
+   *          the transaction
+   * @throws Exception
+   *           the exception
+   */
+  void nackReceived(String id, String receipt, String transaction) throws Exception;
+
+  /**
+   * No acknowledgement received.
+   * 
+   * @param id
+   *          the id
+   */
+  void noAcknowledgementReceived(String id);
 
 }

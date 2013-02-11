@@ -42,300 +42,300 @@ import asia.stampy.common.mina.StampyMinaHandler;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.common.mina.StampyServiceAdapter;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ClientMinaMessageGateway.
  */
 @Resource
 public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private StampyServiceAdapter serviceAdapter = new StampyServiceAdapter();
-	private StampyMinaHandler<ClientMinaMessageGateway> handler;
-	private NioSocketConnector connector = new NioSocketConnector();
-	private int maxMessageSize = Integer.MAX_VALUE;
-	private String host;
-	private int port;
+  private StampyServiceAdapter serviceAdapter = new StampyServiceAdapter();
+  private StampyMinaHandler<ClientMinaMessageGateway> handler;
+  private NioSocketConnector connector = new NioSocketConnector();
+  private int maxMessageSize = Integer.MAX_VALUE;
+  private String host;
+  private int port;
 
-	private void init() {
-		serviceAdapter.setGateway(this);
-		serviceAdapter.setAutoShutdown(isAutoShutdown());
+  private void init() {
+    serviceAdapter.setGateway(this);
+    serviceAdapter.setAutoShutdown(isAutoShutdown());
 
-		log.trace("Initializing Stampy MINA connector");
+    log.trace("Initializing Stampy MINA connector");
 
-		connector.setHandler(handler);
+    connector.setHandler(handler);
 
-		connector.addListener(serviceAdapter);
+    connector.addListener(serviceAdapter);
 
-		DefaultIoFilterChainBuilder chain = connector.getFilterChain();
+    DefaultIoFilterChainBuilder chain = connector.getFilterChain();
 
-		MdcInjectionFilter mdcInjectionFilter = new MdcInjectionFilter();
-		chain.addLast("mdc", mdcInjectionFilter);
-		chain.addLast("codec", new ProtocolCodecFilter(getHandler().getFactory(getMaxMessageSize())));
+    MdcInjectionFilter mdcInjectionFilter = new MdcInjectionFilter();
+    chain.addLast("mdc", mdcInjectionFilter);
+    chain.addLast("codec", new ProtocolCodecFilter(getHandler().getFactory(getMaxMessageSize())));
 
-		log.trace("Connector initialized");
-	}
+    log.trace("Connector initialized");
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see asia.stampy.common.AbstractStampyMessageGateway#connect()
-	 */
-	public void connect() throws Exception {
-		log.trace("connect() invoked");
-		
-		if(connector != null && connector.isActive()) {
-			log.warn("connect invoked when already connected");
-			return;
-		}
-		
-		if (connector == null || connector.isDisposed()) {
-			connector = new NioSocketConnector();
-		}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.AbstractStampyMessageGateway#connect()
+   */
+  @Override
+  public void connect() throws Exception {
+    log.trace("connect() invoked");
 
-		if (!connector.isActive()) init();
+    if (connector != null && connector.isActive()) {
+      log.warn("connect invoked when already connected");
+      return;
+    }
 
-		ConnectFuture cf = connector.connect(new InetSocketAddress(getHost(), getPort()));
+    if (connector == null || connector.isDisposed()) {
+      connector = new NioSocketConnector();
+    }
 
-		cf.await(2000);
-		if (connector.isActive()) {
-			log.info("Stampy MINA ClientMinaMessageGateway connected to {}:{}", host, port);
-		} else {
-			log.error("Could not connect to {}:{}", host, port);
-		}
-	}
+    if (!connector.isActive()) init();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.AbstractStampyMessageGateway#isConnected(asia.stampy
-	 * .common.HostPort)
-	 */
-	@Override
-	public boolean isConnected(HostPort hostPort) {
-		return serviceAdapter.hasSession(hostPort) && connector.isActive();
-	}
+    ConnectFuture cf = connector.connect(new InetSocketAddress(getHost(), getPort()));
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.AbstractStampyMessageGateway#closeConnection(asia.stampy
-	 * .common.HostPort)
-	 */
-	@Override
-	public void closeConnection(HostPort hostPort) {
-		serviceAdapter.closeAllSessions();
-		connector.dispose();
-	}
+    cf.await(2000);
+    if (connector.isActive()) {
+      log.info("Stampy MINA ClientMinaMessageGateway connected to {}:{}", host, port);
+    } else {
+      log.error("Could not connect to {}:{}", host, port);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see asia.stampy.common.AbstractStampyMessageGateway#shutdown()
-	 */
-	@Override
-	public void shutdown() throws Exception {
-		closeConnection(null);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.AbstractStampyMessageGateway#isConnected(asia.stampy
+   * .common.HostPort)
+   */
+  @Override
+  public boolean isConnected(HostPort hostPort) {
+    return serviceAdapter.hasSession(hostPort) && connector.isActive();
+  }
 
-	/**
-	 * Send message. Use
-	 * 
-	 * @param message
-	 *          the message
-	 * @param hostPort
-	 *          the host port
-	 * @throws InterceptException
-	 *           the intercept exception
-	 *           {@link ClientMinaMessageGateway#broadcastMessage(StampyMessage)}
-	 *           in preference.
-	 */
-	@Override
-	public void sendMessage(String message, HostPort hostPort) throws InterceptException {
-		broadcastMessage(message);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.AbstractStampyMessageGateway#closeConnection(asia.stampy
+   * .common.HostPort)
+   */
+  @Override
+  public void closeConnection(HostPort hostPort) {
+    serviceAdapter.closeAllSessions();
+    connector.dispose();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.AbstractStampyMessageGateway#broadcastMessage(java.lang
-	 * .String)
-	 */
-	@Override
-	public void broadcastMessage(String message) throws InterceptException {
-		if (!connector.isActive()) {
-			log.warn("Attempting to send message {} when the connector is not active", message);
-			throw new IllegalStateException("The connector is not active, cannot send message");
-		}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.AbstractStampyMessageGateway#shutdown()
+   */
+  @Override
+  public void shutdown() throws Exception {
+    closeConnection(null);
+  }
 
-		interceptOutgoingMessage(message);
+  /**
+   * Send message. Use
+   * 
+   * @param message
+   *          the message
+   * @param hostPort
+   *          the host port
+   * @throws InterceptException
+   *           the intercept exception
+   *           {@link ClientMinaMessageGateway#broadcastMessage(StampyMessage)}
+   *           in preference.
+   */
+  @Override
+  public void sendMessage(String message, HostPort hostPort) throws InterceptException {
+    broadcastMessage(message);
+  }
 
-		for (HostPort hostPort : serviceAdapter.getHostPorts()) {
-			getHandler().getHeartbeatContainer().reset(hostPort);
-		}
-		connector.broadcast(message);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.AbstractStampyMessageGateway#broadcastMessage(java.lang
+   * .String)
+   */
+  @Override
+  public void broadcastMessage(String message) throws InterceptException {
+    if (!connector.isActive()) {
+      log.warn("Attempting to send message {} when the connector is not active", message);
+      throw new IllegalStateException("The connector is not active, cannot send message");
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.AbstractStampyMessageGateway#getConnectedHostPorts()
-	 */
-	@Override
-	public Set<HostPort> getConnectedHostPorts() {
-		return serviceAdapter.getHostPorts();
-	}
+    interceptOutgoingMessage(message);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addMessageListener
-	 * (asia.stampy.common.mina.StampyMinaMessageListener)
-	 */
-	@Override
-	public void addMessageListener(StampyMinaMessageListener listener) {
-		getHandler().addMessageListener(listener);
-	}
+    for (HostPort hostPort : serviceAdapter.getHostPorts()) {
+      getHandler().getHeartbeatContainer().reset(hostPort);
+    }
+    connector.broadcast(message);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#removeMessageListener
-	 * (asia.stampy.common.mina.StampyMinaMessageListener)
-	 */
-	@Override
-	public void removeMessageListener(StampyMinaMessageListener listener) {
-		getHandler().removeMessageListener(listener);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.AbstractStampyMessageGateway#getConnectedHostPorts()
+   */
+  @Override
+  public Set<HostPort> getConnectedHostPorts() {
+    return serviceAdapter.getHostPorts();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#clearMessageListeners
-	 * ()
-	 */
-	@Override
-	public void clearMessageListeners() {
-		getHandler().clearMessageListeners();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addMessageListener
+   * (asia.stampy.common.mina.StampyMinaMessageListener)
+   */
+  @Override
+  public void addMessageListener(StampyMinaMessageListener listener) {
+    getHandler().addMessageListener(listener);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#setListeners(java
-	 * .util.Queue)
-	 */
-	@Override
-	public void setListeners(Queue<StampyMinaMessageListener> listeners) {
-		getHandler().setListeners(listeners);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#removeMessageListener
+   * (asia.stampy.common.mina.StampyMinaMessageListener)
+   */
+  @Override
+  public void removeMessageListener(StampyMinaMessageListener listener) {
+    getHandler().removeMessageListener(listener);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addServiceListener
-	 * (org.apache.mina.core.service.IoServiceListener)
-	 */
-	@Override
-	public void addServiceListener(IoServiceListener listener) {
-		connector.addListener(listener);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#clearMessageListeners
+   * ()
+   */
+  @Override
+  public void clearMessageListeners() {
+    getHandler().clearMessageListeners();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#removeServiceListener
-	 * (org.apache.mina.core.service.IoServiceListener)
-	 */
-	@Override
-	public void removeServiceListener(IoServiceListener listener) {
-		connector.removeListener(listener);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#setListeners(java
+   * .util.Queue)
+   */
+  @Override
+  public void setListeners(Queue<StampyMinaMessageListener> listeners) {
+    getHandler().setListeners(listeners);
+  }
 
-	/**
-	 * Gets the max message size.
-	 * 
-	 * @return the max message size
-	 */
-	public int getMaxMessageSize() {
-		return maxMessageSize;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addServiceListener
+   * (org.apache.mina.core.service.IoServiceListener)
+   */
+  @Override
+  public void addServiceListener(IoServiceListener listener) {
+    connector.addListener(listener);
+  }
 
-	/**
-	 * Sets the max message size.
-	 * 
-	 * @param maxMessageSize
-	 *          the new max message size
-	 */
-	public void setMaxMessageSize(int maxMessageSize) {
-		this.maxMessageSize = maxMessageSize;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#removeServiceListener
+   * (org.apache.mina.core.service.IoServiceListener)
+   */
+  @Override
+  public void removeServiceListener(IoServiceListener listener) {
+    connector.removeListener(listener);
+  }
 
-	/**
-	 * Gets the host.
-	 * 
-	 * @return the host
-	 */
-	public String getHost() {
-		return host;
-	}
+  /**
+   * Gets the max message size.
+   * 
+   * @return the max message size
+   */
+  public int getMaxMessageSize() {
+    return maxMessageSize;
+  }
 
-	/**
-	 * Sets the host.
-	 * 
-	 * @param host
-	 *          the new host
-	 */
-	public void setHost(String host) {
-		this.host = host;
-	}
+  /**
+   * Sets the max message size.
+   * 
+   * @param maxMessageSize
+   *          the new max message size
+   */
+  public void setMaxMessageSize(int maxMessageSize) {
+    this.maxMessageSize = maxMessageSize;
+  }
 
-	/**
-	 * Gets the port.
-	 * 
-	 * @return the port
-	 */
-	public int getPort() {
-		return port;
-	}
+  /**
+   * Gets the host.
+   * 
+   * @return the host
+   */
+  public String getHost() {
+    return host;
+  }
 
-	/**
-	 * Sets the port.
-	 * 
-	 * @param port
-	 *          the new port
-	 */
-	public void setPort(int port) {
-		this.port = port;
-	}
+  /**
+   * Sets the host.
+   * 
+   * @param host
+   *          the new host
+   */
+  public void setHost(String host) {
+    this.host = host;
+  }
 
-	/**
-	 * Gets the handler.
-	 * 
-	 * @return the handler
-	 */
-	public StampyMinaHandler<ClientMinaMessageGateway> getHandler() {
-		return handler;
-	}
+  /**
+   * Gets the port.
+   * 
+   * @return the port
+   */
+  public int getPort() {
+    return port;
+  }
 
-	/**
-	 * Sets the handler.
-	 * 
-	 * @param handler
-	 *          the new handler
-	 */
-	public void setHandler(StampyMinaHandler<ClientMinaMessageGateway> handler) {
-		this.handler = handler;
-	}
+  /**
+   * Sets the port.
+   * 
+   * @param port
+   *          the new port
+   */
+  public void setPort(int port) {
+    this.port = port;
+  }
+
+  /**
+   * Gets the handler.
+   * 
+   * @return the handler
+   */
+  public StampyMinaHandler<ClientMinaMessageGateway> getHandler() {
+    return handler;
+  }
+
+  /**
+   * Sets the handler.
+   * 
+   * @param handler
+   *          the new handler
+   */
+  public void setHandler(StampyMinaHandler<ClientMinaMessageGateway> handler) {
+    this.handler = handler;
+  }
 
 }

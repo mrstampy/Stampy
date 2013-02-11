@@ -20,32 +20,31 @@ package asia.stampy.client.mina;
 
 import asia.stampy.common.message.StampyMessage;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class ClientHandlerAdapter.
  */
 public class ClientHandlerAdapter {
-	
-	/**
-	 * Checks if is valid message.
-	 *
-	 * @param message the message
-	 * @return true, if is valid message
-	 */
-	boolean isValidMessage(StampyMessage<?> message) {
-		switch(message.getMessageType()) {
-		
-		case CONNECTED:
-		case ERROR:
-		case MESSAGE:
-		case RECEIPT:
-			message.validate();
-			return true;
-		default:
-			return false;
-		
-		}
-	}
+
+  /**
+   * Checks if is valid message.
+   * 
+   * @param message
+   *          the message
+   * @return true, if is valid message
+   */
+  boolean isValidMessage(StampyMessage<?> message) {
+    switch (message.getMessageType()) {
+
+    case CONNECTED:
+    case ERROR:
+    case MESSAGE:
+    case RECEIPT:
+      message.validate();
+      return true;
+    default:
+      return false;
+
+    }
+  }
 
 }

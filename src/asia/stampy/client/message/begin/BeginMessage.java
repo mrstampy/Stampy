@@ -24,49 +24,52 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class BeginMessage.
  */
 public class BeginMessage extends AbstractMessage<BeginHeader> {
 
-	private static final long serialVersionUID = -1331929421949592240L;
+  private static final long serialVersionUID = -1331929421949592240L;
 
-	/**
-	 * Instantiates a new begin message.
-	 *
-	 * @param transaction the transaction
-	 */
-	public BeginMessage(String transaction) {
-		this();
-		
-		getHeader().setTransaction(transaction);
-	}
-	
-	/**
-	 * Instantiates a new begin message.
-	 */
-	public BeginMessage() {
-		super(StompMessageType.BEGIN);
-	}
+  /**
+   * Instantiates a new begin message.
+   * 
+   * @param transaction
+   *          the transaction
+   */
+  public BeginMessage(String transaction) {
+    this();
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected BeginHeader createNewHeader() {
-		return new BeginHeader();
-	}
+    getHeader().setTransaction(transaction);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if (StringUtils.isEmpty(getHeader().getTransaction())) {
-			throw new InvalidStompMessageException(BeginHeader.TRANSACTION + " is required");
-		}
-	}
+  /**
+   * Instantiates a new begin message.
+   */
+  public BeginMessage() {
+    super(StompMessageType.BEGIN);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected BeginHeader createNewHeader() {
+    return new BeginHeader();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getTransaction())) {
+      throw new InvalidStompMessageException(BeginHeader.TRANSACTION + " is required");
+    }
+  }
 
 }

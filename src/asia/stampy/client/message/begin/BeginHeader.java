@@ -20,33 +20,32 @@ package asia.stampy.client.message.begin;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class BeginHeader.
  */
 public class BeginHeader extends AbstractClientMessageHeader {
-	private static final long serialVersionUID = 1752296477013796007L;
-	
-	/** The Constant TRANSACTION. */
-	public static final String TRANSACTION = "transaction";
-	
-	/**
-	 * Sets the transaction.
-	 *
-	 * @param transaction the new transaction
-	 */
-	public void setTransaction(String transaction) {
-		addHeader(TRANSACTION, transaction);
-	}
-	
-	/**
-	 * Gets the transaction.
-	 *
-	 * @return the transaction
-	 */
-	public String getTransaction() {
-		return getHeaderValue(TRANSACTION);
-	}
+  private static final long serialVersionUID = 1752296477013796007L;
+
+  /** The Constant TRANSACTION. */
+  public static final String TRANSACTION = "transaction";
+
+  /**
+   * Sets the transaction.
+   * 
+   * @param transaction
+   *          the new transaction
+   */
+  public void setTransaction(String transaction) {
+    addHeader(TRANSACTION, transaction);
+  }
+
+  /**
+   * Gets the transaction.
+   * 
+   * @return the transaction
+   */
+  public String getTransaction() {
+    return getHeaderValue(TRANSACTION);
+  }
 
 }

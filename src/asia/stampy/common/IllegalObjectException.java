@@ -18,21 +18,20 @@
  */
 package asia.stampy.common;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * Thrown when the object type has been determined to be invalid.
  */
 public class IllegalObjectException extends Exception {
-	private static final long serialVersionUID = -1179844490646396652L;
+  private static final long serialVersionUID = -1179844490646396652L;
 
-	/**
-	 * Instantiates a new illegal object exception.
-	 *
-	 * @param message the message
-	 */
-	public IllegalObjectException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new illegal object exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public IllegalObjectException(String message) {
+    super(message);
+  }
 
 }

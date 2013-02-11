@@ -27,61 +27,66 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
 import asia.stampy.common.mina.StampyMinaHandler;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class StringDecoder.
  */
 public class StringDecoder extends CumulativeProtocolDecoder {
 
-	private int maxDataLength = Integer.MAX_VALUE;
+  private int maxDataLength = Integer.MAX_VALUE;
 
-	/**
-	 * Instantiates a new string decoder.
-	 *
-	 * @param maxDataLength the max data length
-	 */
-	public StringDecoder(int maxDataLength) {
-		super();
-		setMaxDataLength(maxDataLength);
-	}
+  /**
+   * Instantiates a new string decoder.
+   * 
+   * @param maxDataLength
+   *          the max data length
+   */
+  public StringDecoder(int maxDataLength) {
+    super();
+    setMaxDataLength(maxDataLength);
+  }
 
-	/* (non-Javadoc)
-	 * @see org.apache.mina.filter.codec.CumulativeProtocolDecoder#doDecode(org.apache.mina.core.session.IoSession, org.apache.mina.core.buffer.IoBuffer, org.apache.mina.filter.codec.ProtocolDecoderOutput)
-	 */
-	@Override
-	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
-		if (!in.hasRemaining()) return false;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.filter.codec.CumulativeProtocolDecoder#doDecode(org.apache
+   * .mina.core.session.IoSession, org.apache.mina.core.buffer.IoBuffer,
+   * org.apache.mina.filter.codec.ProtocolDecoderOutput)
+   */
+  @Override
+  protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
+    if (!in.hasRemaining()) return false;
 
-		InputStream is = in.asInputStream();
-		int available = is.available();
-		if (available > getMaxDataLength()) {
-			throw new IllegalArgumentException("Data length: " + available);
-		}
+    InputStream is = in.asInputStream();
+    int available = is.available();
+    if (available > getMaxDataLength()) {
+      throw new IllegalArgumentException("Data length: " + available);
+    }
 
-		byte[] b = new byte[available];
-		is.read(b);
-		String decoded = new String(b, StampyMinaHandler.CHARSET).replace("\nnull", "\n");
-		out.write(decoded);
-		return true;
-	}
+    byte[] b = new byte[available];
+    is.read(b);
+    String decoded = new String(b, StampyMinaHandler.CHARSET).replace("\nnull", "\n");
+    out.write(decoded);
+    return true;
+  }
 
-	/**
-	 * Gets the max data length.
-	 *
-	 * @return the max data length
-	 */
-	public int getMaxDataLength() {
-		return maxDataLength;
-	}
+  /**
+   * Gets the max data length.
+   * 
+   * @return the max data length
+   */
+  public int getMaxDataLength() {
+    return maxDataLength;
+  }
 
-	/**
-	 * Sets the max data length.
-	 *
-	 * @param maxDataLength the new max data length
-	 */
-	public void setMaxDataLength(int maxDataLength) {
-		this.maxDataLength = maxDataLength;
-	}
+  /**
+   * Sets the max data length.
+   * 
+   * @param maxDataLength
+   *          the new max data length
+   */
+  public void setMaxDataLength(int maxDataLength) {
+    this.maxDataLength = maxDataLength;
+  }
 
 }

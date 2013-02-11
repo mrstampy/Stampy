@@ -24,49 +24,52 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class NackMessage.
  */
 public class NackMessage extends AbstractMessage<NackHeader> {
 
-	private static final long serialVersionUID = -1213685585376641464L;
+  private static final long serialVersionUID = -1213685585376641464L;
 
-	/**
-	 * Instantiates a new nack message.
-	 *
-	 * @param id the id
-	 */
-	public NackMessage(String id) {
-		this();
-		
-		getHeader().setId(id);
-	}
-	
-	/**
-	 * Instantiates a new nack message.
-	 */
-	public NackMessage() {
-		super(StompMessageType.NACK);
-	}
+  /**
+   * Instantiates a new nack message.
+   * 
+   * @param id
+   *          the id
+   */
+  public NackMessage(String id) {
+    this();
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected NackHeader createNewHeader() {
-		return new NackHeader();
-	}
+    getHeader().setId(id);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if (StringUtils.isEmpty(getHeader().getId())) {
-			throw new InvalidStompMessageException(NackHeader.ID + " is required");
-		}
-	}
+  /**
+   * Instantiates a new nack message.
+   */
+  public NackMessage() {
+    super(StompMessageType.NACK);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected NackHeader createNewHeader() {
+    return new NackHeader();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getId())) {
+      throw new InvalidStompMessageException(NackHeader.ID + " is required");
+    }
+  }
 
 }

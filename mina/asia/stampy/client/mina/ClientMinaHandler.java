@@ -23,25 +23,24 @@ import javax.annotation.Resource;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.mina.StampyMinaHandler;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ClientMinaHandler.
  */
 @Resource
 public class ClientMinaHandler extends StampyMinaHandler<ClientMinaMessageGateway> {
 
-	private ClientHandlerAdapter adapter = new ClientHandlerAdapter();
+  private ClientHandlerAdapter adapter = new ClientHandlerAdapter();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common
-	 * .message.StampyMessage)
-	 */
-	@Override
-	protected boolean isValidMessage(StampyMessage<?> message) {
-		return adapter.isValidMessage(message);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common
+   * .message.StampyMessage)
+   */
+  @Override
+  protected boolean isValidMessage(StampyMessage<?> message) {
+    return adapter.isValidMessage(message);
+  }
 
 }

@@ -29,63 +29,66 @@ import org.slf4j.LoggerFactory;
 
 import asia.stampy.common.HostPort;
 
-
-// TODO: Auto-generated Javadoc
 /**
- * Encapsulates all the currently active {@link PaceMaker}s.  This class is a singleton; wire into
- * the system appropriately.
+ * Encapsulates all the currently active {@link PaceMaker}s. This class is a
+ * singleton; wire into the system appropriately.
  */
 @Resource
 public class HeartbeatContainer {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private Map<HostPort, PaceMaker> paceMakers = new ConcurrentHashMap<>();
+  private Map<HostPort, PaceMaker> paceMakers = new ConcurrentHashMap<>();
 
-	/**
-	 * Stops heartbeats to the specified {@link HostPort}.
-	 *
-	 * @param hostPort the host port
-	 */
-	public void stop(HostPort hostPort) {
-		PaceMaker paceMaker = paceMakers.get(hostPort);
-		if (paceMaker != null) {
-			log.info("Stopping PaceMaker for {}", hostPort);
-			paceMaker.stop();
-		}
-	}
-	
-	/**
-	 * Adds a new {@link PaceMaker} for the specified {@link HostPort}.
-	 *
-	 * @param hostPort the host port
-	 * @param paceMaker the pace maker
-	 */
-	public void add(HostPort hostPort, PaceMaker paceMaker) {
-		log.info("Adding PaceMaker for {}", hostPort);
-		stop(hostPort);
-		paceMakers.put(hostPort, paceMaker);
-	}
-	
-	/**
-	 * Removes the {@link PaceMaker} specified by {@link HostPort}.
-	 *
-	 * @param hostPort the host port
-	 */
-	public void remove(HostPort hostPort) {
-		log.info("Removing PaceMaker for {}", hostPort);
-		stop(hostPort);
-		paceMakers.remove(hostPort);
-	}
-	
-	/**
-	 * Resets the {@link PaceMaker} for the specified {@link HostPort},
-	 * preventing a heartbeat from being sent.
-	 *
-	 * @param hostPort the host port
-	 */
-	public void reset(HostPort hostPort) {
-		log.trace("Resetting PaceMaker for {}", hostPort);
-		PaceMaker paceMaker = paceMakers.get(hostPort);
-		if(paceMaker != null) paceMaker.reset();
-	}
+  /**
+   * Stops heartbeats to the specified {@link HostPort}.
+   * 
+   * @param hostPort
+   *          the host port
+   */
+  public void stop(HostPort hostPort) {
+    PaceMaker paceMaker = paceMakers.get(hostPort);
+    if (paceMaker != null) {
+      log.info("Stopping PaceMaker for {}", hostPort);
+      paceMaker.stop();
+    }
+  }
+
+  /**
+   * Adds a new {@link PaceMaker} for the specified {@link HostPort}.
+   * 
+   * @param hostPort
+   *          the host port
+   * @param paceMaker
+   *          the pace maker
+   */
+  public void add(HostPort hostPort, PaceMaker paceMaker) {
+    log.info("Adding PaceMaker for {}", hostPort);
+    stop(hostPort);
+    paceMakers.put(hostPort, paceMaker);
+  }
+
+  /**
+   * Removes the {@link PaceMaker} specified by {@link HostPort}.
+   * 
+   * @param hostPort
+   *          the host port
+   */
+  public void remove(HostPort hostPort) {
+    log.info("Removing PaceMaker for {}", hostPort);
+    stop(hostPort);
+    paceMakers.remove(hostPort);
+  }
+
+  /**
+   * Resets the {@link PaceMaker} for the specified {@link HostPort}, preventing
+   * a heartbeat from being sent.
+   * 
+   * @param hostPort
+   *          the host port
+   */
+  public void reset(HostPort hostPort) {
+    log.trace("Resetting PaceMaker for {}", hostPort);
+    PaceMaker paceMaker = paceMakers.get(hostPort);
+    if (paceMaker != null) paceMaker.reset();
+  }
 }

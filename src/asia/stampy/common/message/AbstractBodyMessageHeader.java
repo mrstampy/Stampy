@@ -18,33 +18,32 @@
  */
 package asia.stampy.common.message;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractBodyMessageHeader.
  */
 public class AbstractBodyMessageHeader extends AbstractMessageHeader {
 
-	private static final long serialVersionUID = -4546439038775868974L;
-	
-	/** The Constant CONTENT_TYPE. */
-	public static final String CONTENT_TYPE = "content-type";
+  private static final long serialVersionUID = -4546439038775868974L;
 
-	/**
-	 * Sets the content type.
-	 *
-	 * @param mimeType the new content type
-	 */
-	public void setContentType(String mimeType) {
-		addHeader(CONTENT_TYPE, mimeType);
-	}
-	
-	/**
-	 * Gets the content type.
-	 *
-	 * @return the content type
-	 */
-	public String getContentType() {
-		return getHeaderValue(CONTENT_TYPE);
-	}
+  /** The Constant CONTENT_TYPE. */
+  public static final String CONTENT_TYPE = "content-type";
+
+  /**
+   * Sets the content type.
+   * 
+   * @param mimeType
+   *          the new content type
+   */
+  public void setContentType(String mimeType) {
+    addHeader(CONTENT_TYPE, mimeType);
+  }
+
+  /**
+   * Gets the content type.
+   * 
+   * @return the content type
+   */
+  public String getContentType() {
+    return getHeaderValue(CONTENT_TYPE);
+  }
 }

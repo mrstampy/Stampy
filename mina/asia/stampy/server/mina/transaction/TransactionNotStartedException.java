@@ -18,21 +18,21 @@
  */
 package asia.stampy.server.mina.transaction;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class TransactionNotStartedException.
  */
 public class TransactionNotStartedException extends Exception {
 
-	private static final long serialVersionUID = -651656641322030058L;
+  private static final long serialVersionUID = -651656641322030058L;
 
-	/**
-	 * Instantiates a new transaction not started exception.
-	 *
-	 * @param message the message
-	 */
-	public TransactionNotStartedException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new transaction not started exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public TransactionNotStartedException(String message) {
+    super(message);
+  }
 
 }

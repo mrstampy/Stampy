@@ -20,58 +20,57 @@ package asia.stampy.examples.remote.exe.log4j.server;
 
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Log4jLevelChangerTestServer.
  */
 public class Log4jLevelChangerTestServer {
-	private ServerMinaMessageGateway gateway;
+  private ServerMinaMessageGateway gateway;
 
-	/**
-	 * Inits.
-	 * 
-	 * @throws Exception
-	 *           the exception
-	 */
-	public void init() throws Exception {
-		setGateway(Initializer.initialize());
-		gateway.addMessageListener(new TestServerMessageListener());
-		gateway.connect();
-		System.out.println("Stampy server started");
-	}
+  /**
+   * Inits.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  public void init() throws Exception {
+    setGateway(Initializer.initialize());
+    gateway.addMessageListener(new TestServerMessageListener());
+    gateway.connect();
+    System.out.println("Stampy server started");
+  }
 
-	/**
-	 * The main method.
-	 * 
-	 * @param args
-	 *          the arguments
-	 */
-	public static void main(String[] args) {
-		Log4jLevelChangerTestServer server = new Log4jLevelChangerTestServer();
-		try {
-			server.init();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+  /**
+   * The main method.
+   * 
+   * @param args
+   *          the arguments
+   */
+  public static void main(String[] args) {
+    Log4jLevelChangerTestServer server = new Log4jLevelChangerTestServer();
+    try {
+      server.init();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 
-	/**
-	 * Gets the gateway.
-	 * 
-	 * @return the gateway
-	 */
-	public ServerMinaMessageGateway getGateway() {
-		return gateway;
-	}
+  /**
+   * Gets the gateway.
+   * 
+   * @return the gateway
+   */
+  public ServerMinaMessageGateway getGateway() {
+    return gateway;
+  }
 
-	/**
-	 * Sets the gateway.
-	 * 
-	 * @param gateway
-	 *          the new gateway
-	 */
-	public void setGateway(ServerMinaMessageGateway gateway) {
-		this.gateway = gateway;
-	}
+  /**
+   * Sets the gateway.
+   * 
+   * @param gateway
+   *          the new gateway
+   */
+  public void setGateway(ServerMinaMessageGateway gateway) {
+    this.gateway = gateway;
+  }
 
 }

@@ -52,246 +52,263 @@ import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.message.MessageMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * This class parses STOMP messages into {@link StampyMessage}s.
  */
 public class StompMessageParser {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	/** The Constant EOM. */
-	public static final String EOM = "\000";
+  /** The Constant EOM. */
+  public static final String EOM = "\000";
 
-	/**
-	 * Parses the message.
-	 *
-	 * @param <MSG> the generic type
-	 * @param stompMessage the stomp message
-	 * @return the msg
-	 * @throws UnparseableException the unparseable exception
-	 */
-	public <MSG extends StampyMessage<?>> MSG parseMessage(String stompMessage) throws UnparseableException {
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new StringReader(stompMessage));
+  /**
+   * Parses the message.
+   * 
+   * @param <MSG>
+   *          the generic type
+   * @param stompMessage
+   *          the stomp message
+   * @return the msg
+   * @throws UnparseableException
+   *           the unparseable exception
+   */
+  public <MSG extends StampyMessage<?>> MSG parseMessage(String stompMessage) throws UnparseableException {
+    BufferedReader reader = null;
+    try {
+      reader = new BufferedReader(new StringReader(stompMessage));
 
-			String messageType = reader.readLine();
+      String messageType = reader.readLine();
 
-			StompMessageType type = StompMessageType.valueOf(messageType);
+      StompMessageType type = StompMessageType.valueOf(messageType);
 
-			List<String> headers = new ArrayList<String>();
-			String hdr = reader.readLine();
+      List<String> headers = new ArrayList<String>();
+      String hdr = reader.readLine();
 
-			while (hdr != null && !hdr.isEmpty()) {
-				headers.add(hdr);
-				hdr = reader.readLine();
-			}
+      while (hdr != null && !hdr.isEmpty()) {
+        headers.add(hdr);
+        hdr = reader.readLine();
+      }
 
-			String body = reader.readLine();
-			body = body.equals(EOM) ? null : fillBody(body, reader);
+      String body = reader.readLine();
+      body = body.equals(EOM) ? null : fillBody(body, reader);
 
-			MSG msg = createStampyMessage(type, headers);
+      MSG msg = createStampyMessage(type, headers);
 
-			if (!StringUtils.isEmpty(body) && msg instanceof AbstractBodyMessage<?>) {
-				AbstractBodyMessage<?> abm = (AbstractBodyMessage<?>) msg;
-				abm.setBody(isText(headers) ? body : convertToObject(body, abm.getHeader().getContentType()));
-			}
-			return msg;
-		} catch (Exception e) {
-			throw new UnparseableException("The message supplied cannot be parsed as a STOMP message", stompMessage, e);
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					log.warn("Could not close reader", e);
-				}
-			}
-		}
-	}
+      if (!StringUtils.isEmpty(body) && msg instanceof AbstractBodyMessage<?>) {
+        AbstractBodyMessage<?> abm = (AbstractBodyMessage<?>) msg;
+        abm.setBody(isText(headers) ? body : convertToObject(body, abm.getHeader().getContentType()));
+      }
+      return msg;
+    } catch (Exception e) {
+      throw new UnparseableException("The message supplied cannot be parsed as a STOMP message", stompMessage, e);
+    } finally {
+      if (reader != null) {
+        try {
+          reader.close();
+        } catch (IOException e) {
+          log.warn("Could not close reader", e);
+        }
+      }
+    }
+  }
 
-	/**
-	 * Converts the specified string to an object based upon the specified content type.  Only
-	 * base64 encoding is supported for Java objects.
-	 *
-	 * @param body the body
-	 * @param contentType the content type
-	 * @return the object
-	 * @throws IllegalObjectException the illegal object exception
-	 * @throws ClassNotFoundException the class not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	protected Object convertToObject(String body, String contentType) throws IllegalObjectException,
-			ClassNotFoundException, IOException {
-		if (!AbstractBodyMessage.JAVA_BASE64_MIME_TYPE.equals(contentType)) {
-			throw new NotImplementedException(
-					"Subclass this class and override convertToObject to enable conversion using mime type " + contentType);
-		}
+  /**
+   * Converts the specified string to an object based upon the specified content
+   * type. Only base64 encoding is supported for Java objects.
+   * 
+   * @param body
+   *          the body
+   * @param contentType
+   *          the content type
+   * @return the object
+   * @throws IllegalObjectException
+   *           the illegal object exception
+   * @throws ClassNotFoundException
+   *           the class not found exception
+   * @throws IOException
+   *           Signals that an I/O exception has occurred.
+   */
+  protected Object convertToObject(String body, String contentType) throws IllegalObjectException,
+      ClassNotFoundException, IOException {
+    if (!AbstractBodyMessage.JAVA_BASE64_MIME_TYPE.equals(contentType)) {
+      throw new NotImplementedException(
+          "Subclass this class and override convertToObject to enable conversion using mime type " + contentType);
+    }
 
-		Object o = SerializationUtils.deserializeBase64(body);
+    Object o = SerializationUtils.deserializeBase64(body);
 
-		illegalObjectCheck(o);
+    illegalObjectCheck(o);
 
-		return o;
-	}
+    return o;
+  }
 
-	/**
-	 * Blank implementation; override to add any object checking logic.
-	 *
-	 * @param o the o
-	 * @throws IllegalObjectException the illegal object exception
-	 */
-	protected void illegalObjectCheck(Object o) throws IllegalObjectException {
+  /**
+   * Blank implementation; override to add any object checking logic.
+   * 
+   * @param o
+   *          the o
+   * @throws IllegalObjectException
+   *           the illegal object exception
+   */
+  protected void illegalObjectCheck(Object o) throws IllegalObjectException {
 
-	}
+  }
 
-	/**
-	 * Checks if is text.
-	 *
-	 * @param headers the headers
-	 * @return true, if is text
-	 */
-	protected boolean isText(List<String> headers) {
-		boolean text = false;
-		boolean content = false;
-		for (String hdr : headers) {
-			if (hdr.contains(AbstractBodyMessageHeader.CONTENT_TYPE)) {
-				content = true;
-				text = hdr.contains("text/");
-			}
-		}
+  /**
+   * Checks if is text.
+   * 
+   * @param headers
+   *          the headers
+   * @return true, if is text
+   */
+  protected boolean isText(List<String> headers) {
+    boolean text = false;
+    boolean content = false;
+    for (String hdr : headers) {
+      if (hdr.contains(AbstractBodyMessageHeader.CONTENT_TYPE)) {
+        content = true;
+        text = hdr.contains("text/");
+      }
+    }
 
-		return !content || (content && text);
-	}
+    return !content || (content && text);
+  }
 
-	/**
-	 * Creates the stampy message.
-	 *
-	 * @param <MSG> the generic type
-	 * @param type the type
-	 * @param headers the headers
-	 * @return the msg
-	 * @throws UnparseableException the unparseable exception
-	 */
-	@SuppressWarnings("unchecked")
-	protected <MSG extends StampyMessage<?>> MSG createStampyMessage(StompMessageType type, List<String> headers)
-			throws UnparseableException {
+  /**
+   * Creates the stampy message.
+   * 
+   * @param <MSG>
+   *          the generic type
+   * @param type
+   *          the type
+   * @param headers
+   *          the headers
+   * @return the msg
+   * @throws UnparseableException
+   *           the unparseable exception
+   */
+  @SuppressWarnings("unchecked")
+  protected <MSG extends StampyMessage<?>> MSG createStampyMessage(StompMessageType type, List<String> headers)
+      throws UnparseableException {
 
-		MSG message = null;
+    MSG message = null;
 
-		switch (type) {
+    switch (type) {
 
-		case ABORT:
-			message = (MSG) new AbortMessage();
-			break;
-		case ACK:
-			message = (MSG) new AckMessage();
-			break;
-		case BEGIN:
-			message = (MSG) new BeginMessage();
-			break;
-		case COMMIT:
-			message = (MSG) new CommitMessage();
-			break;
-		case CONNECT:
-			message = (MSG) new ConnectMessage();
-			break;
-		case CONNECTED:
-			message = (MSG) new ConnectedMessage();
-			break;
-		case DISCONNECT:
-			message = (MSG) new DisconnectMessage();
-			break;
-		case ERROR:
-			ErrorMessage error = new ErrorMessage();
-			message = (MSG) error;
-			break;
-		case MESSAGE:
-			MessageMessage mm = new MessageMessage();
-			message = (MSG) mm;
-			break;
-		case NACK:
-			message = (MSG) new NackMessage();
-			break;
-		case RECEIPT:
-			message = (MSG) new ReceiptMessage();
-			break;
-		case SEND:
-			SendMessage send = new SendMessage();
-			message = (MSG) send;
-			break;
-		case STOMP:
-			message = (MSG) new StompMessage();
-			break;
-		case SUBSCRIBE:
-			message = (MSG) new SubscribeMessage();
-			break;
-		case UNSUBSCRIBE:
-			message = (MSG) new UnsubscribeMessage();
-			break;
-		default:
-			break;
+    case ABORT:
+      message = (MSG) new AbortMessage();
+      break;
+    case ACK:
+      message = (MSG) new AckMessage();
+      break;
+    case BEGIN:
+      message = (MSG) new BeginMessage();
+      break;
+    case COMMIT:
+      message = (MSG) new CommitMessage();
+      break;
+    case CONNECT:
+      message = (MSG) new ConnectMessage();
+      break;
+    case CONNECTED:
+      message = (MSG) new ConnectedMessage();
+      break;
+    case DISCONNECT:
+      message = (MSG) new DisconnectMessage();
+      break;
+    case ERROR:
+      ErrorMessage error = new ErrorMessage();
+      message = (MSG) error;
+      break;
+    case MESSAGE:
+      MessageMessage mm = new MessageMessage();
+      message = (MSG) mm;
+      break;
+    case NACK:
+      message = (MSG) new NackMessage();
+      break;
+    case RECEIPT:
+      message = (MSG) new ReceiptMessage();
+      break;
+    case SEND:
+      SendMessage send = new SendMessage();
+      message = (MSG) send;
+      break;
+    case STOMP:
+      message = (MSG) new StompMessage();
+      break;
+    case SUBSCRIBE:
+      message = (MSG) new SubscribeMessage();
+      break;
+    case UNSUBSCRIBE:
+      message = (MSG) new UnsubscribeMessage();
+      break;
+    default:
+      break;
 
-		}
-		
-		message.getHeader();
+    }
 
-		addHeaders(message, headers);
+    message.getHeader();
 
-		return message;
-	}
+    addHeaders(message, headers);
 
-	private <MSG extends StampyMessage<?>> void addHeaders(MSG message, List<String> headers) throws UnparseableException {
-		for (String header : headers) {
-			StringTokenizer st = new StringTokenizer(header, ":");
+    return message;
+  }
 
-			if (st.countTokens() < 2) {
-				log.error("Cannot parse STOMP header {}", header);
-				throw new UnparseableException("Cannot parse STOMP header " + header);
-			}
+  private <MSG extends StampyMessage<?>> void addHeaders(MSG message, List<String> headers) throws UnparseableException {
+    for (String header : headers) {
+      StringTokenizer st = new StringTokenizer(header, ":");
 
-			String key = st.nextToken();
-			String value = header.substring(key.length() + 1);
+      if (st.countTokens() < 2) {
+        log.error("Cannot parse STOMP header {}", header);
+        throw new UnparseableException("Cannot parse STOMP header " + header);
+      }
 
-			message.getHeader().addHeader(key, value);
-		}
-	}
+      String key = st.nextToken();
+      String value = header.substring(key.length() + 1);
 
-	/**
-	 * Fills the body of the STOMP message.
-	 *
-	 * @param body the body
-	 * @param reader the reader
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	protected String fillBody(String body, BufferedReader reader) throws IOException {
-		StringBuilder builder = new StringBuilder(trimEOM(body));
+      message.getHeader().addHeader(key, value);
+    }
+  }
 
-		String s = reader.readLine();
+  /**
+   * Fills the body of the STOMP message.
+   * 
+   * @param body
+   *          the body
+   * @param reader
+   *          the reader
+   * @return the string
+   * @throws IOException
+   *           Signals that an I/O exception has occurred.
+   */
+  protected String fillBody(String body, BufferedReader reader) throws IOException {
+    StringBuilder builder = new StringBuilder(trimEOM(body));
 
-		while (s != null) {
-			builder.append(trimEOM(s));
-			s = reader.readLine();
-		}
+    String s = reader.readLine();
 
-		return builder.toString();
-	}
+    while (s != null) {
+      builder.append(trimEOM(s));
+      s = reader.readLine();
+    }
 
-	/**
-	 * Trims the terminating byte.
-	 *
-	 * @param s the s
-	 * @return the string
-	 */
-	protected String trimEOM(String s) {
-		String trimmed = s;
-		if (s.contains(EOM)) {
-			int idx = s.indexOf(EOM);
-			trimmed = s.substring(0, idx);
-		}
+    return builder.toString();
+  }
 
-		return trimmed;
-	}
+  /**
+   * Trims the terminating byte.
+   * 
+   * @param s
+   *          the s
+   * @return the string
+   */
+  protected String trimEOM(String s) {
+    String trimmed = s;
+    if (s.contains(EOM)) {
+      int idx = s.indexOf(EOM);
+      trimmed = s.substring(0, idx);
+    }
+
+    return trimmed;
+  }
 }

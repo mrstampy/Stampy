@@ -28,7 +28,6 @@ import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
-// TODO: Auto-generated Javadoc
 /**
  * Executes a {@link Remoteable} object and if a receipt has been specified,
  * returns a RECEIPT message. An ERROR message is returned to the client should
@@ -36,75 +35,75 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  */
 public class RemoteExecutor {
 
-	private ServerMinaMessageGateway gateway;
+  private ServerMinaMessageGateway gateway;
 
-	/**
-	 * Process stomp message.
-	 * 
-	 * @param message
-	 *          the message
-	 * @param hostPort
-	 *          the host port
-	 * @return true, if successful
-	 * @throws Exception
-	 *           the exception
-	 */
-	public boolean processStompMessage(SendMessage message, HostPort hostPort) throws Exception {
-		try {
-			Remoteable remoteable = message.getBody();
+  /**
+   * Process stomp message.
+   * 
+   * @param message
+   *          the message
+   * @param hostPort
+   *          the host port
+   * @return true, if successful
+   * @throws Exception
+   *           the exception
+   */
+  public boolean processStompMessage(SendMessage message, HostPort hostPort) throws Exception {
+    try {
+      Remoteable remoteable = message.getBody();
 
-			remoteable.setProperties(message.getHeader().getHeaders());
+      remoteable.setProperties(message.getHeader().getHeaders());
 
-			boolean b = remoteable.execute();
+      boolean b = remoteable.execute();
 
-			sendSuccess(message, hostPort);
+      sendSuccess(message, hostPort);
 
-			return b;
-		} catch (Exception e) {
-			sendError(message, e, hostPort);
-		}
+      return b;
+    } catch (Exception e) {
+      sendError(message, e, hostPort);
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	private void sendSuccess(SendMessage message, HostPort hostPort) throws InterceptException {
-		String receiptId = message.getHeader().getReceipt();
+  private void sendSuccess(SendMessage message, HostPort hostPort) throws InterceptException {
+    String receiptId = message.getHeader().getReceipt();
 
-		if (StringUtils.isEmpty(receiptId)) return;
+    if (StringUtils.isEmpty(receiptId)) return;
 
-		ReceiptMessage receipt = new ReceiptMessage(receiptId);
+    ReceiptMessage receipt = new ReceiptMessage(receiptId);
 
-		getGateway().sendMessage(receipt, hostPort);
-	}
+    getGateway().sendMessage(receipt, hostPort);
+  }
 
-	private void sendError(SendMessage message, Exception e, HostPort hostPort) throws InterceptException {
-		String receipt = message.getHeader().getReceipt();
+  private void sendError(SendMessage message, Exception e, HostPort hostPort) throws InterceptException {
+    String receipt = message.getHeader().getReceipt();
 
-		ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
-		error.getHeader().setMessageHeader(
-				"Could not execute " + message.getBody().getClass().getCanonicalName() + " - " + e.getMessage());
-		error.getHeader().setContentType(AbstractBodyMessage.JAVA_BASE64_MIME_TYPE);
-		error.setBody(e);
+    ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
+    error.getHeader().setMessageHeader(
+        "Could not execute " + message.getBody().getClass().getCanonicalName() + " - " + e.getMessage());
+    error.getHeader().setContentType(AbstractBodyMessage.JAVA_BASE64_MIME_TYPE);
+    error.setBody(e);
 
-		getGateway().sendMessage(error, hostPort);
-	}
+    getGateway().sendMessage(error, hostPort);
+  }
 
-	/**
-	 * Gets the gateway.
-	 * 
-	 * @return the gateway
-	 */
-	public ServerMinaMessageGateway getGateway() {
-		return gateway;
-	}
+  /**
+   * Gets the gateway.
+   * 
+   * @return the gateway
+   */
+  public ServerMinaMessageGateway getGateway() {
+    return gateway;
+  }
 
-	/**
-	 * Sets the gateway.
-	 * 
-	 * @param messageSender
-	 *          the new gateway
-	 */
-	public void setGateway(ServerMinaMessageGateway messageSender) {
-		this.gateway = messageSender;
-	}
+  /**
+   * Sets the gateway.
+   * 
+   * @param messageSender
+   *          the new gateway
+   */
+  public void setGateway(ServerMinaMessageGateway messageSender) {
+    this.gateway = messageSender;
+  }
 }

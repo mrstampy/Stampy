@@ -38,138 +38,137 @@ import asia.stampy.server.message.connected.ConnectedMessage;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ServerHandlerAdapter.
  */
 class ServerHandlerAdapter {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private ServerMinaMessageGateway messageGateway;
+  private ServerMinaMessageGateway messageGateway;
 
-	/**
-	 * Checks if is valid message.
-	 * 
-	 * @param message
-	 *          the message
-	 * @return true, if is valid message
-	 */
-	boolean isValidMessage(StampyMessage<?> message) {
-		switch (message.getMessageType()) {
+  /**
+   * Checks if is valid message.
+   * 
+   * @param message
+   *          the message
+   * @return true, if is valid message
+   */
+  boolean isValidMessage(StampyMessage<?> message) {
+    switch (message.getMessageType()) {
 
-		case ABORT:
-		case ACK:
-		case BEGIN:
-		case COMMIT:
-		case CONNECT:
-		case STOMP:
-		case DISCONNECT:
-		case NACK:
-		case SEND:
-		case SUBSCRIBE:
-		case UNSUBSCRIBE:
-			message.validate();
-			return true;
-		default:
-			return false;
+    case ABORT:
+    case ACK:
+    case BEGIN:
+    case COMMIT:
+    case CONNECT:
+    case STOMP:
+    case DISCONNECT:
+    case NACK:
+    case SEND:
+    case SUBSCRIBE:
+    case UNSUBSCRIBE:
+      message.validate();
+      return true;
+    default:
+      return false;
 
-		}
-	}
+    }
+  }
 
-	/**
-	 * Error handle.
-	 * 
-	 * @param message
-	 *          the message
-	 * @param e
-	 *          the e
-	 * @param hostPort
-	 *          the host port
-	 * @throws InterceptException
-	 *           the intercept exception
-	 */
-	void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws InterceptException {
-		log.error("Handling error, sending error message to " + hostPort, e);
-		String receipt = message.getHeader().getHeaderValue(AbstractClientMessageHeader.RECEIPT);
+  /**
+   * Error handle.
+   * 
+   * @param message
+   *          the message
+   * @param e
+   *          the e
+   * @param hostPort
+   *          the host port
+   * @throws InterceptException
+   *           the intercept exception
+   */
+  void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws InterceptException {
+    log.error("Handling error, sending error message to " + hostPort, e);
+    String receipt = message.getHeader().getHeaderValue(AbstractClientMessageHeader.RECEIPT);
 
-		ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
-		error.getHeader().setMessageHeader("Could not execute " + message.getMessageType() + " - " + e.getMessage());
+    ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
+    error.getHeader().setMessageHeader("Could not execute " + message.getMessageType() + " - " + e.getMessage());
 
-		getMessageGateway().sendMessage(error, hostPort);
-	}
+    getMessageGateway().sendMessage(error, hostPort);
+  }
 
-	/**
-	 * Send response if required.
-	 * 
-	 * @param message
-	 *          the message
-	 * @param session
-	 *          the session
-	 * @param hostPort
-	 *          the host port
-	 * @throws InterceptException
-	 *           the intercept exception
-	 */
-	void sendResponseIfRequired(StampyMessage<?> message, IoSession session, HostPort hostPort) throws InterceptException {
-		if (isConnectMessage(message)) {
-			sendConnected(((ConnectMessage) message).getHeader(), session, hostPort);
-			log.debug("Sent CONNECTED message to {}", hostPort);
-			return;
-		}
+  /**
+   * Send response if required.
+   * 
+   * @param message
+   *          the message
+   * @param session
+   *          the session
+   * @param hostPort
+   *          the host port
+   * @throws InterceptException
+   *           the intercept exception
+   */
+  void sendResponseIfRequired(StampyMessage<?> message, IoSession session, HostPort hostPort) throws InterceptException {
+    if (isConnectMessage(message)) {
+      sendConnected(((ConnectMessage) message).getHeader(), session, hostPort);
+      log.debug("Sent CONNECTED message to {}", hostPort);
+      return;
+    }
 
-		if (isStompMessage(message)) {
-			sendConnected(((StompMessage) message).getHeader(), session, hostPort);
-			log.debug("Sent CONNECTED message to {}", hostPort);
-			return;
-		}
+    if (isStompMessage(message)) {
+      sendConnected(((StompMessage) message).getHeader(), session, hostPort);
+      log.debug("Sent CONNECTED message to {}", hostPort);
+      return;
+    }
 
-		String receipt = ((ClientMessageHeader) message.getHeader()).getReceipt();
-		if (StringUtils.isEmpty(receipt)) return;
+    String receipt = ((ClientMessageHeader) message.getHeader()).getReceipt();
+    if (StringUtils.isEmpty(receipt)) return;
 
-		ReceiptMessage msg = new ReceiptMessage(receipt);
+    ReceiptMessage msg = new ReceiptMessage(receipt);
 
-		getMessageGateway().sendMessage(msg, hostPort);
-		log.debug("Sent RECEIPT message to {}", hostPort);
-	}
+    getMessageGateway().sendMessage(msg, hostPort);
+    log.debug("Sent RECEIPT message to {}", hostPort);
+  }
 
-	private void sendConnected(ConnectHeader header, IoSession session, HostPort hostPort) throws InterceptException {
-		ConnectedMessage message = new ConnectedMessage("1.2");
+  private void sendConnected(ConnectHeader header, IoSession session, HostPort hostPort) throws InterceptException {
+    ConnectedMessage message = new ConnectedMessage("1.2");
 
-		int requested = message.getHeader().getIncomingHeartbeat();
-		if (requested >= 0 || messageGateway.getHeartbeat() >= 0) {
-			int heartbeat = Math.max(requested, messageGateway.getHeartbeat());
-			message.getHeader().setHeartbeat(heartbeat, header.getOutgoingHeartbeat());
-			message.getHeader().setSession(Long.toString(session.getId()));
-		}
+    int requested = message.getHeader().getIncomingHeartbeat();
+    if (requested >= 0 || messageGateway.getHeartbeat() >= 0) {
+      int heartbeat = Math.max(requested, messageGateway.getHeartbeat());
+      message.getHeader().setHeartbeat(heartbeat, header.getOutgoingHeartbeat());
+      message.getHeader().setSession(Long.toString(session.getId()));
+    }
 
-		getMessageGateway().sendMessage(message, hostPort);
-	}
+    getMessageGateway().sendMessage(message, hostPort);
+  }
 
-	private boolean isConnectMessage(StampyMessage<?> message) {
-		return message.getMessageType().equals(StompMessageType.CONNECT);
-	}
+  private boolean isConnectMessage(StampyMessage<?> message) {
+    return message.getMessageType().equals(StompMessageType.CONNECT);
+  }
 
-	private boolean isStompMessage(StampyMessage<?> message) {
-		return message.getMessageType().equals(StompMessageType.STOMP);
-	}
+  private boolean isStompMessage(StampyMessage<?> message) {
+    return message.getMessageType().equals(StompMessageType.STOMP);
+  }
 
-	/**
-	 * Gets the message gateway.
-	 * 
-	 * @return the message gateway
-	 */
-	public ServerMinaMessageGateway getMessageGateway() {
-		return messageGateway;
-	}
+  /**
+   * Gets the message gateway.
+   * 
+   * @return the message gateway
+   */
+  public ServerMinaMessageGateway getMessageGateway() {
+    return messageGateway;
+  }
 
-	/**
-	 * Sets the message gateway.
-	 * 
-	 * @param messageGateway
-	 *          the new message gateway
-	 */
-	public void setMessageGateway(ServerMinaMessageGateway messageGateway) {
-		this.messageGateway = messageGateway;
-	}
+  /**
+   * Sets the message gateway.
+   * 
+   * @param messageGateway
+   *          the new message gateway
+   */
+  public void setMessageGateway(ServerMinaMessageGateway messageGateway) {
+    this.messageGateway = messageGateway;
+  }
 
 }

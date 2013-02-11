@@ -18,22 +18,21 @@
  */
 package asia.stampy.server.mina.connect;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class TransactionAlreadyStartedException.
  */
 public class AlreadyConnectedException extends Exception {
 
-	private static final long serialVersionUID = 6714733758151973447L;
+  private static final long serialVersionUID = 6714733758151973447L;
 
-	/**
-	 * Instantiates a new already connected exception.
-	 * 
-	 * @param message
-	 *          the message
-	 */
-	public AlreadyConnectedException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new already connected exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public AlreadyConnectedException(String message) {
+    super(message);
+  }
 
 }

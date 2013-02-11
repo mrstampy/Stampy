@@ -25,7 +25,6 @@ import asia.stampy.client.mina.connected.ConnectedMessageListener;
 import asia.stampy.client.mina.disconnect.DisconnectListenerAndInterceptor;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class programmatically initializes the Stampy classes required for this
  * example. It is expected that a DI framework such as <a
@@ -35,37 +34,37 @@ import asia.stampy.common.heartbeat.HeartbeatContainer;
  */
 public class SystemClientInitializer {
 
-	/**
-	 * Initialize.
-	 * 
-	 * @return the client mina message gateway
-	 */
-	public static ClientMinaMessageGateway initialize() {
-		HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
+  /**
+   * Initialize.
+   * 
+   * @return the client mina message gateway
+   */
+  public static ClientMinaMessageGateway initialize() {
+    HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-		AutoTerminatingClientGateway gateway = new AutoTerminatingClientGateway();
-		gateway.setPort(1234);
-		gateway.setHost("localhost");
-		gateway.setHeartbeat(1000);
+    AutoTerminatingClientGateway gateway = new AutoTerminatingClientGateway();
+    gateway.setPort(1234);
+    gateway.setHost("localhost");
+    gateway.setHeartbeat(1000);
 
-		RawClientMinaHandler handler = new RawClientMinaHandler();
-		handler.setHeartbeatContainer(heartbeatContainer);
-		handler.setMessageGateway(gateway);
+    RawClientMinaHandler handler = new RawClientMinaHandler();
+    handler.setHeartbeatContainer(heartbeatContainer);
+    handler.setMessageGateway(gateway);
 
-		ConnectedMessageListener cml = new ConnectedMessageListener();
-		cml.setHeartbeatContainer(heartbeatContainer);
-		cml.setMessageGateway(gateway);
-		handler.addMessageListener(cml);
-		
-		DisconnectListenerAndInterceptor disconnect = new DisconnectListenerAndInterceptor();
-		disconnect.setCloseOnDisconnectMessage(false);
-		handler.addMessageListener(disconnect);
-		gateway.addOutgoingMessageInterceptor(disconnect);
-		disconnect.setGateway(gateway);
+    ConnectedMessageListener cml = new ConnectedMessageListener();
+    cml.setHeartbeatContainer(heartbeatContainer);
+    cml.setMessageGateway(gateway);
+    handler.addMessageListener(cml);
 
-		gateway.setHandler(handler);
+    DisconnectListenerAndInterceptor disconnect = new DisconnectListenerAndInterceptor();
+    disconnect.setCloseOnDisconnectMessage(false);
+    handler.addMessageListener(disconnect);
+    gateway.addOutgoingMessageInterceptor(disconnect);
+    disconnect.setGateway(gateway);
 
-		return gateway;
+    gateway.setHandler(handler);
 
-	}
+    return gateway;
+
+  }
 }

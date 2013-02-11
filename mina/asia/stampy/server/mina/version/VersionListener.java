@@ -34,73 +34,82 @@ import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 
-// TODO: Auto-generated Javadoc
 /**
- * The listener interface for receiving version events.
- * The class that is interested in processing a version
- * event implements this interface, and the object created
- * with that class is registered with a component using the
+ * The listener interface for receiving version events. The class that is
+ * interested in processing a version event implements this interface, and the
+ * object created with that class is registered with a component using the
  * component's <code>addVersionListener<code> method. When
  * the version event occurs, that object's appropriate
  * method is invoked.
- *
+ * 
  * @see VersionEvent
  */
 @Resource
 public class VersionListener implements StampyMinaMessageListener {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP };
+  private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP };
 
-	private static final String VERSION = "1.2";
+  private static final String VERSION = "1.2";
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
-	 */
-	@Override
-	public StompMessageType[] getMessageTypes() {
-		return TYPES;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   */
+  @Override
+  public StompMessageType[] getMessageTypes() {
+    return TYPES;
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
-	 */
-	@Override
-	public boolean isForMessage(StampyMessage<?> message) {
-		return true;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * .common.message.StampyMessage)
+   */
+  @Override
+  public boolean isForMessage(StampyMessage<?> message) {
+    return true;
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
-		switch (message.getMessageType()) {
-		case CONNECT:
-			checkVersion(hostPort, ((ConnectMessage) message).getHeader());
-			break;
-		case STOMP:
-			checkVersion(hostPort, ((StompMessage) message).getHeader());
-			break;
-		default:
-			break;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage,
+   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   */
+  @Override
+  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+    switch (message.getMessageType()) {
+    case CONNECT:
+      checkVersion(hostPort, ((ConnectMessage) message).getHeader());
+      break;
+    case STOMP:
+      checkVersion(hostPort, ((StompMessage) message).getHeader());
+      break;
+    default:
+      break;
 
-		}
-	}
+    }
+  }
 
-	private void checkVersion(HostPort hostPort, ConnectHeader header) throws StompVersionException {
-		String acceptVersion = header.getAcceptVersion();
-		
-		String[] parts = acceptVersion.split(",");
-		
-		for(String part : parts) {
-			if(part.trim().equals(VERSION)) {
-				log.info("Accept version is valid for {}", hostPort);
-				return;
-			}
-		}
-		
-		throw new StompVersionException("Only STOMP version " + VERSION + " is supported");
-	}
+  private void checkVersion(HostPort hostPort, ConnectHeader header) throws StompVersionException {
+    String acceptVersion = header.getAcceptVersion();
+
+    String[] parts = acceptVersion.split(",");
+
+    for (String part : parts) {
+      if (part.trim().equals(VERSION)) {
+        log.info("Accept version is valid for {}", hostPort);
+        return;
+      }
+    }
+
+    throw new StompVersionException("Only STOMP version " + VERSION + " is supported");
+  }
 
 }

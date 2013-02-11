@@ -20,46 +20,49 @@ package asia.stampy.examples.remote.exe.common;
 
 import asia.stampy.common.message.StampyMessageHeader;
 
-// TODO: Auto-generated Javadoc
 /**
  * Thrown when a property is missing from the {@link StampyMessageHeader}.
  */
 public class MissingPropertyException extends Exception {
-	private static final long serialVersionUID = 4900660741154749582L;
+  private static final long serialVersionUID = 4900660741154749582L;
 
-	/**
-	 * Instantiates a new missing propery exception.
-	 */
-	public MissingPropertyException() {
+  /**
+   * Instantiates a new missing propery exception.
+   */
+  public MissingPropertyException() {
 
-	}
+  }
 
-	/**
-	 * Instantiates a new missing propery exception.
-	 *
-	 * @param message the message
-	 */
-	public MissingPropertyException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new missing propery exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public MissingPropertyException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Instantiates a new missing propery exception.
-	 *
-	 * @param cause the cause
-	 */
-	public MissingPropertyException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Instantiates a new missing propery exception.
+   * 
+   * @param cause
+   *          the cause
+   */
+  public MissingPropertyException(Throwable cause) {
+    super(cause);
+  }
 
-	/**
-	 * Instantiates a new missing propery exception.
-	 *
-	 * @param message the message
-	 * @param cause the cause
-	 */
-	public MissingPropertyException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Instantiates a new missing propery exception.
+   * 
+   * @param message
+   *          the message
+   * @param cause
+   *          the cause
+   */
+  public MissingPropertyException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
 }

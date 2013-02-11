@@ -21,48 +21,51 @@ package asia.stampy.server.message.error;
 import asia.stampy.common.message.AbstractBodyMessage;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class ErrorMessage.
  */
 public class ErrorMessage extends AbstractBodyMessage<ErrorHeader> {
 
-	private static final long serialVersionUID = -4583369848020945035L;
+  private static final long serialVersionUID = -4583369848020945035L;
 
-	/**
-	 * Instantiates a new error message.
-	 */
-	public ErrorMessage() {
-		super(StompMessageType.ERROR);
-	}
-	
-	/**
-	 * Instantiates a new error message.
-	 *
-	 * @param receiptId the receipt id
-	 */
-	public ErrorMessage(String receiptId) {
-		this();
-		
-		getHeader().setReceiptId(receiptId);
-	}
+  /**
+   * Instantiates a new error message.
+   */
+  public ErrorMessage() {
+    super(StompMessageType.ERROR);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected ErrorHeader createNewHeader() {
-		return new ErrorHeader();
-	}
+  /**
+   * Instantiates a new error message.
+   * 
+   * @param receiptId
+   *          the receipt id
+   */
+  public ErrorMessage(String receiptId) {
+    this();
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		// TODO Auto-generated method stub
+    getHeader().setReceiptId(receiptId);
+  }
 
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected ErrorHeader createNewHeader() {
+    return new ErrorHeader();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    // TODO Auto-generated method stub
+
+  }
 
 }

@@ -24,49 +24,52 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class ConnectedMessage.
  */
 public class ConnectedMessage extends AbstractMessage<ConnectedHeader> {
 
-	private static final long serialVersionUID = -7120496085646311030L;
+  private static final long serialVersionUID = -7120496085646311030L;
 
-	/**
-	 * Instantiates a new connected message.
-	 *
-	 * @param version the version
-	 */
-	public ConnectedMessage(String version) {
-		this();
-		getHeader().setVersion(version);
-	}
+  /**
+   * Instantiates a new connected message.
+   * 
+   * @param version
+   *          the version
+   */
+  public ConnectedMessage(String version) {
+    this();
+    getHeader().setVersion(version);
+  }
 
-	/**
-	 * Instantiates a new connected message.
-	 */
-	public ConnectedMessage() {
-		super(StompMessageType.CONNECTED);
-	}
+  /**
+   * Instantiates a new connected message.
+   */
+  public ConnectedMessage() {
+    super(StompMessageType.CONNECTED);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected ConnectedHeader createNewHeader() {
-		return new ConnectedHeader();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected ConnectedHeader createNewHeader() {
+    return new ConnectedHeader();
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if (StringUtils.isEmpty(getHeader().getVersion())) {
-			throw new InvalidStompMessageException(ConnectedHeader.VERSION + " is required");
-		}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getVersion())) {
+      throw new InvalidStompMessageException(ConnectedHeader.VERSION + " is required");
+    }
 
-	}
+  }
 
 }

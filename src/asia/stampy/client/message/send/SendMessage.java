@@ -24,51 +24,55 @@ import asia.stampy.common.message.AbstractBodyMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class SendMessage.
  */
 public class SendMessage extends AbstractBodyMessage<SendHeader> {
 
-	private static final long serialVersionUID = -104251665180607773L;
+  private static final long serialVersionUID = -104251665180607773L;
 
-	/**
-	 * Instantiates a new send message.
-	 *
-	 * @param destination the destination
-	 * @param receipt the receipt
-	 */
-	public SendMessage(String destination, String receipt) {
-		this();
+  /**
+   * Instantiates a new send message.
+   * 
+   * @param destination
+   *          the destination
+   * @param receipt
+   *          the receipt
+   */
+  public SendMessage(String destination, String receipt) {
+    this();
 
-		getHeader().setDestination(destination);
-		getHeader().setReceipt(receipt);
-	}
+    getHeader().setDestination(destination);
+    getHeader().setReceipt(receipt);
+  }
 
-	/**
-	 * Instantiates a new send message.
-	 */
-	public SendMessage() {
-		super(StompMessageType.SEND);
-	}
+  /**
+   * Instantiates a new send message.
+   */
+  public SendMessage() {
+    super(StompMessageType.SEND);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected SendHeader createNewHeader() {
-		return new SendHeader();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected SendHeader createNewHeader() {
+    return new SendHeader();
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if (StringUtils.isEmpty(getHeader().getDestination())) {
-			throw new InvalidStompMessageException(SendHeader.DESTINATION + " is required");
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getDestination())) {
+      throw new InvalidStompMessageException(SendHeader.DESTINATION + " is required");
+    }
+  }
 
 }

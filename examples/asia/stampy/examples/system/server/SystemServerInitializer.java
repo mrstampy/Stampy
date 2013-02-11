@@ -28,7 +28,6 @@ import asia.stampy.server.mina.subscription.AcknowledgementListenerAndIntercepto
 import asia.stampy.server.mina.transaction.TransactionListener;
 import asia.stampy.server.mina.version.VersionListener;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class programmatically initializes the Stampy classes required for this
  * example. It is expected that a DI framework such as <a
@@ -38,54 +37,54 @@ import asia.stampy.server.mina.version.VersionListener;
  */
 public class SystemServerInitializer {
 
-	/**
-	 * Initialize.
-	 * 
-	 * @return the server mina message gateway
-	 */
-	public static ServerMinaMessageGateway initialize() {
-		HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
+  /**
+   * Initialize.
+   * 
+   * @return the server mina message gateway
+   */
+  public static ServerMinaMessageGateway initialize() {
+    HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-		ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();
-		gateway.setPort(1234);
-		gateway.setHeartbeat(1000);
+    ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();
+    gateway.setPort(1234);
+    gateway.setHeartbeat(1000);
 
-		RawServerMinaHandler handler = new RawServerMinaHandler();
-		handler.setHeartbeatContainer(heartbeatContainer);
-		handler.setMessageGateway(gateway);
+    RawServerMinaHandler handler = new RawServerMinaHandler();
+    handler.setHeartbeatContainer(heartbeatContainer);
+    handler.setMessageGateway(gateway);
 
-		handler.addMessageListener(new VersionListener());
+    handler.addMessageListener(new VersionListener());
 
-		LoginMessageListener login = new LoginMessageListener();
-		login.setGateway(gateway);
-		login.setLoginHandler(new SystemLoginHandler());
-		handler.addMessageListener(login);
+    LoginMessageListener login = new LoginMessageListener();
+    login.setGateway(gateway);
+    login.setLoginHandler(new SystemLoginHandler());
+    handler.addMessageListener(login);
 
-		ConnectListener connect = new ConnectListener();
-		connect.setGateway(gateway);
-		handler.addMessageListener(connect);
+    ConnectListener connect = new ConnectListener();
+    connect.setGateway(gateway);
+    handler.addMessageListener(connect);
 
-		HeartbeatListener heartbeat = new HeartbeatListener();
-		heartbeat.setHeartbeatContainer(heartbeatContainer);
-		heartbeat.setGateway(gateway);
-		handler.addMessageListener(heartbeat);
+    HeartbeatListener heartbeat = new HeartbeatListener();
+    heartbeat.setHeartbeatContainer(heartbeatContainer);
+    heartbeat.setGateway(gateway);
+    handler.addMessageListener(heartbeat);
 
-		TransactionListener transaction = new TransactionListener();
-		transaction.setGateway(gateway);
-		handler.addMessageListener(transaction);
+    TransactionListener transaction = new TransactionListener();
+    transaction.setGateway(gateway);
+    handler.addMessageListener(transaction);
 
-		SystemAcknowledgementHandler sys = new SystemAcknowledgementHandler();
+    SystemAcknowledgementHandler sys = new SystemAcknowledgementHandler();
 
-		AcknowledgementListenerAndInterceptor acknowledgement = new AcknowledgementListenerAndInterceptor();
-		acknowledgement.setHandler(sys);
-		acknowledgement.setGateway(gateway);
-		acknowledgement.setAckTimeoutMillis(2000);
-		handler.addMessageListener(acknowledgement);
-		gateway.addOutgoingMessageInterceptor(acknowledgement);
+    AcknowledgementListenerAndInterceptor acknowledgement = new AcknowledgementListenerAndInterceptor();
+    acknowledgement.setHandler(sys);
+    acknowledgement.setGateway(gateway);
+    acknowledgement.setAckTimeoutMillis(2000);
+    handler.addMessageListener(acknowledgement);
+    gateway.addOutgoingMessageInterceptor(acknowledgement);
 
-		gateway.setHandler(handler);
+    gateway.setHandler(handler);
 
-		return gateway;
-	}
+    return gateway;
+  }
 
 }

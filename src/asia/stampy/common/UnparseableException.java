@@ -20,44 +20,47 @@ package asia.stampy.common;
 
 import asia.stampy.common.message.StampyMessage;
 
-
-// TODO: Auto-generated Javadoc
 /**
- * Thrown when a presumed STOMP message cannot be parsed to a {@link StampyMessage}.
+ * Thrown when a presumed STOMP message cannot be parsed to a
+ * {@link StampyMessage}.
  */
 public class UnparseableException extends Exception {
-	private static final long serialVersionUID = -5077635019985663697L;
-	
-	private String stompMessage;
+  private static final long serialVersionUID = -5077635019985663697L;
 
-	/**
-	 * Instantiates a new unparseable exception.
-	 *
-	 * @param message the message
-	 * @param stompMessage the stomp message
-	 * @param cause the cause
-	 */
-	public UnparseableException(String message, String stompMessage, Throwable cause) {
-		super(message, cause);
-		this.stompMessage = stompMessage;
-	}
-	
-	/**
-	 * Instantiates a new unparseable exception.
-	 *
-	 * @param message the message
-	 */
-	public UnparseableException(String message) {
-		super(message);
-	}
+  private String stompMessage;
 
-	/**
-	 * Gets the stomp message.
-	 *
-	 * @return the stomp message
-	 */
-	public String getStompMessage() {
-		return stompMessage;
-	}
+  /**
+   * Instantiates a new unparseable exception.
+   * 
+   * @param message
+   *          the message
+   * @param stompMessage
+   *          the stomp message
+   * @param cause
+   *          the cause
+   */
+  public UnparseableException(String message, String stompMessage, Throwable cause) {
+    super(message, cause);
+    this.stompMessage = stompMessage;
+  }
+
+  /**
+   * Instantiates a new unparseable exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public UnparseableException(String message) {
+    super(message);
+  }
+
+  /**
+   * Gets the stomp message.
+   * 
+   * @return the stomp message
+   */
+  public String getStompMessage() {
+    return stompMessage;
+  }
 
 }

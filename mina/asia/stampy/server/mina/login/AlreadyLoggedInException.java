@@ -18,21 +18,21 @@
  */
 package asia.stampy.server.mina.login;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AlreadyLoggedInException.
  */
 public class AlreadyLoggedInException extends Exception {
 
-	private static final long serialVersionUID = 4175613077223909784L;
+  private static final long serialVersionUID = 4175613077223909784L;
 
-	/**
-	 * Instantiates a new already logged in exception.
-	 *
-	 * @param message the message
-	 */
-	public AlreadyLoggedInException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new already logged in exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public AlreadyLoggedInException(String message) {
+    super(message);
+  }
 
 }

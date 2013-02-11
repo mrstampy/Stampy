@@ -24,49 +24,52 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class UnsubscribeMessage.
  */
 public class UnsubscribeMessage extends AbstractMessage<UnsubscribeHeader> {
 
-	private static final long serialVersionUID = -4889351559871669847L;
+  private static final long serialVersionUID = -4889351559871669847L;
 
-	/**
-	 * Instantiates a new unsubscribe message.
-	 *
-	 * @param id the id
-	 */
-	public UnsubscribeMessage(String id) {
-		this();
+  /**
+   * Instantiates a new unsubscribe message.
+   * 
+   * @param id
+   *          the id
+   */
+  public UnsubscribeMessage(String id) {
+    this();
 
-		getHeader().setId(id);
-	}
+    getHeader().setId(id);
+  }
 
-	/**
-	 * Instantiates a new unsubscribe message.
-	 */
-	public UnsubscribeMessage() {
-		super(StompMessageType.UNSUBSCRIBE);
-	}
+  /**
+   * Instantiates a new unsubscribe message.
+   */
+  public UnsubscribeMessage() {
+    super(StompMessageType.UNSUBSCRIBE);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected UnsubscribeHeader createNewHeader() {
-		return new UnsubscribeHeader();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected UnsubscribeHeader createNewHeader() {
+    return new UnsubscribeHeader();
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if (StringUtils.isEmpty(getHeader().getId())) {
-			throw new InvalidStompMessageException(UnsubscribeHeader.ID + " is required");
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getId())) {
+      throw new InvalidStompMessageException(UnsubscribeHeader.ID + " is required");
+    }
+  }
 
 }

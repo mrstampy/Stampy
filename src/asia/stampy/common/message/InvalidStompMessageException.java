@@ -18,21 +18,21 @@
  */
 package asia.stampy.common.message;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class InvalidStompMessageException.
  */
 public class InvalidStompMessageException extends RuntimeException {
 
-	private static final long serialVersionUID = 4139832823187771410L;
+  private static final long serialVersionUID = 4139832823187771410L;
 
-	/**
-	 * Instantiates a new invalid stomp message exception.
-	 *
-	 * @param message the message
-	 */
-	public InvalidStompMessageException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new invalid stomp message exception.
+   * 
+   * @param message
+   *          the message
+   */
+  public InvalidStompMessageException(String message) {
+    super(message);
+  }
 
 }

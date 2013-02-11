@@ -18,28 +18,29 @@
  */
 package asia.stampy.client.mina;
 
-
 import javax.annotation.Resource;
 
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class RawClientMinaHandler.
  */
 @Resource
 public class RawClientMinaHandler extends StampyRawStringHandler<ClientMinaMessageGateway> {
 
-	private ClientHandlerAdapter adapter = new ClientHandlerAdapter();
+  private ClientHandlerAdapter adapter = new ClientHandlerAdapter();
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common.message.StampyMessage)
-	 */
-	@Override
-	protected boolean isValidMessage(StampyMessage<?> message) {
-		return adapter.isValidMessage(message);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common
+   * .message.StampyMessage)
+   */
+  @Override
+  protected boolean isValidMessage(StampyMessage<?> message) {
+    return adapter.isValidMessage(message);
+  }
 
 }

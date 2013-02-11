@@ -24,49 +24,52 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class ReceiptMessage.
  */
 public class ReceiptMessage extends AbstractMessage<ReceiptHeader> {
-	
-	private static final long serialVersionUID = -5942932500390572224L;
 
-	/**
-	 * Instantiates a new receipt message.
-	 *
-	 * @param receiptId the receipt id
-	 */
-	public ReceiptMessage(String receiptId) {
-		this();
-		
-		getHeader().setReceiptId(receiptId);
-	}
+  private static final long serialVersionUID = -5942932500390572224L;
 
-	/**
-	 * Instantiates a new receipt message.
-	 */
-	public ReceiptMessage() {
-		super(StompMessageType.RECEIPT);
-	}
+  /**
+   * Instantiates a new receipt message.
+   * 
+   * @param receiptId
+   *          the receipt id
+   */
+  public ReceiptMessage(String receiptId) {
+    this();
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected ReceiptHeader createNewHeader() {
-		return new ReceiptHeader();
-	}
+    getHeader().setReceiptId(receiptId);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if (StringUtils.isEmpty(getHeader().getReceiptId())) {
-			throw new InvalidStompMessageException(ReceiptHeader.RECEIPT_ID + " is required");
-		}
-	}
+  /**
+   * Instantiates a new receipt message.
+   */
+  public ReceiptMessage() {
+    super(StompMessageType.RECEIPT);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected ReceiptHeader createNewHeader() {
+    return new ReceiptHeader();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getReceiptId())) {
+      throw new InvalidStompMessageException(ReceiptHeader.RECEIPT_ID + " is required");
+    }
+  }
 
 }

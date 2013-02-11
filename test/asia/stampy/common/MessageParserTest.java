@@ -42,203 +42,219 @@ import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.message.MessageMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
-
 /**
  * The Class MessageParserTest.
  */
 public class MessageParserTest {
 
-	private StompMessageParser parser = new StompMessageParser();
+  private StompMessageParser parser = new StompMessageParser();
 
-	/**
-	 * Test connect message parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testConnectMessageParsing() throws Exception {
-		testEquals(new ConnectMessage("1.2", "burt.alexander"));
-	}
+  /**
+   * Test connect message parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testConnectMessageParsing() throws Exception {
+    testEquals(new ConnectMessage("1.2", "burt.alexander"));
+  }
 
-	/**
-	 * Test send message parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testSendMessageParsing() throws Exception {
-		SendMessage message = new SendMessage("over/there", "receiptId");
-		message.setMimeType("text/plain", "UTF-8");
-		message.setBody("The body");
+  /**
+   * Test send message parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testSendMessageParsing() throws Exception {
+    SendMessage message = new SendMessage("over/there", "receiptId");
+    message.setMimeType("text/plain", "UTF-8");
+    message.setBody("The body");
 
-		testEquals(message);
-	}
+    testEquals(message);
+  }
 
-	/**
-	 * Test send message parsing byte array.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testSendMessageParsingByteArray() throws Exception {
-		SendMessage message = new SendMessage("over/there", "receiptId");
-		message.setMimeType("application/jpeg", "UTF-8");
-		message.setBody(new HostPort("burt.alexander", 1234));
+  /**
+   * Test send message parsing byte array.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testSendMessageParsingByteArray() throws Exception {
+    SendMessage message = new SendMessage("over/there", "receiptId");
+    message.setMimeType("application/jpeg", "UTF-8");
+    message.setBody(new HostPort("burt.alexander", 1234));
 
-		testEquals(message);
-	}
+    testEquals(message);
+  }
 
-	/**
-	 * Test subscribe message parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testSubscribeMessageParsing() throws Exception {
-		testEquals(new SubscribeMessage("over/there", "12345"));
-	}
+  /**
+   * Test subscribe message parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testSubscribeMessageParsing() throws Exception {
+    testEquals(new SubscribeMessage("over/there", "12345"));
+  }
 
-	/**
-	 * Test connected message parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testConnectedMessageParsing() throws Exception {
-		testEquals(new ConnectedMessage("1.2"));
-	}
+  /**
+   * Test connected message parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testConnectedMessageParsing() throws Exception {
+    testEquals(new ConnectedMessage("1.2"));
+  }
 
-	/**
-	 * Test error message parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testErrorMessageParsing() throws Exception {
-		ErrorMessage message = new ErrorMessage();
-		message.setBody("The body");
+  /**
+   * Test error message parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testErrorMessageParsing() throws Exception {
+    ErrorMessage message = new ErrorMessage();
+    message.setBody("The body");
 
-		testEquals(message);
-	}
+    testEquals(message);
+  }
 
-	/**
-	 * Test ack parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testAckParsing() throws Exception {
-		testEquals(new AckMessage("12345"));
-	}
+  /**
+   * Test ack parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testAckParsing() throws Exception {
+    testEquals(new AckMessage("12345"));
+  }
 
-	/**
-	 * Test nack parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testNackParsing() throws Exception {
-		testEquals(new NackMessage("12345"));
-	}
+  /**
+   * Test nack parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testNackParsing() throws Exception {
+    testEquals(new NackMessage("12345"));
+  }
 
-	/**
-	 * Test disconnect parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testDisconnectParsing() throws Exception {
-		testEquals(new DisconnectMessage());
-	}
+  /**
+   * Test disconnect parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testDisconnectParsing() throws Exception {
+    testEquals(new DisconnectMessage());
+  }
 
-	/**
-	 * Test unsubscribe parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testUnsubscribeParsing() throws Exception {
-		testEquals(new UnsubscribeMessage("12345"));
-	}
+  /**
+   * Test unsubscribe parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testUnsubscribeParsing() throws Exception {
+    testEquals(new UnsubscribeMessage("12345"));
+  }
 
-	/**
-	 * Test abort parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testAbortParsing() throws Exception {
-		testEquals(new AbortMessage("transaction"));
-	}
+  /**
+   * Test abort parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testAbortParsing() throws Exception {
+    testEquals(new AbortMessage("transaction"));
+  }
 
-	/**
-	 * Test commit parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testCommitParsing() throws Exception {
-		testEquals(new CommitMessage("transaction"));
-	}
+  /**
+   * Test commit parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testCommitParsing() throws Exception {
+    testEquals(new CommitMessage("transaction"));
+  }
 
-	/**
-	 * Test subscribe parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testSubscribeParsing() throws Exception {
-		testEquals(new SubscribeMessage("over/there", "12345"));
-	}
+  /**
+   * Test subscribe parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testSubscribeParsing() throws Exception {
+    testEquals(new SubscribeMessage("over/there", "12345"));
+  }
 
-	/**
-	 * Test begin parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testBeginParsing() throws Exception {
-		testEquals(new BeginMessage("transaction"));
-	}
+  /**
+   * Test begin parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testBeginParsing() throws Exception {
+    testEquals(new BeginMessage("transaction"));
+  }
 
-	/**
-	 * Test receipt parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testReceiptParsing() throws Exception {
-		testEquals(new ReceiptMessage("12345"));
-	}
+  /**
+   * Test receipt parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testReceiptParsing() throws Exception {
+    testEquals(new ReceiptMessage("12345"));
+  }
 
-	/**
-	 * Test message parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testMessageParsing() throws Exception {
-		MessageMessage mm = new MessageMessage("over/there", "12345", "54321");
-		mm.setBody("This is the body");
+  /**
+   * Test message parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testMessageParsing() throws Exception {
+    MessageMessage mm = new MessageMessage("over/there", "12345", "54321");
+    mm.setBody("This is the body");
 
-		testEquals(mm);
-	}
+    testEquals(mm);
+  }
 
-	/**
-	 * Test stomp parsing.
-	 *
-	 * @throws Exception the exception
-	 */
-	@Test
-	public void testStompParsing() throws Exception {
-		testEquals(new StompMessage("burt.alexander"));
-	}
+  /**
+   * Test stomp parsing.
+   * 
+   * @throws Exception
+   *           the exception
+   */
+  @Test
+  public void testStompParsing() throws Exception {
+    testEquals(new StompMessage("burt.alexander"));
+  }
 
-	private void testEquals(AbstractMessage<?> message) throws UnparseableException {
-		String stomp = message.toStompMessage(true);
+  private void testEquals(AbstractMessage<?> message) throws UnparseableException {
+    String stomp = message.toStompMessage(true);
 
-		AbstractMessage<?> parsed = parser.parseMessage(stomp);
+    AbstractMessage<?> parsed = parser.parseMessage(stomp);
 
-		assertTrue(message.equals(parsed));
-	}
+    assertTrue(message.equals(parsed));
+  }
 }

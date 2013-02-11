@@ -20,33 +20,32 @@ package asia.stampy.server.message.receipt;
 
 import asia.stampy.common.message.AbstractMessageHeader;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class ReceiptHeader.
  */
 public class ReceiptHeader extends AbstractMessageHeader {
-	private static final long serialVersionUID = 2499933932635661316L;
-	
-	/** The Constant RECEIPT_ID. */
-	public static final String RECEIPT_ID = "receipt-id";
-	
-	/**
-	 * Sets the receipt id.
-	 *
-	 * @param receiptId the new receipt id
-	 */
-	public void setReceiptId(String receiptId) {
-		addHeader(RECEIPT_ID, receiptId);
-	}
-	
-	/**
-	 * Gets the receipt id.
-	 *
-	 * @return the receipt id
-	 */
-	public String getReceiptId() {
-		return getHeaderValue(RECEIPT_ID);
-	}
+  private static final long serialVersionUID = 2499933932635661316L;
+
+  /** The Constant RECEIPT_ID. */
+  public static final String RECEIPT_ID = "receipt-id";
+
+  /**
+   * Sets the receipt id.
+   * 
+   * @param receiptId
+   *          the new receipt id
+   */
+  public void setReceiptId(String receiptId) {
+    addHeader(RECEIPT_ID, receiptId);
+  }
+
+  /**
+   * Gets the receipt id.
+   * 
+   * @return the receipt id
+   */
+  public String getReceiptId() {
+    return getHeaderValue(RECEIPT_ID);
+  }
 
 }

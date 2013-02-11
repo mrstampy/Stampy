@@ -24,57 +24,57 @@ import org.apache.mina.core.service.IoServiceListener;
 
 import asia.stampy.common.AbstractStampyMessageGateway;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractStampyMinaMessageGateway.
  */
 public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMessageGateway {
 
-	/**
-	 * Adds the message listener.
-	 * 
-	 * @param listener
-	 *          the listener
-	 */
-	public abstract void addMessageListener(StampyMinaMessageListener listener);
+  /**
+   * Adds the message listener.
+   * 
+   * @param listener
+   *          the listener
+   */
+  public abstract void addMessageListener(StampyMinaMessageListener listener);
 
-	/**
-	 * Removes the message listener.
-	 * 
-	 * @param listener
-	 *          the listener
-	 */
-	public abstract void removeMessageListener(StampyMinaMessageListener listener);
+  /**
+   * Removes the message listener.
+   * 
+   * @param listener
+   *          the listener
+   */
+  public abstract void removeMessageListener(StampyMinaMessageListener listener);
 
-	/**
-	 * Clear message listeners.
-	 */
-	public abstract void clearMessageListeners();
+  /**
+   * Clear message listeners.
+   */
+  public abstract void clearMessageListeners();
 
-	/**
-	 * Sets the listeners. Specified for DI frameworks; programmatic usage should
-	 * invoke the
-	 *
-	 * @param listeners the new listeners
-	 * {@link AbstractStampyMinaMessageGateway#addMessageListener(StampyMinaMessageListener)}
-	 * method to specify {@link StampyMinaMessageListener}s.
-	 */
-	public abstract void setListeners(Queue<StampyMinaMessageListener> listeners);
+  /**
+   * Sets the listeners. Specified for DI frameworks; programmatic usage should
+   * invoke the
+   * 
+   * @param listeners
+   *          the new listeners
+   *          {@link AbstractStampyMinaMessageGateway#addMessageListener(StampyMinaMessageListener)}
+   *          method to specify {@link StampyMinaMessageListener}s.
+   */
+  public abstract void setListeners(Queue<StampyMinaMessageListener> listeners);
 
-	/**
-	 * Adds the MINA service listener to the underlying connector or acceptor.
-	 * 
-	 * @param listener
-	 *          the listener
-	 */
-	public abstract void addServiceListener(IoServiceListener listener);
+  /**
+   * Adds the MINA service listener to the underlying connector or acceptor.
+   * 
+   * @param listener
+   *          the listener
+   */
+  public abstract void addServiceListener(IoServiceListener listener);
 
-	/**
-	 * Removes the MINA service listener.
-	 * 
-	 * @param listener
-	 *          the listener
-	 */
-	public abstract void removeServiceListener(IoServiceListener listener);
+  /**
+   * Removes the MINA service listener.
+   * 
+   * @param listener
+   *          the listener
+   */
+  public abstract void removeServiceListener(IoServiceListener listener);
 
 }

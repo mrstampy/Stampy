@@ -24,49 +24,52 @@ import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class AbortMessage.
  */
 public class AbortMessage extends AbstractMessage<AbortHeader> {
 
-	private static final long serialVersionUID = -7511003273041211848L;
+  private static final long serialVersionUID = -7511003273041211848L;
 
-	/**
-	 * Instantiates a new abort message.
-	 *
-	 * @param transaction the transaction
-	 */
-	public AbortMessage(String transaction) {
-		this();
+  /**
+   * Instantiates a new abort message.
+   * 
+   * @param transaction
+   *          the transaction
+   */
+  public AbortMessage(String transaction) {
+    this();
 
-		getHeader().setTransaction(transaction);
-	}
+    getHeader().setTransaction(transaction);
+  }
 
-	/**
-	 * Instantiates a new abort message.
-	 */
-	public AbortMessage() {
-		super(StompMessageType.ABORT);
-	}
+  /**
+   * Instantiates a new abort message.
+   */
+  public AbortMessage() {
+    super(StompMessageType.ABORT);
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
-	 */
-	@Override
-	protected AbortHeader createNewHeader() {
-		return new AbortHeader();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#createNewHeader()
+   */
+  @Override
+  protected AbortHeader createNewHeader() {
+    return new AbortHeader();
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.message.AbstractMessage#validate()
-	 */
-	@Override
-	public void validate() {
-		if (StringUtils.isEmpty(getHeader().getTransaction())) {
-			throw new InvalidStompMessageException(AbortHeader.TRANSACTION + " is required");
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.message.AbstractMessage#validate()
+   */
+  @Override
+  public void validate() {
+    if (StringUtils.isEmpty(getHeader().getTransaction())) {
+      throw new InvalidStompMessageException(AbortHeader.TRANSACTION + " is required");
+    }
+  }
 
 }

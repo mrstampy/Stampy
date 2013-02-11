@@ -42,160 +42,172 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
-// TODO: Auto-generated Javadoc
 /**
- * The listener interface for receiving loginMessage events.
- * The class that is interested in processing a loginMessage
- * event implements this interface, and the object created
- * with that class is registered with a component using the
+ * The listener interface for receiving loginMessage events. The class that is
+ * interested in processing a loginMessage event implements this interface, and
+ * the object created with that class is registered with a component using the
  * component's <code>addLoginMessageListener<code> method. When
  * the loginMessage event occurs, that object's appropriate
  * method is invoked.
- *
+ * 
  * @see LoginMessageEvent
  */
 @Resource
 public class LoginMessageListener implements StampyMinaMessageListener {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private static StompMessageType[] TYPES = StompMessageType.values();
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static StompMessageType[] TYPES = StompMessageType.values();
 
-	private Queue<HostPort> loggedInConnections = new ConcurrentLinkedQueue<>();
+  private Queue<HostPort> loggedInConnections = new ConcurrentLinkedQueue<>();
 
-	private StampyLoginHandler loginHandler;
-	private ServerMinaMessageGateway gateway;
+  private StampyLoginHandler loginHandler;
+  private ServerMinaMessageGateway gateway;
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
-	 */
-	@Override
-	public StompMessageType[] getMessageTypes() {
-		return TYPES;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   */
+  @Override
+  public StompMessageType[] getMessageTypes() {
+    return TYPES;
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy.common.message.StampyMessage)
-	 */
-	@Override
-	public boolean isForMessage(StampyMessage<?> message) {
-		return true;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * .common.message.StampyMessage)
+   */
+  @Override
+  public boolean isForMessage(StampyMessage<?> message) {
+    return true;
+  }
 
-	/* (non-Javadoc)
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.stampy.common.message.StampyMessage, org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
-		switch (message.getMessageType()) {
-		case ABORT:
-		case ACK:
-		case BEGIN:
-		case COMMIT:
-		case NACK:
-		case SEND:
-		case SUBSCRIBE:
-		case UNSUBSCRIBE:
-			loggedInCheck(message, hostPort);
-			break;
-		case CONNECT:
-			logIn(session, hostPort, ((ConnectMessage) message).getHeader());
-			break;
-		case STOMP:
-			logIn(session, hostPort, ((StompMessage) message).getHeader());
-			break;
-		case DISCONNECT:
-			loggedInConnections.remove(hostPort);
-			break;
-		default:
-			String error = "Unexpected message type " + message.getMessageType();
-			log.error(error);
-			throw new IllegalArgumentException(error);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage,
+   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   */
+  @Override
+  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+    switch (message.getMessageType()) {
+    case ABORT:
+    case ACK:
+    case BEGIN:
+    case COMMIT:
+    case NACK:
+    case SEND:
+    case SUBSCRIBE:
+    case UNSUBSCRIBE:
+      loggedInCheck(message, hostPort);
+      break;
+    case CONNECT:
+      logIn(session, hostPort, ((ConnectMessage) message).getHeader());
+      break;
+    case STOMP:
+      logIn(session, hostPort, ((StompMessage) message).getHeader());
+      break;
+    case DISCONNECT:
+      loggedInConnections.remove(hostPort);
+      break;
+    default:
+      String error = "Unexpected message type " + message.getMessageType();
+      log.error(error);
+      throw new IllegalArgumentException(error);
 
-		}
-	}
+    }
+  }
 
-	private void loggedInCheck(StampyMessage<?> message, HostPort hostPort) throws NotLoggedInException {
-		if (loggedInConnections.contains(hostPort)) return;
+  private void loggedInCheck(StampyMessage<?> message, HostPort hostPort) throws NotLoggedInException {
+    if (loggedInConnections.contains(hostPort)) return;
 
-		log.error("{} attempted to send a {} message without logging in", hostPort, message.getMessageType());
-		throw new NotLoggedInException("Not logged in");
-	}
+    log.error("{} attempted to send a {} message without logging in", hostPort, message.getMessageType());
+    throw new NotLoggedInException("Not logged in");
+  }
 
-	private void logIn(IoSession session, HostPort hostPort, ConnectHeader header) throws AlreadyLoggedInException,
-			NotLoggedInException {
-		if (loggedInConnections.contains(hostPort)) throw new AlreadyLoggedInException(hostPort + " is already logged in");
+  private void logIn(IoSession session, HostPort hostPort, ConnectHeader header) throws AlreadyLoggedInException,
+      NotLoggedInException {
+    if (loggedInConnections.contains(hostPort)) throw new AlreadyLoggedInException(hostPort + " is already logged in");
 
-		if (!isForHeader(header)) throw new NotLoggedInException("login and passcode not specified, cannot log in");
+    if (!isForHeader(header)) throw new NotLoggedInException("login and passcode not specified, cannot log in");
 
-		try {
-			getLoginHandler().login(header.getLogin(), header.getPasscode());
-			loggedInConnections.add(hostPort);
-		} catch (TerminateSessionException e) {
-			log.error(e.getMessage(), e);
-			sendErrorMessage(e.getMessage(), hostPort);
-			session.close(false);
-		}
-	}
+    try {
+      getLoginHandler().login(header.getLogin(), header.getPasscode());
+      loggedInConnections.add(hostPort);
+    } catch (TerminateSessionException e) {
+      log.error(e.getMessage(), e);
+      sendErrorMessage(e.getMessage(), hostPort);
+      session.close(false);
+    }
+  }
 
-	private void sendErrorMessage(String message, HostPort hostPort) {
-		ErrorMessage error = new ErrorMessage("n/a");
-		error.getHeader().setMessageHeader(message);
+  private void sendErrorMessage(String message, HostPort hostPort) {
+    ErrorMessage error = new ErrorMessage("n/a");
+    error.getHeader().setMessageHeader(message);
 
-		try {
-			getGateway().sendMessage(error, hostPort);
-		} catch (InterceptException e) {
-			log.error("Sending of login error message failed", e);
-		}
-	}
+    try {
+      getGateway().sendMessage(error, hostPort);
+    } catch (InterceptException e) {
+      log.error("Sending of login error message failed", e);
+    }
+  }
 
-	private boolean isForHeader(ConnectHeader header) {
-		return StringUtils.isNotEmpty(header.getLogin()) && StringUtils.isNotEmpty(header.getPasscode());
-	}
+  private boolean isForHeader(ConnectHeader header) {
+    return StringUtils.isNotEmpty(header.getLogin()) && StringUtils.isNotEmpty(header.getPasscode());
+  }
 
-	/**
-	 * Gets the login handler.
-	 *
-	 * @return the login handler
-	 */
-	public StampyLoginHandler getLoginHandler() {
-		return loginHandler;
-	}
+  /**
+   * Gets the login handler.
+   * 
+   * @return the login handler
+   */
+  public StampyLoginHandler getLoginHandler() {
+    return loginHandler;
+  }
 
-	/**
-	 * Sets the login handler.
-	 *
-	 * @param loginHandler the new login handler
-	 */
-	public void setLoginHandler(StampyLoginHandler loginHandler) {
-		this.loginHandler = loginHandler;
-	}
+  /**
+   * Sets the login handler.
+   * 
+   * @param loginHandler
+   *          the new login handler
+   */
+  public void setLoginHandler(StampyLoginHandler loginHandler) {
+    this.loginHandler = loginHandler;
+  }
 
-	/**
-	 * Gets the gateway.
-	 *
-	 * @return the gateway
-	 */
-	public ServerMinaMessageGateway getGateway() {
-		return gateway;
-	}
+  /**
+   * Gets the gateway.
+   * 
+   * @return the gateway
+   */
+  public ServerMinaMessageGateway getGateway() {
+    return gateway;
+  }
 
-	/**
-	 * Sets the gateway.
-	 *
-	 * @param gateway the new gateway
-	 */
-	public void setGateway(ServerMinaMessageGateway gateway) {
-		this.gateway = gateway;
-		
-		gateway.addServiceListener(new MinaServiceAdapter() {
+  /**
+   * Sets the gateway.
+   * 
+   * @param gateway
+   *          the new gateway
+   */
+  public void setGateway(ServerMinaMessageGateway gateway) {
+    this.gateway = gateway;
 
-			public void sessionDestroyed(IoSession session) throws Exception {
-				HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
-				if (loggedInConnections.contains(hostPort)) {
-					log.debug("{} session terminated before DISCONNECT message received, cleaning up", hostPort);
-					loggedInConnections.remove(hostPort);
-				}
-			}
-		});
-	}
+    gateway.addServiceListener(new MinaServiceAdapter() {
+
+      @Override
+      public void sessionDestroyed(IoSession session) throws Exception {
+        HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
+        if (loggedInConnections.contains(hostPort)) {
+          log.debug("{} session terminated before DISCONNECT message received, cleaning up", hostPort);
+          loggedInConnections.remove(hostPort);
+        }
+      }
+    });
+  }
 
 }

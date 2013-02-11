@@ -20,40 +20,40 @@ package asia.stampy.common.message;
 
 import java.io.Serializable;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * All Stampy implementations of STOMP messages must implement this interface.
- *
- * @param <HDR> the generic type
+ * 
+ * @param <HDR>
+ *          the generic type
  */
 public interface StampyMessage<HDR extends StampyMessageHeader> extends Serializable {
 
-	/**
-	 * Gets the header.
-	 *
-	 * @return the header
-	 */
-	HDR getHeader();
+  /**
+   * Gets the header.
+   * 
+   * @return the header
+   */
+  HDR getHeader();
 
-	/**
-	 * Returns a STOMP-string representation of a {@link StampyMessage}.
-	 *
-	 * @param validate if true message validation is executed
-	 * @return the string
-	 */
-	String toStompMessage(boolean validate);
-	
-	/**
-	 * Gets the message type.
-	 *
-	 * @return the message type
-	 */
-	StompMessageType getMessageType();
-	
-	/**
-	 * Performs validation on the message.
-	 */
-	void validate();
+  /**
+   * Returns a STOMP-string representation of a {@link StampyMessage}.
+   * 
+   * @param validate
+   *          if true message validation is executed
+   * @return the string
+   */
+  String toStompMessage(boolean validate);
+
+  /**
+   * Gets the message type.
+   * 
+   * @return the message type
+   */
+  StompMessageType getMessageType();
+
+  /**
+   * Performs validation on the message.
+   */
+  void validate();
 
 }

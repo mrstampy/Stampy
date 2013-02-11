@@ -36,125 +36,124 @@ import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
-// TODO: Auto-generated Javadoc
 /**
- * The listener interface for receiving connect events.
- * The class that is interested in processing a connect
- * event implements this interface, and the object created
- * with that class is registered with a component using the
+ * The listener interface for receiving connect events. The class that is
+ * interested in processing a connect event implements this interface, and the
+ * object created with that class is registered with a component using the
  * component's <code>addConnectListener<code> method. When
  * the connect event occurs, that object's appropriate
  * method is invoked.
- *
+ * 
  * @see ConnectEvent
  */
 @Resource
 public class ConnectListener implements StampyMinaMessageListener {
-	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private Queue<HostPort> connectedClients = new ConcurrentLinkedQueue<>();
-	private ServerMinaMessageGateway gateway;
+  private Queue<HostPort> connectedClients = new ConcurrentLinkedQueue<>();
+  private ServerMinaMessageGateway gateway;
 
-	private static StompMessageType[] TYPES = StompMessageType.values();
+  private static StompMessageType[] TYPES = StompMessageType.values();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
-	 */
-	@Override
-	public StompMessageType[] getMessageTypes() {
-		return TYPES;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   */
+  @Override
+  public StompMessageType[] getMessageTypes() {
+    return TYPES;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
-	 * .common.message.StampyMessage)
-	 */
-	@Override
-	public boolean isForMessage(StampyMessage<?> message) {
-		return true;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * .common.message.StampyMessage)
+   */
+  @Override
+  public boolean isForMessage(StampyMessage<?> message) {
+    return true;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
-	 * stampy.common.message.StampyMessage,
-	 * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
-	 */
-	@Override
-	public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
-		switch (message.getMessageType()) {
-		case ABORT:
-		case ACK:
-		case BEGIN:
-		case COMMIT:
-		case NACK:
-		case SEND:
-		case SUBSCRIBE:
-		case UNSUBSCRIBE:
-			checkConnected(hostPort);
-			break;
-		case CONNECT:
-		case STOMP:
-			checkDisconnected(hostPort);
-			connectedClients.add(hostPort);
-			break;
-		case DISCONNECT:
-			connectedClients.remove(hostPort);
-			break;
-		default:
-			throw new IllegalArgumentException("Unexpected message type " + message.getMessageType());
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage,
+   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   */
+  @Override
+  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+    switch (message.getMessageType()) {
+    case ABORT:
+    case ACK:
+    case BEGIN:
+    case COMMIT:
+    case NACK:
+    case SEND:
+    case SUBSCRIBE:
+    case UNSUBSCRIBE:
+      checkConnected(hostPort);
+      break;
+    case CONNECT:
+    case STOMP:
+      checkDisconnected(hostPort);
+      connectedClients.add(hostPort);
+      break;
+    case DISCONNECT:
+      connectedClients.remove(hostPort);
+      break;
+    default:
+      throw new IllegalArgumentException("Unexpected message type " + message.getMessageType());
 
-		}
+    }
 
-	}
+  }
 
-	private void checkDisconnected(HostPort hostPort) throws AlreadyConnectedException {
-		if (!connectedClients.contains(hostPort)) return;
+  private void checkDisconnected(HostPort hostPort) throws AlreadyConnectedException {
+    if (!connectedClients.contains(hostPort)) return;
 
-		throw new AlreadyConnectedException(hostPort + " is already connected");
-	}
+    throw new AlreadyConnectedException(hostPort + " is already connected");
+  }
 
-	private void checkConnected(HostPort hostPort) throws NotConnectedException {
-		if (connectedClients.contains(hostPort)) return;
+  private void checkConnected(HostPort hostPort) throws NotConnectedException {
+    if (connectedClients.contains(hostPort)) return;
 
-		throw new NotConnectedException("CONNECT message required for " + hostPort);
-	}
+    throw new NotConnectedException("CONNECT message required for " + hostPort);
+  }
 
-	/**
-	 * Gets the gateway.
-	 * 
-	 * @return the gateway
-	 */
-	public ServerMinaMessageGateway getGateway() {
-		return gateway;
-	}
+  /**
+   * Gets the gateway.
+   * 
+   * @return the gateway
+   */
+  public ServerMinaMessageGateway getGateway() {
+    return gateway;
+  }
 
-	/**
-	 * Sets the gateway.
-	 * 
-	 * @param gateway
-	 *          the new gateway
-	 */
-	public void setGateway(ServerMinaMessageGateway gateway) {
-		this.gateway = gateway;
+  /**
+   * Sets the gateway.
+   * 
+   * @param gateway
+   *          the new gateway
+   */
+  public void setGateway(ServerMinaMessageGateway gateway) {
+    this.gateway = gateway;
 
-		gateway.addServiceListener(new MinaServiceAdapter() {
+    gateway.addServiceListener(new MinaServiceAdapter() {
 
-			public void sessionDestroyed(IoSession session) throws Exception {
-				HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
-				if (connectedClients.contains(hostPort)) {
-					log.debug("{} session terminated with outstanding connection, cleaning up", hostPort);
-					connectedClients.remove(hostPort);
-				}
-			}
-		});
-	}
+      @Override
+      public void sessionDestroyed(IoSession session) throws Exception {
+        HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
+        if (connectedClients.contains(hostPort)) {
+          log.debug("{} session terminated with outstanding connection, cleaning up", hostPort);
+          connectedClients.remove(hostPort);
+        }
+      }
+    });
+  }
 
 }
