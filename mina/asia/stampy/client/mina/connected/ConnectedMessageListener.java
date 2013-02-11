@@ -36,15 +36,20 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.connected.ConnectedMessage;
 
 /**
- * The listener interface for receiving connectedMessage events. The class that
- * is interested in processing a connectedMessage event implements this
- * interface, and the object created with that class is registered with a
- * component using the component's
- * <code>addConnectedMessageListener<code> method. When
- * the connectedMessage event occurs, that object's appropriate
- * method is invoked.
+ * This class intercepts incoming {@link StompMessageType#CONNECTED} from a
+ * STOMP 1.2 server and starts a heartbeat, if requested.
  * 
- * @see ConnectedMessageEvent
+ * <i>CONNECT heart-beat:[cx],[cy] <br>
+ * CONNECTED: heart-beat:[sx],[sy]<br>
+ * <br>
+ * For heart-beats from the client to the server: if [cx] is 0 (the client
+ * cannot send heart-beats) or [sy] is 0 (the server does not want to receive
+ * heart-beats) then there will be none otherwise, there will be heart-beats
+ * every MAX([cx],[sy]) milliseconds In the other direction, [sx] and [cy] are
+ * used the same way.</i>
+ * 
+ * @see HeartbeatContainer
+ * @see PaceMaker
  */
 @Resource
 public class ConnectedMessageListener implements StampyMinaMessageListener {
@@ -116,7 +121,7 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
   }
 
   /**
-   * Sets the heartbeat container.
+   * Inject the {@link HeartbeatContainer} on system startup.
    * 
    * @param heartbeatContainer
    *          the new heartbeat container
@@ -135,7 +140,7 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
   }
 
   /**
-   * Sets the message gateway.
+   * Inject the client {@link AbstractStampyMessageGateway} on system startup.
    * 
    * @param messageGateway
    *          the new message gateway

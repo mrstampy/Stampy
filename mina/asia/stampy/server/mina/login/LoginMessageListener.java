@@ -43,14 +43,8 @@ import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
- * The listener interface for receiving loginMessage events. The class that is
- * interested in processing a loginMessage event implements this interface, and
- * the object created with that class is registered with a component using the
- * component's <code>addLoginMessageListener<code> method. When
- * the loginMessage event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see LoginMessageEvent
+ * This class enforces login functionality via the implementation of a
+ * {@link StampyLoginHandler}.
  */
 @Resource
 public class LoginMessageListener implements StampyMinaMessageListener {
@@ -170,7 +164,7 @@ public class LoginMessageListener implements StampyMinaMessageListener {
   }
 
   /**
-   * Sets the login handler.
+   * Inject the implementation of {@link StampyLoginHandler} on system startup.
    * 
    * @param loginHandler
    *          the new login handler
@@ -189,7 +183,7 @@ public class LoginMessageListener implements StampyMinaMessageListener {
   }
 
   /**
-   * Sets the gateway.
+   * Inject the {@link ServerMinaMessageGateway} on system startup.
    * 
    * @param gateway
    *          the new gateway

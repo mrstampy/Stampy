@@ -18,13 +18,16 @@
  */
 package asia.stampy.server.mina.subscription;
 
+import asia.stampy.common.message.StompMessageType;
+
 /**
  * The Interface StampyAcknowledgementHandler.
  */
 public interface StampyAcknowledgementHandler {
 
   /**
-   * Ack received.
+   * Invoked when an {@link StompMessageType#ACK} message has been received for
+   * a published {@link StompMessageType#MESSAGE}.
    * 
    * @param id
    *          the id
@@ -38,7 +41,8 @@ public interface StampyAcknowledgementHandler {
   void ackReceived(String id, String receipt, String transaction) throws Exception;
 
   /**
-   * Nack received.
+   * Invoked when an {@link StompMessageType#NACK} message has been received for
+   * a missing {@link StompMessageType#MESSAGE}.
    * 
    * @param id
    *          the id
@@ -52,7 +56,8 @@ public interface StampyAcknowledgementHandler {
   void nackReceived(String id, String receipt, String transaction) throws Exception;
 
   /**
-   * No acknowledgement received.
+   * Invoked when the acknowledgement timer has finished and no acknowledgement
+   * has been received.
    * 
    * @param id
    *          the id

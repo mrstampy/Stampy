@@ -32,26 +32,23 @@ import org.slf4j.LoggerFactory;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
+import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.common.mina.StampyMinaMessageListener;
-import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
- * The listener interface for receiving connect events. The class that is
- * interested in processing a connect event implements this interface, and the
- * object created with that class is registered with a component using the
- * component's <code>addConnectListener<code> method. When
- * the connect event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see ConnectEvent
+ * This class ensures that a {@link StompMessageType#CONNECT} or
+ * {@link StompMessageType#STOMP} frame is the first frame a client sends, that
+ * no additional connect frames are sent, and that a
+ * {@link StompMessageType#DISCONNECT} frame initializes the state.<br>
+ * <br>
  */
 @Resource
 public class ConnectListener implements StampyMinaMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private Queue<HostPort> connectedClients = new ConcurrentLinkedQueue<>();
-  private ServerMinaMessageGateway gateway;
+  private AbstractStampyMinaMessageGateway gateway;
 
   private static StompMessageType[] TYPES = StompMessageType.values();
 
@@ -130,17 +127,17 @@ public class ConnectListener implements StampyMinaMessageListener {
    * 
    * @return the gateway
    */
-  public ServerMinaMessageGateway getGateway() {
+  public AbstractStampyMinaMessageGateway getGateway() {
     return gateway;
   }
 
   /**
-   * Sets the gateway.
+   * Inject the {@link AbstractStampyMinaMessageGateway} on system startup.
    * 
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(ServerMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMinaMessageGateway gateway) {
     this.gateway = gateway;
 
     gateway.addServiceListener(new MinaServiceAdapter() {

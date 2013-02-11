@@ -42,14 +42,9 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
- * The listener interface for receiving transaction events. The class that is
- * interested in processing a transaction event implements this interface, and
- * the object created with that class is registered with a component using the
- * component's <code>addTransactionListener<code> method. When
- * the transaction event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see TransactionEvent
+ * This class manages transactional boundaries, ensuring that a transaction has
+ * been started prior to an {@link StompMessageType#ABORT} or
+ * {@link StompMessageType#COMMIT} and that a transaction is began only once.
  */
 @Resource
 public class TransactionListener implements StampyMinaMessageListener {
@@ -104,13 +99,22 @@ public class TransactionListener implements StampyMinaMessageListener {
       commit(hostPort, ((CommitMessage) message).getHeader().getTransaction());
       break;
     case DISCONNECT:
-      activeTransactions.remove(hostPort);
+      logOutstandingTransactions(hostPort);
       break;
     default:
       break;
 
     }
 
+  }
+
+  private void logOutstandingTransactions(HostPort hostPort) {
+    Queue<String> q = getTransactions(hostPort);
+    if (q.isEmpty()) return;
+
+    for (String transaction : q) {
+      log.warn("Disconnect received, discarding outstanding transaction {}", transaction);
+    }
   }
 
   private void commit(HostPort hostPort, String transaction) throws TransactionNotStartedException {
@@ -180,7 +184,7 @@ public class TransactionListener implements StampyMinaMessageListener {
   }
 
   /**
-   * Sets the gateway.
+   * Inject the {@link ServerMinaMessageGateway} on system startup.
    * 
    * @param gateway
    *          the new gateway

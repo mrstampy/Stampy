@@ -30,23 +30,29 @@ import org.slf4j.LoggerFactory;
 import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.message.stomp.StompMessage;
-import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
+import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 
 /**
- * The listener interface for receiving heartbeat events. The class that is
- * interested in processing a heartbeat event implements this interface, and the
- * object created with that class is registered with a component using the
- * component's <code>addHeartbeatListener<code> method. When
- * the heartbeat event occurs, that object's appropriate
- * method is invoked.
+ * This class intercepts incoming {@link StompMessageType#CONNECT} from a STOMP
+ * 1.2 client and starts a heartbeat, if requested.
  * 
- * @see HeartbeatEvent
+ * <i>CONNECT heart-beat:[cx],[cy] <br>
+ * CONNECTED: heart-beat:[sx],[sy]<br>
+ * <br>
+ * For heart-beats from the client to the server: if [cx] is 0 (the client
+ * cannot send heart-beats) or [sy] is 0 (the server does not want to receive
+ * heart-beats) then there will be none otherwise, there will be heart-beats
+ * every MAX([cx],[sy]) milliseconds In the other direction, [sx] and [cy] are
+ * used the same way.</i>
+ * 
+ * @see HeartbeatContainer
+ * @see PaceMaker
  */
 @Resource
 public class HeartbeatListener implements StampyMinaMessageListener {
@@ -56,7 +62,7 @@ public class HeartbeatListener implements StampyMinaMessageListener {
 
   private HeartbeatContainer heartbeatContainer;
 
-  private AbstractStampyMessageGateway messageGateway;
+  private AbstractStampyMinaMessageGateway messageGateway;
 
   /*
    * (non-Javadoc)
@@ -144,7 +150,7 @@ public class HeartbeatListener implements StampyMinaMessageListener {
   }
 
   /**
-   * Sets the heartbeat container.
+   * Inject the {@link HeartbeatContainer} on system startup.
    * 
    * @param heartbeatContainer
    *          the new heartbeat container
@@ -158,17 +164,18 @@ public class HeartbeatListener implements StampyMinaMessageListener {
    * 
    * @return the message gateway
    */
-  public AbstractStampyMessageGateway getMessageGateway() {
+  public AbstractStampyMinaMessageGateway getMessageGateway() {
     return messageGateway;
   }
 
   /**
-   * Sets the message gateway.
+   * Inject the server {@link AbstractStampyMinaMessageGateway} on system
+   * startup.
    * 
    * @param messageGateway
    *          the new message gateway
    */
-  public void setGateway(AbstractStampyMessageGateway messageGateway) {
+  public void setGateway(AbstractStampyMinaMessageGateway messageGateway) {
     this.messageGateway = messageGateway;
   }
 

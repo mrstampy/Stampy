@@ -20,7 +20,7 @@ package asia.stampy.client.mina;
 
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
-import java.util.Queue;
+import java.util.Collection;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -43,7 +43,8 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.common.mina.StampyServiceAdapter;
 
 /**
- * The Class ClientMinaMessageGateway.
+ * This class is the reference implementation of a Stampy <a
+ * href="https://mina.apache.org">MINA</a> client gateway.
  */
 @Resource
 public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
@@ -234,7 +235,7 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
    * .util.Queue)
    */
   @Override
-  public void setListeners(Queue<StampyMinaMessageListener> listeners) {
+  public void setListeners(Collection<StampyMinaMessageListener> listeners) {
     getHandler().setListeners(listeners);
   }
 

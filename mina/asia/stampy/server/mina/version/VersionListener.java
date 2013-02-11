@@ -35,14 +35,7 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 
 /**
- * The listener interface for receiving version events. The class that is
- * interested in processing a version event implements this interface, and the
- * object created with that class is registered with a component using the
- * component's <code>addVersionListener<code> method. When
- * the version event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see VersionEvent
+ * Enforces STOMP 1.2 compliant connections.
  */
 @Resource
 public class VersionListener implements StampyMinaMessageListener {

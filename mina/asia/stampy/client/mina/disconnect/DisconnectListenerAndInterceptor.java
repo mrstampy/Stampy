@@ -37,7 +37,16 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
 /**
- * The Class DisconnectListenerAndInterceptor.
+ * This class intercepts an outgoing {@link StompMessageType#DISCONNECT} message
+ * if a receipt has been requested. When the receipt from the server arrives the
+ * {@link DisconnectListenerAndInterceptor#isCloseOnDisconnectMessage()} is
+ * evaluated and if true the <b>session</b> is closed.<br>
+ * <br>
+ * <i>To do a graceful shutdown, where the client is assured that all previous
+ * frames have been received by the server, the client SHOULD: send a DISCONNECT
+ * frame with a receipt header set. Example: DISCONNECT receipt:77 ^@ wait for
+ * the RECEIPT frame response to the DISCONNECT. Example: RECEIPT receipt-id:77
+ * ^@ close the <strike>socket</strike> session.</i>
  */
 @Resource
 public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInterceptor implements
@@ -149,7 +158,7 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
   }
 
   /**
-   * Sets the close on disconnect message.
+   * Inject the desired behaviour on system startup.
    * 
    * @param closeOnDisconnectMessage
    *          the new close on disconnect message

@@ -24,7 +24,9 @@ package asia.stampy.server.mina.login;
 public interface StampyLoginHandler {
 
   /**
-   * Login.
+   * Implementations are to perform any required login functionality. If the
+   * login fails a {@link NotLoggedInException} is to be thrown. If the session
+   * is to be terminated a {@link TerminateSessionException} is to be thrown.
    * 
    * @param username
    *          the username

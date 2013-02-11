@@ -50,15 +50,11 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.message.MessageMessage;
 
 /**
- * The listener interface for receiving acknowledgement events. The class that
- * is interested in processing a acknowledgement event implements this
- * interface, and the object created with that class is registered with a
- * component using the component's
- * <code>addAcknowledgementListener<code> method. When
- * the acknowledgement event occurs, that object's appropriate
- * method is invoked.
- * 
- * @see AcknowledgementEvent
+ * This class assists in the publication of {@link StompMessageType#MESSAGE}
+ * messages for a subscription. If confirmation of the publication is requested
+ * a timer is created to await receipt of the confirmation, and the appropriate
+ * methods of the {@link StampyAcknowledgementHandler} implementation are
+ * invoked.
  */
 @Resource
 public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessageInterceptor implements
@@ -237,7 +233,7 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
   }
 
   /**
-   * Sets the ack timeout millis.
+   * Sets the ack timeout millis. Initialize appropriately on system startup.
    * 
    * @param ackTimeoutMillis
    *          the new ack timeout millis
@@ -256,13 +252,14 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
   }
 
   /**
-   * Sets the handler.
+   * Inject the {@link StampyAcknowledgementHandler} implementation on system
+   * startup.
    * 
-   * @param adapter
+   * @param handler
    *          the new handler
    */
-  public void setHandler(StampyAcknowledgementHandler adapter) {
-    this.handler = adapter;
+  public void setHandler(StampyAcknowledgementHandler handler) {
+    this.handler = handler;
   }
 
 }

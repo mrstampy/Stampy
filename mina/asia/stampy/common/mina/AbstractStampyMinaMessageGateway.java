@@ -18,14 +18,15 @@
  */
 package asia.stampy.common.mina;
 
-import java.util.Queue;
+import java.util.Collection;
 
 import org.apache.mina.core.service.IoServiceListener;
 
 import asia.stampy.common.AbstractStampyMessageGateway;
 
 /**
- * The Class AbstractStampyMinaMessageGateway.
+ * Defines the <a href="https://mina.apache.org">MINA</a>-specific methods for
+ * the implementation of clients and servers.
  */
 public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMessageGateway {
 
@@ -53,13 +54,14 @@ public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMes
   /**
    * Sets the listeners. Specified for DI frameworks; programmatic usage should
    * invoke the
+   * {@link AbstractStampyMinaMessageGateway#addMessageListener(StampyMinaMessageListener)}
+   * method to specify {@link StampyMinaMessageListener}s.
    * 
    * @param listeners
    *          the new listeners
-   *          {@link AbstractStampyMinaMessageGateway#addMessageListener(StampyMinaMessageListener)}
-   *          method to specify {@link StampyMinaMessageListener}s.
+   * 
    */
-  public abstract void setListeners(Queue<StampyMinaMessageListener> listeners);
+  public abstract void setListeners(Collection<StampyMinaMessageListener> listeners);
 
   /**
    * Adds the MINA service listener to the underlying connector or acceptor.
