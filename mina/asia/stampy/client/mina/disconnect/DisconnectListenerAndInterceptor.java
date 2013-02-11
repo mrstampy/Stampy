@@ -74,11 +74,13 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
 		switch (message.getMessageType()) {
 		case DISCONNECT:
 			boolean absent = StringUtils.isEmpty(getReceiptId());
+			
 			if (!absent) {
 				log.warn("Outstanding receipt id {} in DisconnectListenerAndInterceptor, resetting", getReceiptId());
 				setReceiptId((String) null);
 			}
-			return true;
+			
+			return StringUtils.isNotEmpty(((DisconnectMessage)message).getHeader().getReceipt());
 		case RECEIPT:
 			ReceiptMessage receipt = (ReceiptMessage) message;
 			return StringUtils.isNotEmpty(getReceiptId()) && getReceiptId().equals(receipt.getHeader().getReceiptId());

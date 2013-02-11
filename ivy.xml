@@ -20,20 +20,15 @@
 <ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
        
-    <info organisation="Entrainer" module="Entrainer" status="integration"/>
+    <info organisation="Stampy" module="Stampy" status="integration"/>
 	
 	<dependencies>
 		<dependency org="log4j" name="log4j" rev="1.2.17"/>
 		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.6"/>
-		<dependency org="com.googlecode.disruptor" name="disruptor" rev="2.10.4"/>
-		<dependency org="javolution" name="javolution" rev="5.5.1"/>
-		<dependency org="org.apache.mina" name="mina-core" rev="2.0.6"/>
-		<dependency org="io.netty" name="netty" rev="3.6.1.Final"/>
+		<dependency org="org.apache.mina" name="mina-core" rev="2.0.7"/>
 		<dependency org="commons-lang" name="commons-lang" rev="2.6"/>
-		<dependency org="commons-pool" name="commons-pool" rev="1.6"/>
-		<dependency org="ch.qos.logback" name="logback-core" rev="1.0.9"/>
-		<dependency org="com.esotericsoftware.kryo" name="kryo" rev="2.20"/>
 		<dependency org="commons-codec" name="commons-codec" rev="1.7"/>
+		<dependency org="org.mockito" name="mockito-all" rev="1.9.5"/>
 	</dependencies>
 	
 </ivy-module>
