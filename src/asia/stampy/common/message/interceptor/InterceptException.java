@@ -19,7 +19,8 @@
 package asia.stampy.common.message.interceptor;
 
 /**
- * The Class InterceptException.
+ * The Class InterceptException, thrown by the implementation of an interceptor
+ * when the sending of a message is to be aborted.
  */
 public class InterceptException extends Exception {
 

@@ -19,7 +19,9 @@
 package asia.stampy.client.message;
 
 /**
- * The Interface ClientMessageHeader.
+ * <i>any client frame other than CONNECT MAY specify a receipt header with an
+ * arbitrary value. This will cause the server to acknowledge the processing of
+ * the client frame with a RECEIPT frame</i>
  */
 public interface ClientMessageHeader {
 

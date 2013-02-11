@@ -24,8 +24,8 @@ import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 
 /**
- * This interface is implemented to intercept specified messages to capture the
- * state of any outgoing messages.
+ * This interface is implemented to intercept outgoing messages to capture the
+ * state of any specified messages.
  * 
  * @author burton
  * 
@@ -50,17 +50,20 @@ public interface StampyOutgoingMessageInterceptor {
   boolean isForMessage(StampyMessage<?> message);
 
   /**
-   * Intercepts the outgoing message for capturing state etc.
+   * Intercepts the outgoing message for capturing state etc, invoked by the
+   * {@link AbstractStampyMessageGateway}
    * 
    * @param message
    *          the message
    * @throws InterceptException
    *           if the outgoing message is to be aborted
+   * @see AbstractStampyMessageGateway
    */
   void interceptMessage(StampyMessage<?> message) throws InterceptException;
 
   /**
-   * Intercepts the outgoing message for capturing state etc.
+   * Intercepts the outgoing message for capturing state etc, invoked by the
+   * {@link AbstractStampyMessageGateway}
    * 
    * @param message
    *          the message
@@ -68,6 +71,7 @@ public interface StampyOutgoingMessageInterceptor {
    *          the host port
    * @throws InterceptException
    *           if the outgoing message is to be aborted
+   * @see AbstractStampyMessageGateway
    */
   void interceptMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException;
 
