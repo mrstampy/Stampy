@@ -23,6 +23,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -30,6 +32,9 @@ import org.apache.commons.codec.binary.Base64;
  * Convenience class to encapsulate the serialize/deserialize functionality.
  */
 public class SerializationUtils {
+
+  private static Lock SERIALIZE_LOCK = new ReentrantLock(true);
+  private static Lock DESERIALIZE_LOCK = new ReentrantLock(true);
 
   /**
    * Serialize base64.
@@ -41,14 +46,19 @@ public class SerializationUtils {
    *           Signals that an I/O exception has occurred.
    */
   public static String serializeBase64(Object o) throws IOException {
-    if (o instanceof byte[]) return Base64.encodeBase64URLSafeString((byte[]) o);
+    SERIALIZE_LOCK.lock();
+    try {
+      if (o instanceof byte[]) return Base64.encodeBase64String((byte[]) o);
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ObjectOutputStream oos = new ObjectOutputStream(baos);
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ObjectOutputStream oos = new ObjectOutputStream(baos);
 
-    oos.writeObject(o);
+      oos.writeObject(o);
 
-    return Base64.encodeBase64String(baos.toByteArray());
+      return Base64.encodeBase64String(baos.toByteArray());
+    } finally {
+      SERIALIZE_LOCK.unlock();
+    }
   }
 
   /**
@@ -63,11 +73,16 @@ public class SerializationUtils {
    *           the class not found exception
    */
   public static Object deserializeBase64(String s) throws IOException, ClassNotFoundException {
-    byte[] bytes = Base64.decodeBase64(s);
+    DESERIALIZE_LOCK.lock();
+    try {
+      byte[] bytes = Base64.decodeBase64(s);
 
-    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+      ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
 
-    return ois.readObject();
+      return ois.readObject();
+    } finally {
+      DESERIALIZE_LOCK.unlock();
+    }
   }
 
 }
