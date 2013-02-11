@@ -252,7 +252,7 @@ public class SystemClient {
 
 	public void testSubscription() throws Exception {
 		SubscribeMessage message = new SubscribeMessage("destination", "subscription");
-		message.getHeader().setAck(Ack.auto);
+		message.getHeader().setAck(Ack.clientIndividual);
 		gateway.broadcastMessage(message);
 		synchronized (waiter) {
 			waiter.wait();
