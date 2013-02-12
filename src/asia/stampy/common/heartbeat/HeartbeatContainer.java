@@ -62,8 +62,8 @@ public class HeartbeatContainer {
    *          the pace maker
    */
   public void add(HostPort hostPort, PaceMaker paceMaker) {
-    log.info("Adding PaceMaker for {}", hostPort);
     stop(hostPort);
+    log.info("Adding PaceMaker for {}", hostPort);
     paceMakers.put(hostPort, paceMaker);
   }
 
