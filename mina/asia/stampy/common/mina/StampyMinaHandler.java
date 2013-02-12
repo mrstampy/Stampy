@@ -183,7 +183,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
       try {
         errorHandle(e, session, hostPort);
       } catch(Exception e2) {
-        log.error("Could not parse message", e);
+        log.error("Could not parse message " + msg + " for " + hostPort, e);
         log.error("Unexpected error delegating to unparseable message handler", e1);
         log.error("Unexpected exception sending error message for " + hostPort, e2);
       }
