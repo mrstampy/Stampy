@@ -14,6 +14,7 @@ This library provides [Java class](https://github.com/mrstampy/Stampy/blob/maste
 * Fast (11 microseconds per message during testing)
 * Reliable
 * Extensible
+* Security focused
 
 ## stampy-core
 
