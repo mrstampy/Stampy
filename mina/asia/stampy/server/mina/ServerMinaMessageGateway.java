@@ -89,7 +89,7 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
    * @throws InterceptException
    *           the intercept exception
    */
-  public void sendMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
+  public synchronized void sendMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
     interceptOutgoingMessage(message, hostPort);
     sendMessage(message.toStompMessage(true), hostPort);
   }
@@ -156,7 +156,7 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
    * , asia.stampy.common.HostPort)
    */
   @Override
-  public void sendMessage(String message, HostPort hostPort) throws InterceptException {
+  public synchronized void sendMessage(String message, HostPort hostPort) throws InterceptException {
     if (!isConnected(hostPort)) {
       log.warn("Attempting to send message {} to {} when the acceptor is not active", message, hostPort);
       throw new IllegalStateException("The acceptor is not active, cannot send message");
@@ -176,7 +176,7 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
    * .String)
    */
   @Override
-  public void broadcastMessage(String message) throws InterceptException {
+  public synchronized void broadcastMessage(String message) throws InterceptException {
     if (!acceptor.isActive()) {
       log.warn("Attempting to broadcast {} when the acceptor is not active", message);
       throw new IllegalStateException("The acceptor is not active, cannot send message");
