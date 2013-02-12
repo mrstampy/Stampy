@@ -18,14 +18,12 @@
  */
 package asia.stampy.examples.system.server;
 
-import org.apache.mina.core.session.IoSession;
-
 import asia.stampy.client.message.subscribe.SubscribeMessage;
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.InterceptException;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.message.MessageMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
@@ -47,10 +45,10 @@ public class SystemServer {
   public void init() throws Exception {
     setGateway(SystemServerInitializer.initialize());
 
-    gateway.addMessageListener(new StampyMinaMessageListener() {
+    gateway.addMessageListener(new StampyMessageListener() {
 
       @Override
-      public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+      public void messageReceived(StampyMessage<?> message,  HostPort hostPort) throws Exception {
         switch (message.getMessageType()) {
         case ABORT:
           break;

@@ -20,17 +20,18 @@ package asia.stampy.client.mina.disconnect;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import asia.stampy.client.listener.disconnect.DisconnectListenerAndInterceptor;
 import asia.stampy.client.message.disconnect.DisconnectMessage;
+import asia.stampy.common.gateway.MessageListenerHaltException;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.AbstractMinaListenerTest;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -45,7 +46,7 @@ public class DisconnectListenerAndInterceptorTest extends AbstractMinaListenerTe
 
   @Test
   public void testTypes() throws Exception {
-    testTypes((StampyMinaMessageListener) disconnect, new StompMessageType[] { StompMessageType.DISCONNECT,
+    testTypes((StampyMessageListener) disconnect, new StompMessageType[] { StompMessageType.DISCONNECT,
         StompMessageType.RECEIPT });
   }
 
@@ -64,23 +65,20 @@ public class DisconnectListenerAndInterceptorTest extends AbstractMinaListenerTe
     assertTrue(disconnect.isForMessage(receipt));
   }
 
-  @Test
+  @Test(expected=MessageListenerHaltException.class)
   public void testMessageReceived() throws Exception {
+    disconnect.setGateway(clientGateway);
     disconnect.setReceiptId("test");
 
     ReceiptMessage message = new ReceiptMessage("blah");
 
     disconnect.setCloseOnDisconnectMessage(false);
-    disconnect.messageReceived(message, session, hostPort);
-
-    verify(session, never()).close(false);
+    disconnect.messageReceived(message, hostPort);
 
     disconnect.setReceiptId("test");
     disconnect.setCloseOnDisconnectMessage(true);
 
-    disconnect.messageReceived(message, session, hostPort);
-
-    verify(session).close(false);
+    disconnect.messageReceived(message, hostPort);
   }
 
 }

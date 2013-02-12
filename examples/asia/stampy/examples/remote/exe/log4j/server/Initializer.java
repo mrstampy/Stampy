@@ -21,9 +21,9 @@ package asia.stampy.examples.remote.exe.log4j.server;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.common.IDontNeedSecurity;
 import asia.stampy.examples.remote.exe.common.RemoteExeMessageListener;
+import asia.stampy.server.listener.receipt.ReceiptListener;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
-import asia.stampy.server.mina.receipt.ReceiptListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
@@ -49,15 +49,15 @@ public class Initializer {
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
     
-    handler.addMessageListener(new IDontNeedSecurity());
+    gateway.addMessageListener(new IDontNeedSecurity());
     
     ReceiptListener receipt = new ReceiptListener();
     receipt.setGateway(gateway);
-    handler.addMessageListener(receipt);
+    gateway.addMessageListener(receipt);
 
     RemoteExeMessageListener remoteExe = new RemoteExeMessageListener();
     remoteExe.setGateway(gateway);
-    handler.addMessageListener(remoteExe);
+    gateway.addMessageListener(remoteExe);
 
     gateway.setHandler(handler);
 

@@ -32,7 +32,7 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
 
 /**
  * This class keeps track of all connections and disconnections and is the

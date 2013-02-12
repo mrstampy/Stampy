@@ -20,12 +20,12 @@ package asia.stampy.server.mina;
 
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
-import java.util.Collection;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
+import org.apache.mina.core.future.CloseFuture;
 import org.apache.mina.core.service.IoServiceListener;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -34,12 +34,9 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.HostPort;
-import asia.stampy.common.message.StampyMessage;
+import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.interceptor.InterceptException;
-import asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 
 /**
  * This class is the reference implementation of a Stampy <a
@@ -72,40 +69,6 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
     chain.addLast("mdc", mdcInjectionFilter);
     chain.addLast("codec", new ProtocolCodecFilter(getHandler().getFactory(getMaxMessageSize())));
     log.trace("Acceptor initialized");
-  }
-
-  /**
-   * Sends a {@link StampyMessage} to the specified {@link HostPort}. Use this
-   * method for all STOMP messages.
-   * 
-   * @param message
-   *          the message
-   * @param hostPort
-   *          the host port
-   * @throws InterceptException
-   *           the intercept exception
-   */
-  public void sendMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
-    interceptOutgoingMessage(message, hostPort);
-    sendMessage(message.toStompMessage(true), hostPort);
-  }
-
-  /**
-   * Intercept outgoing message.
-   * 
-   * @param message
-   *          the message
-   * @param hostPort
-   *          the host port
-   * @throws InterceptException
-   *           the intercept exception
-   */
-  protected void interceptOutgoingMessage(StampyMessage<?> message, HostPort hostPort) throws InterceptException {
-    for (StampyOutgoingMessageInterceptor interceptor : interceptors) {
-      if (isForType(interceptor.getMessageTypes(), message.getMessageType()) && interceptor.isForMessage(message)) {
-        interceptor.interceptMessage(message, hostPort);
-      }
-    }
   }
 
   /*
@@ -207,7 +170,8 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
     log.info("closeConnection() invoked, closing session for {}", hostPort);
 
     IoSession session = serviceAdapter.getSession(hostPort);
-    session.close(false);
+    CloseFuture cf = session.close(false);
+    cf.awaitUninterruptibly();
   }
 
   /*
@@ -257,56 +221,8 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
     acceptor.removeListener(listener);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addMessageListener
-   * (asia.stampy.common.mina.StampyMinaMessageListener)
-   */
-  @Override
-  public void addMessageListener(StampyMinaMessageListener listener) {
-    getHandler().addMessageListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#removeMessageListener
-   * (asia.stampy.common.mina.StampyMinaMessageListener)
-   */
-  @Override
-  public void removeMessageListener(StampyMinaMessageListener listener) {
-    getHandler().removeMessageListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#clearMessageListeners
-   * ()
-   */
-  @Override
-  public void clearMessageListeners() {
-    getHandler().clearMessageListeners();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#setListeners(java
-   * .util.Queue)
-   */
-  @Override
-  public void setListeners(Collection<StampyMinaMessageListener> listeners) {
-    getHandler().setListeners(listeners);
-  }
-
   /**
-   * Gets the max message size.  Defaults to Integer.MAX_VALUE.
+   * Gets the max message size. Defaults to Integer.MAX_VALUE.
    * 
    * @return the max message size
    */

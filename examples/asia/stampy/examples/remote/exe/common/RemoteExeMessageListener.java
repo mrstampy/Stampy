@@ -18,13 +18,11 @@
  */
 package asia.stampy.examples.remote.exe.common;
 
-import org.apache.mina.core.session.IoSession;
-
 import asia.stampy.client.message.send.SendMessage;
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
@@ -32,7 +30,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * 
  * @see RemoteExeMessageEvent
  */
-public class RemoteExeMessageListener implements StampyMinaMessageListener {
+public class RemoteExeMessageListener implements StampyMessageListener {
   private ServerMinaMessageGateway gateway;
   private static StompMessageType[] TYPES = { StompMessageType.SEND };
 
@@ -69,7 +67,7 @@ public class RemoteExeMessageListener implements StampyMinaMessageListener {
    * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
    */
   @Override
-  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+  public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     RemoteExecutor executor = new RemoteExecutor();
     executor.setGateway(getGateway());
     executor.processStompMessage((SendMessage) message, hostPort);

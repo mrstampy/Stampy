@@ -34,11 +34,11 @@ import org.slf4j.LoggerFactory;
 import asia.stampy.client.message.abort.AbortMessage;
 import asia.stampy.client.message.begin.BeginMessage;
 import asia.stampy.client.message.commit.CommitMessage;
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.MinaServiceAdapter;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
@@ -47,7 +47,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * {@link StompMessageType#COMMIT} and that a transaction is began only once.
  */
 @Resource
-public class TransactionListener implements StampyMinaMessageListener {
+public class TransactionListener implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private Map<HostPort, Queue<String>> activeTransactions = new ConcurrentHashMap<>();
@@ -87,7 +87,7 @@ public class TransactionListener implements StampyMinaMessageListener {
    * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
    */
   @Override
-  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+  public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     switch (message.getMessageType()) {
     case ABORT:
       abort(hostPort, ((AbortMessage) message).getHeader().getTransaction());

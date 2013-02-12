@@ -23,12 +23,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.mina.core.session.IoSession;
-
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 
 /**
  * The listener interface for receiving testServerMessage events. The class that
@@ -41,7 +39,7 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
  * 
  * @see TestServerMessageEvent
  */
-public class TestServerMessageListener implements StampyMinaMessageListener {
+public class TestServerMessageListener implements StampyMessageListener {
 
   private Map<HostPort, AtomicInteger> acks = new ConcurrentHashMap<>();
 
@@ -60,7 +58,7 @@ public class TestServerMessageListener implements StampyMinaMessageListener {
    * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
    */
   @Override
-  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+  public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     switch (message.getMessageType()) {
     case ACK:
       acks.get(hostPort).getAndIncrement();

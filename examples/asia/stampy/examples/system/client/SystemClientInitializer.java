@@ -18,19 +18,19 @@
  */
 package asia.stampy.examples.system.client;
 
+import asia.stampy.client.listener.connected.ConnectedMessageListener;
+import asia.stampy.client.listener.disconnect.DisconnectListenerAndInterceptor;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.mina.RawClientMinaHandler;
-import asia.stampy.client.mina.connected.ConnectedMessageListener;
-import asia.stampy.client.mina.disconnect.DisconnectListenerAndInterceptor;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.client.AutoTerminatingClientGateway;
 import asia.stampy.examples.common.IDontNeedSecurity;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
  * example, which tests the functionality of the various
- * {@link StampyMinaMessageListener} implementations for a STOMP 1.2 compliant
+ * {@link StampyMessageListener} implementations for a STOMP 1.2 compliant
  * client communicating with a compliant server. It is expected that a DI
  * framework such as <a href="http://www.springsource.org/">Spring</a> or <a
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
@@ -55,16 +55,16 @@ public class SystemClientInitializer {
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
     
-    handler.addMessageListener(new IDontNeedSecurity());
+    gateway.addMessageListener(new IDontNeedSecurity());
 
     ConnectedMessageListener cml = new ConnectedMessageListener();
     cml.setHeartbeatContainer(heartbeatContainer);
     cml.setGateway(gateway);
-    handler.addMessageListener(cml);
+    gateway.addMessageListener(cml);
 
     DisconnectListenerAndInterceptor disconnect = new DisconnectListenerAndInterceptor();
     disconnect.setCloseOnDisconnectMessage(false);
-    handler.addMessageListener(disconnect);
+    gateway.addMessageListener(disconnect);
     gateway.addOutgoingMessageInterceptor(disconnect);
     disconnect.setGateway(gateway);
 

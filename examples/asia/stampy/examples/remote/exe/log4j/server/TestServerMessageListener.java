@@ -19,12 +19,11 @@
 package asia.stampy.examples.remote.exe.log4j.server;
 
 import org.apache.log4j.Logger;
-import org.apache.mina.core.session.IoSession;
 
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 
 /**
  * The listener interface for receiving testServerMessage events. The class that
@@ -37,7 +36,7 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
  * 
  * @see TestServerMessageEvent
  */
-public class TestServerMessageListener implements StampyMinaMessageListener {
+public class TestServerMessageListener implements StampyMessageListener {
   private static StompMessageType[] TYPES = { StompMessageType.SEND };
 
   /*
@@ -49,7 +48,7 @@ public class TestServerMessageListener implements StampyMinaMessageListener {
    * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
    */
   @Override
-  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+  public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     Logger logger = Logger.getLogger("asia.stampy.examples.remote.exe.log4j.server");
     System.out.println("Log level is " + logger.getLevel());
   }

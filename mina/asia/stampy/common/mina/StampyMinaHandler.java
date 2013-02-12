@@ -21,9 +21,6 @@ package asia.stampy.common.mina;
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -36,15 +33,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asia.stampy.client.message.ClientMessageHeader;
-import asia.stampy.common.AbstractStampyMessageGateway;
-import asia.stampy.common.HostPort;
-import asia.stampy.common.StompMessageParser;
-import asia.stampy.common.UnparseableException;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
+import asia.stampy.common.gateway.DefaultUnparseableMessageHandler;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.MessageListenerHaltException;
+import asia.stampy.common.gateway.UnparseableMessageHandler;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
+import asia.stampy.common.parsing.StompMessageParser;
+import asia.stampy.common.parsing.UnparseableException;
 import asia.stampy.server.message.error.ErrorMessage;
 
 /**
@@ -63,8 +63,6 @@ import asia.stampy.server.message.error.ErrorMessage;
  */
 public abstract class StampyMinaHandler extends IoHandlerAdapter {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-  private Queue<StampyMinaMessageListener> listeners = new ConcurrentLinkedQueue<>();
 
   private StompMessageParser parser = new StompMessageParser();
 
@@ -89,7 +87,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * .mina.core.session.IoSession, java.lang.Object)
    */
   @Override
-  public void messageReceived(final IoSession session, Object message) throws Exception {
+  public void messageReceived(IoSession session, Object message) throws Exception {
     final HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
     log.debug("Received raw message {} from {}", message, hostPort);
 
@@ -112,7 +110,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 
       @Override
       public void run() {
-        asyncProcessing(session, hostPort, msg);
+        asyncProcessing(hostPort, msg);
       }
     };
 
@@ -147,43 +145,41 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * @param msg
    *          the msg
    */
-  protected void asyncProcessing(IoSession session, HostPort hostPort, String msg) {
+  protected void asyncProcessing(HostPort hostPort, String msg) {
     StampyMessage<?> sm = null;
     try {
       sm = getParser().parseMessage(msg);
 
-      if (isValidMessage(sm)) {
-        notifyListeners(sm, session, hostPort);
-      }
+      if (isValidMessage(sm)) getGateway().notifyMessageListeners(sm, hostPort);
     } catch (UnparseableException e) {
-      handleUnparseableMessage(session, hostPort, msg, e);
+      handleUnparseableMessage(hostPort, msg, e);
     } catch (MessageListenerHaltException e) {
       // halting
     } catch (Exception e) {
-      handleUnexpectedError(session, hostPort, msg, sm, e);
+      handleUnexpectedError(hostPort, msg, sm, e);
     }
   }
 
-  protected void handleUnexpectedError(IoSession session, HostPort hostPort, String msg, StampyMessage<?> sm, Exception e) {
+  protected void handleUnexpectedError(HostPort hostPort, String msg, StampyMessage<?> sm, Exception e) {
     try {
       if (sm == null) {
-        errorHandle(e, session, hostPort);
+        errorHandle(e, hostPort);
       } else {
-        errorHandle(sm, e, session, hostPort);
+        errorHandle(sm, e, hostPort);
       }
     } catch (Exception e1) {
       log.error("Unexpected exception sending error message for " + hostPort, e1);
     }
   }
 
-  protected void handleUnparseableMessage(IoSession session, HostPort hostPort, String msg, UnparseableException e) {
+  protected void handleUnparseableMessage(HostPort hostPort, String msg, UnparseableException e) {
     log.debug("Unparseable message, delegating to unparseable message handler");
     try {
-      getUnparseableMessageHandler().unparseableMessage(msg, session, hostPort);
+      getUnparseableMessageHandler().unparseableMessage(msg, hostPort);
     } catch (Exception e1) {
       try {
-        errorHandle(e1, session, hostPort);
-      } catch(Exception e2) {
+        errorHandle(e1, hostPort);
+      } catch (Exception e2) {
         log.error("Could not parse message " + msg + " for " + hostPort, e);
         log.error("Unexpected exception sending error message for " + hostPort, e2);
       }
@@ -237,8 +233,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * @throws Exception
    *           the exception
    */
-  protected void errorHandle(StampyMessage<?> message, Exception e, IoSession session, HostPort hostPort)
-      throws Exception {
+  protected void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws Exception {
     log.error("Handling error, sending error message to " + hostPort, e);
     String receipt = message.getHeader().getHeaderValue(ClientMessageHeader.RECEIPT);
     ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
@@ -258,7 +253,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * @throws Exception
    *           the exception
    */
-  protected void errorHandle(Exception e, IoSession session, HostPort hostPort) throws Exception {
+  protected void errorHandle(Exception e, HostPort hostPort) throws Exception {
     log.error("Handling error, sending error message to " + hostPort, e);
     ErrorMessage error = new ErrorMessage("n/a");
     error.getHeader().setMessageHeader(e.getMessage());
@@ -284,78 +279,6 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * @return true, if is valid message
    */
   protected abstract boolean isValidMessage(StampyMessage<?> message);
-
-  /**
-   * Notify listeners of received {@link StampyMessage}s.
-   * 
-   * @param sm
-   *          the sm
-   * @param session
-   *          the session
-   * @param hostPort
-   *          the host port
-   * @throws Exception
-   *           the exception
-   */
-  protected void notifyListeners(StampyMessage<?> sm, IoSession session, HostPort hostPort) throws Exception {
-    for (StampyMinaMessageListener listener : listeners) {
-      if (isForType(listener.getMessageTypes(), sm.getMessageType()) && listener.isForMessage(sm)) {
-        log.trace("Evaluating message {} with listener {}", sm, listener);
-        listener.messageReceived(sm, session, hostPort);
-      }
-    }
-  }
-
-  private boolean isForType(StompMessageType[] messageTypes, StompMessageType messageType) {
-    if (messageTypes == null || messageTypes.length == 0) return false;
-
-    for (StompMessageType type : messageTypes) {
-      if (type.equals(messageType)) return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Adds the message listener.
-   * 
-   * @param listener
-   *          the listener
-   */
-  public final void addMessageListener(StampyMinaMessageListener listener) {
-    if (listeners.size() == 0 && !(listener instanceof SecurityMinaMessageListener)) {
-      throw new StampySecurityException();
-    }
-
-    listeners.add(listener);
-  }
-
-  /**
-   * Removes the message listener.
-   * 
-   * @param listener
-   *          the listener
-   */
-  public void removeMessageListener(StampyMinaMessageListener listener) {
-    listeners.remove(listener);
-  }
-
-  /**
-   * Clear message listeners.
-   */
-  public void clearMessageListeners() {
-    listeners.clear();
-  }
-
-  /**
-   * Sets the listeners.
-   * 
-   * @param listeners
-   *          the new listeners
-   */
-  public void setListeners(Collection<StampyMinaMessageListener> listeners) {
-    this.listeners.addAll(listeners);
-  }
 
   /**
    * Gets the parser.

@@ -38,15 +38,15 @@ import asia.stampy.client.message.ack.AckHeader;
 import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.client.message.nack.NackHeader;
 import asia.stampy.client.message.nack.NackMessage;
-import asia.stampy.common.AbstractStampyMessageGateway;
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.AbstractOutgoingMessageInterceptor;
 import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.MinaServiceAdapter;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.message.MessageMessage;
 
 /**
@@ -58,7 +58,7 @@ import asia.stampy.server.message.message.MessageMessage;
  */
 @Resource
 public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessageInterceptor implements
-    StampyMinaMessageListener {
+    StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static final StompMessageType[] TYPES = { StompMessageType.ACK, StompMessageType.NACK,
       StompMessageType.MESSAGE };
@@ -110,7 +110,7 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
    * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
    */
   @Override
-  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+  public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     switch (message.getMessageType()) {
     case ACK:
       evaluateAck(((AckMessage) message).getHeader(), hostPort);

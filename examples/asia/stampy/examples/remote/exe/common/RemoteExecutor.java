@@ -19,7 +19,7 @@
 package asia.stampy.examples.remote.exe.common;
 
 import asia.stampy.client.message.send.SendMessage;
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**

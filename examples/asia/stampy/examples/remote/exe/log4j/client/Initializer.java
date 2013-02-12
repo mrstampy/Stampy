@@ -50,7 +50,7 @@ public class Initializer {
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
     
-    handler.addMessageListener(new IDontNeedSecurity());
+    gateway.addMessageListener(new IDontNeedSecurity());
 
     gateway.setHandler(handler);
 

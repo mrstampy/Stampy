@@ -21,7 +21,6 @@ package asia.stampy.common.mina;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
-import org.apache.mina.core.session.IoSession;
 import org.mockito.Mock;
 
 import asia.stampy.client.message.abort.AbortMessage;
@@ -36,7 +35,8 @@ import asia.stampy.client.message.stomp.StompMessage;
 import asia.stampy.client.message.subscribe.SubscribeMessage;
 import asia.stampy.client.message.unsubscribe.UnsubscribeMessage;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor;
@@ -50,15 +50,12 @@ public abstract class AbstractMinaListenerTest {
   protected HostPort hostPort = new HostPort("burt.alexander", 9999);
 
   @Mock
-  protected IoSession session;
-
-  @Mock
   protected ClientMinaMessageGateway clientGateway;
 
   @Mock
   protected ServerMinaMessageGateway serverGateway;
 
-  protected void testTypes(StampyMinaMessageListener listener, StompMessageType[] expecteds) {
+  protected void testTypes(StampyMessageListener listener, StompMessageType[] expecteds) {
     StompMessageType[] actuals = listener.getMessageTypes();
 
     testTypes(expecteds, actuals);

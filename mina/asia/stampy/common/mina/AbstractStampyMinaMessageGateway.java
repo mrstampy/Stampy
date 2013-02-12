@@ -19,12 +19,11 @@
 package asia.stampy.common.mina;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.mina.core.service.IoServiceListener;
 
-import asia.stampy.common.AbstractStampyMessageGateway;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 
 /**
  * Defines the <a href="https://mina.apache.org">MINA</a>-specific methods for
@@ -35,39 +34,6 @@ public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMes
   private List<IoServiceListener> serviceListeners = new ArrayList<>();
   protected StampyServiceAdapter serviceAdapter = new StampyServiceAdapter();
   private StampyMinaHandler handler;
-
-  /**
-   * Adds the message listener.
-   * 
-   * @param listener
-   *          the listener
-   */
-  public abstract void addMessageListener(StampyMinaMessageListener listener);
-
-  /**
-   * Removes the message listener.
-   * 
-   * @param listener
-   *          the listener
-   */
-  public abstract void removeMessageListener(StampyMinaMessageListener listener);
-
-  /**
-   * Clear message listeners.
-   */
-  public abstract void clearMessageListeners();
-
-  /**
-   * Sets the listeners. Specified for DI frameworks; programmatic usage should
-   * invoke the
-   * {@link AbstractStampyMinaMessageGateway#addMessageListener(StampyMinaMessageListener)}
-   * method to specify {@link StampyMinaMessageListener}s.
-   * 
-   * @param listeners
-   *          the new listeners
-   * 
-   */
-  public abstract void setListeners(Collection<StampyMinaMessageListener> listeners);
 
   /**
    * Adds the MINA service listener to the underlying connector or acceptor.
@@ -92,7 +58,7 @@ public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMes
     serviceListeners.remove(listener);
     removeServiceListenerImpl(listener);
   }
-  
+
   public List<IoServiceListener> getServiceListeners() {
     return serviceListeners;
   }

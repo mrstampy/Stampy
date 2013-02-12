@@ -18,14 +18,12 @@
  */
 package asia.stampy.examples.common;
 
-import org.apache.mina.core.session.IoSession;
-
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.SecurityMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.SecurityMinaMessageListener;
 
-public class IDontNeedSecurity implements SecurityMinaMessageListener {
+public class IDontNeedSecurity implements SecurityMessageListener {
 
   @Override
   public StompMessageType[] getMessageTypes() {
@@ -38,7 +36,7 @@ public class IDontNeedSecurity implements SecurityMinaMessageListener {
   }
 
   @Override
-  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+  public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
 
   }
 

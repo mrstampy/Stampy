@@ -26,9 +26,6 @@ import static asia.stampy.common.message.StompMessageType.NACK;
 import static asia.stampy.common.message.StompMessageType.SEND;
 import static asia.stampy.common.message.StompMessageType.SUBSCRIBE;
 import static asia.stampy.common.message.StompMessageType.UNSUBSCRIBE;
-
-import org.apache.mina.core.session.IoSession;
-
 import asia.stampy.client.message.abort.AbortMessage;
 import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.client.message.begin.BeginMessage;
@@ -43,11 +40,11 @@ import asia.stampy.client.message.subscribe.SubscribeHeader.Ack;
 import asia.stampy.client.message.subscribe.SubscribeMessage;
 import asia.stampy.client.message.unsubscribe.UnsubscribeMessage;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.InterceptException;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.system.server.SystemLoginHandler;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.message.MessageMessage;
@@ -93,10 +90,10 @@ public class SystemClient {
    */
   public void init() throws Exception {
     setGateway(SystemClientInitializer.initialize());
-    gateway.addMessageListener(new StampyMinaMessageListener() {
+    gateway.addMessageListener(new StampyMessageListener() {
 
       @Override
-      public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+      public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
         SystemClient.this.hostPort = hostPort;
         switch (message.getMessageType()) {
         case CONNECTED:

@@ -18,19 +18,17 @@
  */
 package asia.stampy.examples.remote.exe.log4j.client;
 
-import org.apache.mina.core.session.IoSession;
-
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 
 /**
  * Simple implementation which prints any messages received.
  * 
  * @see TestClientMessageEvent
  */
-public class TestClientMessageListener implements StampyMinaMessageListener {
+public class TestClientMessageListener implements StampyMessageListener {
 
   /*
    * (non-Javadoc)
@@ -41,7 +39,7 @@ public class TestClientMessageListener implements StampyMinaMessageListener {
    * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
    */
   @Override
-  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+  public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     System.out.println("Received message " + message);
   }
 

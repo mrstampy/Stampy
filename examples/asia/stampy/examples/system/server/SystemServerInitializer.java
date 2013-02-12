@@ -20,25 +20,25 @@ package asia.stampy.examples.system.server;
 
 import org.apache.mina.core.session.IoSession;
 
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.mina.MinaServiceAdapter;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.common.IDontNeedSecurity;
+import asia.stampy.server.listener.connect.ConnectResponseListener;
+import asia.stampy.server.listener.heartbeat.HeartbeatListener;
+import asia.stampy.server.listener.receipt.ReceiptListener;
+import asia.stampy.server.listener.version.VersionListener;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
-import asia.stampy.server.mina.connect.ConnectResponseListener;
 import asia.stampy.server.mina.connect.ConnectStateListener;
-import asia.stampy.server.mina.heartbeat.HeartbeatListener;
 import asia.stampy.server.mina.login.LoginMessageListener;
-import asia.stampy.server.mina.receipt.ReceiptListener;
 import asia.stampy.server.mina.subscription.AcknowledgementListenerAndInterceptor;
 import asia.stampy.server.mina.transaction.TransactionListener;
-import asia.stampy.server.mina.version.VersionListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
  * example which tests the functionality of the various
- * {@link StampyMinaMessageListener} implementations for a STOMP 1.2 compliant
+ * {@link StampyMessageListener} implementations for a STOMP 1.2 compliant
  * server communicating with a compliant client. It is expected that a DI
  * framework such as <a href="http://www.springsource.org/">Spring</a> or <a
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
@@ -72,27 +72,27 @@ public class SystemServerInitializer {
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
     
-    handler.addMessageListener(new IDontNeedSecurity());
+    gateway.addMessageListener(new IDontNeedSecurity());
 
-    handler.addMessageListener(new VersionListener());
+    gateway.addMessageListener(new VersionListener());
 
     LoginMessageListener login = new LoginMessageListener();
     login.setGateway(gateway);
     login.setLoginHandler(new SystemLoginHandler());
-    handler.addMessageListener(login);
+    gateway.addMessageListener(login);
 
     ConnectStateListener connect = new ConnectStateListener();
     connect.setGateway(gateway);
-    handler.addMessageListener(connect);
+    gateway.addMessageListener(connect);
 
     HeartbeatListener heartbeat = new HeartbeatListener();
     heartbeat.setHeartbeatContainer(heartbeatContainer);
     heartbeat.setGateway(gateway);
-    handler.addMessageListener(heartbeat);
+    gateway.addMessageListener(heartbeat);
 
     TransactionListener transaction = new TransactionListener();
     transaction.setGateway(gateway);
-    handler.addMessageListener(transaction);
+    gateway.addMessageListener(transaction);
 
     SystemAcknowledgementHandler sys = new SystemAcknowledgementHandler();
 
@@ -100,16 +100,16 @@ public class SystemServerInitializer {
     acknowledgement.setHandler(sys);
     acknowledgement.setGateway(gateway);
     acknowledgement.setAckTimeoutMillis(200);
-    handler.addMessageListener(acknowledgement);
+    gateway.addMessageListener(acknowledgement);
     gateway.addOutgoingMessageInterceptor(acknowledgement);
     
     ReceiptListener receipt = new ReceiptListener();
     receipt.setGateway(gateway);
-    handler.addMessageListener(receipt);
+    gateway.addMessageListener(receipt);
     
     ConnectResponseListener connectResponse = new ConnectResponseListener();
     connectResponse.setGateway(gateway);
-    handler.addMessageListener(connectResponse);
+    gateway.addMessageListener(connectResponse);
 
     gateway.setHandler(handler);
 

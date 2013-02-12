@@ -20,10 +20,10 @@ package asia.stampy.examples.loadtest.server;
 
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.common.IDontNeedSecurity;
+import asia.stampy.server.listener.connect.ConnectResponseListener;
+import asia.stampy.server.listener.receipt.ReceiptListener;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
-import asia.stampy.server.mina.connect.ConnectResponseListener;
-import asia.stampy.server.mina.receipt.ReceiptListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
@@ -48,18 +48,18 @@ public class Initializer {
     RawServerMinaHandler handler = new RawServerMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
-    
-    handler.addMessageListener(new IDontNeedSecurity());
+
+    gateway.setHandler(handler);
+
+    gateway.addMessageListener(new IDontNeedSecurity());
     
     ConnectResponseListener connectResponse = new ConnectResponseListener();
     connectResponse.setGateway(gateway);
-    handler.addMessageListener(connectResponse);
+    gateway.addMessageListener(connectResponse);
     
     ReceiptListener receipt = new ReceiptListener();
     receipt.setGateway(gateway);
-    handler.addMessageListener(receipt);
-
-    gateway.setHandler(handler);
+    gateway.addMessageListener(receipt);
 
     return gateway;
   }

@@ -21,16 +21,14 @@ package asia.stampy.examples.loadtest.client;
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.mina.core.session.IoSession;
-
 import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.client.message.disconnect.DisconnectMessage;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.InterceptException;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.loadtest.server.TestServer;
 import asia.stampy.server.message.error.ErrorMessage;
 
@@ -40,7 +38,7 @@ import asia.stampy.server.message.error.ErrorMessage;
  * 
  * @see TestClientMessageEvent
  */
-public class TestClientMessageListener implements StampyMinaMessageListener {
+public class TestClientMessageListener implements StampyMessageListener {
   private ClientMinaMessageGateway gateway;
 
   private AtomicInteger receipts = new AtomicInteger();
@@ -64,7 +62,7 @@ public class TestClientMessageListener implements StampyMinaMessageListener {
    * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
    */
   @Override
-  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+  public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     switch (message.getMessageType()) {
     case CONNECTED:
       connected = true;
@@ -118,7 +116,7 @@ public class TestClientMessageListener implements StampyMinaMessageListener {
    * Disconnect, not a method one would normally see in an implementation of.
    * 
    * @throws Exception
-   *           the exception {@link StampyMinaMessageListener}
+   *           the exception {@link StampyMessageListener}
    */
   public void disconnect() throws Exception {
     synchronized (waiter) {

@@ -32,13 +32,13 @@ import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.HostPort;
-import asia.stampy.common.StompMessageParser;
-import asia.stampy.common.UnparseableException;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.MessageListenerHaltException;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.MessageListenerHaltException;
 import asia.stampy.common.mina.StampyMinaHandler;
+import asia.stampy.common.parsing.StompMessageParser;
+import asia.stampy.common.parsing.UnparseableException;
 
 /**
  * This class uses its own message parsing to piece together STOMP messages. In
@@ -59,7 +59,7 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
    * .core.session.IoSession, java.lang.Object)
    */
   @Override
-  public void messageReceived(final IoSession session, Object message) throws Exception {
+  public void messageReceived(IoSession session, Object message) throws Exception {
     final HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
     log.trace("Received raw message {} from {}", message, hostPort);
 
@@ -77,7 +77,7 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
 
       @Override
       public void run() {
-        asyncProcessing(session, hostPort, msg);
+        asyncProcessing(hostPort, msg);
       }
     };
 
@@ -102,53 +102,52 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
    * .core.session.IoSession, asia.stampy.common.HostPort, java.lang.String)
    */
   @Override
-  protected void asyncProcessing(IoSession session, HostPort hostPort, String msg) {
+  protected void asyncProcessing(HostPort hostPort, String msg) {
     try {
       String existing = messageParts.get(hostPort);
       if (StringUtils.isEmpty(existing)) {
-        processNewMessage(session, hostPort, msg);
+        processNewMessage(hostPort, msg);
       } else {
         String concat = existing + msg;
-        processMessage(concat, session, hostPort);
+        processMessage(concat, hostPort);
       }
     } catch (UnparseableException e) {
-      handleUnparseableMessage(session, hostPort, msg, e);
+      handleUnparseableMessage(hostPort, msg, e);
     } catch (MessageListenerHaltException e) {
       // halting
     } catch (Exception e) {
-      handleUnexpectedError(session, hostPort, msg, null, e);
+      handleUnexpectedError(hostPort, msg, null, e);
     }
   }
 
-  private void processNewMessage(IoSession session, HostPort hostPort, String msg) throws Exception,
-      UnparseableException, IOException {
+  private void processNewMessage(HostPort hostPort, String msg) throws Exception, UnparseableException, IOException {
     if (isHeartbeat(msg)) {
       log.trace("Received heartbeat");
       return;
     } else if (isStompMessage(msg)) {
-      processMessage(msg, session, hostPort);
+      processMessage(msg, hostPort);
     } else {
-      handleUnparseableMessage(session, hostPort, msg, null);
+      handleUnparseableMessage(hostPort, msg, null);
     }
   }
 
-  private void processMessage(String msg, IoSession session, HostPort hostPort) throws Exception {
+  private void processMessage(String msg, HostPort hostPort) throws Exception {
     int length = msg.length();
     int idx = msg.indexOf(StompMessageParser.EOM);
 
     if (idx == length - 1) {
       log.trace("Creating StampyMessage from {}", msg);
-      processStompMessage(msg, session, hostPort);
+      processStompMessage(msg, hostPort);
     } else if (idx > 0) {
       log.trace("Multiple messages detected, parsing {}", msg);
-      processMultiMessages(msg, session, hostPort);
+      processMultiMessages(msg, hostPort);
     } else {
       messageParts.put(hostPort, msg);
       log.trace("Message part {} stored for {}", msg, hostPort);
     }
   }
 
-  private void processMultiMessages(String msg, IoSession session, HostPort hostPort) throws Exception {
+  private void processMultiMessages(String msg, HostPort hostPort) throws Exception {
     int idx = msg.indexOf(StompMessageParser.EOM);
     String fullMessage = msg.substring(0, idx + 1);
     String partMessage = msg.substring(idx);
@@ -156,24 +155,23 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
       partMessage = partMessage.substring(1);
     }
 
-    processStompMessage(fullMessage, session, hostPort);
+    processStompMessage(fullMessage, hostPort);
 
-    processMessage(partMessage, session, hostPort);
+    processMessage(partMessage, hostPort);
   }
 
-  private void processStompMessage(String msg, IoSession session, HostPort hostPort)
-      throws MessageListenerHaltException {
+  private void processStompMessage(String msg, HostPort hostPort) throws MessageListenerHaltException {
     messageParts.remove(hostPort);
     StampyMessage<?> sm = null;
     try {
       sm = getParser().parseMessage(msg);
       if (isValidMessage(sm)) {
-        notifyListeners(sm, session, hostPort);
+        getGateway().notifyMessageListeners(sm, hostPort);
       }
     } catch (MessageListenerHaltException e) {
       throw e;
     } catch (Exception e) {
-      handleUnexpectedError(session, hostPort, msg, sm, e);
+      handleUnexpectedError(hostPort, msg, sm, e);
     }
   }
 

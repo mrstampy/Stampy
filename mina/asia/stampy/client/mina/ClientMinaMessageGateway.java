@@ -20,7 +20,6 @@ package asia.stampy.client.mina;
 
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
-import java.util.Collection;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -34,11 +33,10 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
-import asia.stampy.common.mina.StampyMinaMessageListener;
 
 /**
  * This class is the reference implementation of a Stampy <a
@@ -199,54 +197,6 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
    * (non-Javadoc)
    * 
    * @see
-   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addMessageListener
-   * (asia.stampy.common.mina.StampyMinaMessageListener)
-   */
-  @Override
-  public void addMessageListener(StampyMinaMessageListener listener) {
-    getHandler().addMessageListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#removeMessageListener
-   * (asia.stampy.common.mina.StampyMinaMessageListener)
-   */
-  @Override
-  public void removeMessageListener(StampyMinaMessageListener listener) {
-    getHandler().removeMessageListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#clearMessageListeners
-   * ()
-   */
-  @Override
-  public void clearMessageListeners() {
-    getHandler().clearMessageListeners();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#setListeners(java
-   * .util.Queue)
-   */
-  @Override
-  public void setListeners(Collection<StampyMinaMessageListener> listeners) {
-    getHandler().setListeners(listeners);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
    * asia.stampy.common.mina.AbstractStampyMinaMessageGateway#addServiceListener
    * (org.apache.mina.core.service.IoServiceListener)
    */
@@ -268,7 +218,7 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
   }
 
   /**
-   * Gets the max message size.  Defaults to Integer.MAX_VALUE.
+   * Gets the max message size. Defaults to Integer.MAX_VALUE.
    * 
    * @return the max message size
    */

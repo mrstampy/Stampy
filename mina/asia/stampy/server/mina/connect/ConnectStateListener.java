@@ -29,12 +29,13 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.HostPort;
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.MinaServiceAdapter;
-import asia.stampy.common.mina.StampyMinaMessageListener;
+import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
  * This class ensures that a {@link StompMessageType#CONNECT} or
@@ -44,11 +45,11 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
  * <br>
  */
 @Resource
-public class ConnectStateListener implements StampyMinaMessageListener {
+public class ConnectStateListener implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private Queue<HostPort> connectedClients = new ConcurrentLinkedQueue<>();
-  private AbstractStampyMinaMessageGateway gateway;
+  private ServerMinaMessageGateway gateway;
 
   private static StompMessageType[] TYPES = StompMessageType.values();
 
@@ -83,7 +84,7 @@ public class ConnectStateListener implements StampyMinaMessageListener {
    * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
    */
   @Override
-  public void messageReceived(StampyMessage<?> message, IoSession session, HostPort hostPort) throws Exception {
+  public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     switch (message.getMessageType()) {
     case ABORT:
     case ACK:
@@ -127,7 +128,7 @@ public class ConnectStateListener implements StampyMinaMessageListener {
    * 
    * @return the gateway
    */
-  public AbstractStampyMinaMessageGateway getGateway() {
+  public ServerMinaMessageGateway getGateway() {
     return gateway;
   }
 
@@ -137,7 +138,7 @@ public class ConnectStateListener implements StampyMinaMessageListener {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(AbstractStampyMinaMessageGateway gateway) {
+  public void setGateway(ServerMinaMessageGateway gateway) {
     this.gateway = gateway;
 
     gateway.addServiceListener(new MinaServiceAdapter() {

@@ -49,7 +49,7 @@ public class ConnectStateListenerTest extends AbstractMinaListenerTest {
 
     verify(serverGateway).addServiceListener(any(IoServiceListener.class));
 
-    connect.messageReceived(getMessage(DISCONNECT), session, hostPort);
+    connect.messageReceived(getMessage(DISCONNECT), hostPort);
   }
 
   @Test
@@ -63,24 +63,24 @@ public class ConnectStateListenerTest extends AbstractMinaListenerTest {
 
     for (StompMessageType type : connectedTypes) {
       try {
-        connect.messageReceived(getMessage(type), session, hostPort);
+        connect.messageReceived(getMessage(type), hostPort);
         fail("Should have thrown not connected exception");
       } catch (NotConnectedException e) {
         // expected
       }
     }
 
-    connect.messageReceived(getMessage(CONNECT), session, hostPort);
+    connect.messageReceived(getMessage(CONNECT), hostPort);
 
     try {
-      connect.messageReceived(getMessage(CONNECT), session, hostPort);
+      connect.messageReceived(getMessage(CONNECT), hostPort);
       fail("Should have thrown not connected exception");
     } catch (AlreadyConnectedException e) {
       // expected
     }
 
     try {
-      connect.messageReceived(getMessage(STOMP), session, hostPort);
+      connect.messageReceived(getMessage(STOMP), hostPort);
       fail("Should have thrown not connected exception");
     } catch (AlreadyConnectedException e) {
       // expected
@@ -89,15 +89,15 @@ public class ConnectStateListenerTest extends AbstractMinaListenerTest {
 
   @Test
   public void testDisconnect() throws Exception {
-    connect.messageReceived(getMessage(CONNECT), session, hostPort);
+    connect.messageReceived(getMessage(CONNECT), hostPort);
     try {
-      connect.messageReceived(getMessage(CONNECT), session, hostPort);
+      connect.messageReceived(getMessage(CONNECT), hostPort);
       fail("Should have thrown not connected exception");
     } catch (AlreadyConnectedException e) {
       // expected
     }
-    connect.messageReceived(getMessage(DISCONNECT), session, hostPort);
-    connect.messageReceived(getMessage(CONNECT), session, hostPort);
+    connect.messageReceived(getMessage(DISCONNECT), hostPort);
+    connect.messageReceived(getMessage(CONNECT), hostPort);
   }
 
 }
