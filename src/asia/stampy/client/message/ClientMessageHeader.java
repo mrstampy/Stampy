@@ -25,6 +25,9 @@ package asia.stampy.client.message;
  */
 public interface ClientMessageHeader {
 
+  /** The Constant RECEIPT. */
+  public static final String RECEIPT = "receipt";
+
   /**
    * Gets the receipt.
    * 

@@ -26,9 +26,6 @@ import asia.stampy.common.message.AbstractBodyMessageHeader;
 public class AbstractClientBodyMessageHeader extends AbstractBodyMessageHeader implements ClientMessageHeader {
   private static final long serialVersionUID = -4466902797463186691L;
 
-  /** The Constant RECEIPT. */
-  public static final String RECEIPT = "receipt";
-
   /**
    * Sets the receipt.
    * 

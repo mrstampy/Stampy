@@ -105,14 +105,14 @@ public class HeartbeatListener implements StampyMinaMessageListener {
     ConnectHeader header = getConnectHeader(message);
 
     int requested = header.getIncomingHeartbeat();
-    if (getMessageGateway().getHeartbeat() <= 0 || requested <= 0) return;
+    if (getGateway().getHeartbeat() <= 0 || requested <= 0) return;
 
-    int heartbeat = Math.max(requested, getMessageGateway().getHeartbeat());
+    int heartbeat = Math.max(requested, getGateway().getHeartbeat());
 
     log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
     PaceMaker paceMaker = new PaceMaker(heartbeat);
     paceMaker.setHostPort(hostPort);
-    paceMaker.setGateway(getMessageGateway());
+    paceMaker.setGateway(getGateway());
     paceMaker.start();
 
     getHeartbeatContainer().add(hostPort, paceMaker);
@@ -164,7 +164,7 @@ public class HeartbeatListener implements StampyMinaMessageListener {
    * 
    * @return the message gateway
    */
-  public AbstractStampyMinaMessageGateway getMessageGateway() {
+  public AbstractStampyMinaMessageGateway getGateway() {
     return gateway;
   }
 

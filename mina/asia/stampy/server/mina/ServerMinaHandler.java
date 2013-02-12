@@ -18,18 +18,9 @@
  */
 package asia.stampy.server.mina;
 
-import java.lang.invoke.MethodHandles;
-
 import javax.annotation.Resource;
 
-import org.apache.mina.core.session.IoSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
-import asia.stampy.common.message.interceptor.InterceptException;
-import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.StampyMinaHandler;
 
 /**
@@ -37,9 +28,6 @@ import asia.stampy.common.mina.StampyMinaHandler;
  */
 @Resource
 public class ServerMinaHandler extends StampyMinaHandler {
-  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-  private ServerHandlerAdapter adapter = new ServerHandlerAdapter();
 
   /*
    * (non-Javadoc)
@@ -50,53 +38,7 @@ public class ServerMinaHandler extends StampyMinaHandler {
    */
   @Override
   protected boolean isValidMessage(StampyMessage<?> message) {
-    return adapter.isValidMessage(message);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.StampyMinaHandler#errorHandle(asia.stampy.common
-   * .message.StampyMessage, java.lang.Exception,
-   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
-   */
-  @Override
-  protected void errorHandle(StampyMessage<?> message, Exception e, IoSession session, HostPort hostPort) {
-    try {
-      adapter.errorHandle(message, e, hostPort);
-    } catch (InterceptException e1) {
-      log.error("Could not send error message", e);
-    }
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.StampyMinaHandler#sendResponseIfRequired(asia.stampy
-   * .common.message.StampyMessage, org.apache.mina.core.session.IoSession,
-   * asia.stampy.common.HostPort)
-   */
-  @Override
-  protected void sendResponseIfRequired(StampyMessage<?> message, IoSession session, HostPort hostPort) {
-    try {
-      adapter.sendResponseIfRequired(message, session, hostPort);
-    } catch (InterceptException e) {
-      log.error("Could not send receipt message", e);
-    }
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.StampyMinaHandler#setGateway(asia.stampy
-   * .common.AbstractStampyMessageGateway)
-   */
-  public void setGateway(AbstractStampyMinaMessageGateway gateway) {
-    super.setGateway(gateway);
-    adapter.setGateway((ServerMinaMessageGateway)gateway);
+    return ServerHandlerAdapter.isValidMessage(message);
   }
 
 }

@@ -26,9 +26,11 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.common.IDontNeedSecurity;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
-import asia.stampy.server.mina.connect.ConnectListener;
+import asia.stampy.server.mina.connect.ConnectResponseListener;
+import asia.stampy.server.mina.connect.ConnectStateListener;
 import asia.stampy.server.mina.heartbeat.HeartbeatListener;
 import asia.stampy.server.mina.login.LoginMessageListener;
+import asia.stampy.server.mina.receipt.ReceiptListener;
 import asia.stampy.server.mina.subscription.AcknowledgementListenerAndInterceptor;
 import asia.stampy.server.mina.transaction.TransactionListener;
 import asia.stampy.server.mina.version.VersionListener;
@@ -79,7 +81,7 @@ public class SystemServerInitializer {
     login.setLoginHandler(new SystemLoginHandler());
     handler.addMessageListener(login);
 
-    ConnectListener connect = new ConnectListener();
+    ConnectStateListener connect = new ConnectStateListener();
     connect.setGateway(gateway);
     handler.addMessageListener(connect);
 
@@ -100,6 +102,14 @@ public class SystemServerInitializer {
     acknowledgement.setAckTimeoutMillis(200);
     handler.addMessageListener(acknowledgement);
     gateway.addOutgoingMessageInterceptor(acknowledgement);
+    
+    ReceiptListener receipt = new ReceiptListener();
+    receipt.setGateway(gateway);
+    handler.addMessageListener(receipt);
+    
+    ConnectResponseListener connectResponse = new ConnectResponseListener();
+    connectResponse.setGateway(gateway);
+    handler.addMessageListener(connectResponse);
 
     gateway.setHandler(handler);
 

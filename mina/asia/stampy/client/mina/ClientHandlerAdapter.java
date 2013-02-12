@@ -32,7 +32,7 @@ public class ClientHandlerAdapter {
    *          the message
    * @return true, if is valid message
    */
-  boolean isValidMessage(StampyMessage<?> message) {
+  static boolean isValidMessage(StampyMessage<?> message) {
     switch (message.getMessageType()) {
 
     case CONNECTED:

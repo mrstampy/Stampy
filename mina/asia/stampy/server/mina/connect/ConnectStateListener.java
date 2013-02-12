@@ -44,7 +44,7 @@ import asia.stampy.common.mina.StampyMinaMessageListener;
  * <br>
  */
 @Resource
-public class ConnectListener implements StampyMinaMessageListener {
+public class ConnectStateListener implements StampyMinaMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private Queue<HostPort> connectedClients = new ConcurrentLinkedQueue<>();

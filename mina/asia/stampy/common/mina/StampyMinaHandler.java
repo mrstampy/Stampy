@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
@@ -34,6 +35,7 @@ import org.apache.mina.filter.codec.prefixedstring.PrefixedStringCodecFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.client.message.ClientMessageHeader;
 import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.StompMessageParser;
@@ -145,19 +147,24 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    *          the msg
    */
   protected void asyncProcessing(IoSession session, HostPort hostPort, String msg) {
+    StampyMessage<?> sm = null;
     try {
-      StampyMessage<?> sm = getParser().parseMessage(msg);
+      sm = getParser().parseMessage(msg);
 
-      try {
-        if (isValidMessage(sm)) {
-          notifyListeners(sm, session, hostPort);
-          sendResponseIfRequired(sm, session, hostPort);
-        }
-      } catch (Exception e) {
-        errorHandle(sm, e, session, hostPort);
+      if (isValidMessage(sm)) {
+        notifyListeners(sm, session, hostPort);
       }
     } catch (Exception e) {
-      log.error("Unexpected exception processing message " + msg, e);
+      try {
+        if(sm == null) {
+          errorHandle(e, session, hostPort);
+        } else {
+          errorHandle(sm, e, session, hostPort);
+        }
+      } catch (Exception e1) {
+        log.error("Unexpected exception sending error message for " + hostPort, e1);
+        log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
+      }
     }
   }
 
@@ -195,20 +202,6 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
   }
 
   /**
-   * Send response if required. Blank implementation.
-   * 
-   * @param sm
-   *          the sm
-   * @param session
-   *          the session
-   * @param hostPort
-   *          the host port
-   */
-  protected void sendResponseIfRequired(StampyMessage<?> sm, IoSession session, HostPort hostPort) {
-    // Blank by dflt
-  }
-
-  /**
    * Error handle. Logs the error.
    * 
    * @param message
@@ -224,7 +217,11 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    */
   protected void errorHandle(StampyMessage<?> message, Exception e, IoSession session, HostPort hostPort)
       throws Exception {
-    log.error("Unexpected exception", e);
+    log.error("Handling error, sending error message to " + hostPort, e);
+    String receipt = message.getHeader().getHeaderValue(ClientMessageHeader.RECEIPT);
+    ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
+    error.getHeader().setMessageHeader("Could not execute " + message.getMessageType() + " - " + e.getMessage());
+    getGateway().sendMessage(error.toStompMessage(true), hostPort);
   }
 
   /**
@@ -240,9 +237,10 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    *           the exception
    */
   protected void errorHandle(Exception e, IoSession session, HostPort hostPort) throws Exception {
-    ErrorMessage message = new ErrorMessage("n/a");
-    message.getHeader().setMessageHeader(e.getMessage());
-    getGateway().sendMessage(message.toStompMessage(true), hostPort);
+    log.error("Handling error, sending error message to " + hostPort, e);
+    ErrorMessage error = new ErrorMessage("n/a");
+    error.getHeader().setMessageHeader(e.getMessage());
+    getGateway().sendMessage(error.toStompMessage(true), hostPort);
   }
 
   /**
@@ -280,7 +278,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
   protected void notifyListeners(StampyMessage<?> sm, IoSession session, HostPort hostPort) throws Exception {
     for (StampyMinaMessageListener listener : listeners) {
       if (isForType(listener.getMessageTypes(), sm.getMessageType()) && listener.isForMessage(sm)) {
-        log.debug("Evaluating message {} with listener {}", sm, listener);
+        log.trace("Evaluating message {} with listener {}", sm, listener);
         listener.messageReceived(sm, session, hostPort);
       }
     }

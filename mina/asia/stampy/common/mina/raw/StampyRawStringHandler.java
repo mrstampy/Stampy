@@ -125,7 +125,7 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
       try {
         errorHandle(e, session, hostPort);
       } catch (Exception e1) {
-        log.error("Unexpected exception sending error message " + msg + " for " + hostPort, e1);
+        log.error("Unexpected exception sending error message for " + hostPort, e1);
         log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
       }
     }
@@ -174,7 +174,6 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
       sm = getParser().parseMessage(msg);
       if (isValidMessage(sm)) {
         notifyListeners(sm, session, hostPort);
-        sendResponseIfRequired(sm, session, hostPort);
       }
     } catch (Exception e) {
       try {

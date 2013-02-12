@@ -40,8 +40,8 @@ import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.AbstractMinaListenerTest;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ConnectListenerTest extends AbstractMinaListenerTest {
-  private ConnectListener connect = new ConnectListener();
+public class ConnectStateListenerTest extends AbstractMinaListenerTest {
+  private ConnectStateListener connect = new ConnectStateListener();
 
   @Before
   public void before() throws Exception {

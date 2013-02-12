@@ -18,14 +18,8 @@
  */
 package asia.stampy.examples.remote.exe.common;
 
-import org.apache.commons.lang.StringUtils;
-
 import asia.stampy.client.message.send.SendMessage;
 import asia.stampy.common.HostPort;
-import asia.stampy.common.message.AbstractBodyMessage;
-import asia.stampy.common.message.interceptor.InterceptException;
-import asia.stampy.server.message.error.ErrorMessage;
-import asia.stampy.server.message.receipt.ReceiptMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
@@ -49,43 +43,11 @@ public class RemoteExecutor {
    *           the exception
    */
   public boolean processStompMessage(SendMessage message, HostPort hostPort) throws Exception {
-    try {
-      Remoteable remoteable = message.getBody();
+    Remoteable remoteable = message.getBody();
 
-      remoteable.setProperties(message.getHeader().getHeaders());
+    remoteable.setProperties(message.getHeader().getHeaders());
 
-      boolean b = remoteable.execute();
-
-      sendSuccess(message, hostPort);
-
-      return b;
-    } catch (Exception e) {
-      sendError(message, e, hostPort);
-    }
-
-    return false;
-  }
-
-  private void sendSuccess(SendMessage message, HostPort hostPort) throws InterceptException {
-    String receiptId = message.getHeader().getReceipt();
-
-    if (StringUtils.isEmpty(receiptId)) return;
-
-    ReceiptMessage receipt = new ReceiptMessage(receiptId);
-
-    getGateway().sendMessage(receipt, hostPort);
-  }
-
-  private void sendError(SendMessage message, Exception e, HostPort hostPort) throws InterceptException {
-    String receipt = message.getHeader().getReceipt();
-
-    ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
-    error.getHeader().setMessageHeader(
-        "Could not execute " + message.getBody().getClass().getCanonicalName() + " - " + e.getMessage());
-    error.getHeader().setContentType(AbstractBodyMessage.JAVA_BASE64_MIME_TYPE);
-    error.setBody(e);
-
-    getGateway().sendMessage(error, hostPort);
+    return remoteable.execute();
   }
 
   /**

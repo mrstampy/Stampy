@@ -29,8 +29,6 @@ import asia.stampy.common.mina.StampyMinaHandler;
 @Resource
 public class ClientMinaHandler extends StampyMinaHandler {
 
-  private ClientHandlerAdapter adapter = new ClientHandlerAdapter();
-
   /*
    * (non-Javadoc)
    * 
@@ -40,7 +38,7 @@ public class ClientMinaHandler extends StampyMinaHandler {
    */
   @Override
   protected boolean isValidMessage(StampyMessage<?> message) {
-    return adapter.isValidMessage(message);
+    return ClientHandlerAdapter.isValidMessage(message);
   }
 
 }
