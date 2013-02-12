@@ -49,7 +49,7 @@ public class Log4jLevelChangerTestClient {
     setGateway(Initializer.initialize());
     gateway.addMessageListener(new TestClientMessageListener());
     gateway.connect();
-    gateway.broadcastMessage(new ConnectMessage("1.2", "localhost"));
+    gateway.broadcastMessage(new ConnectMessage("localhost"));
   }
 
   /**
