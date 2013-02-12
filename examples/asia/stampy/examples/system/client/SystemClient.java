@@ -258,7 +258,7 @@ public class SystemClient {
     }
   }
 
-  private void onMessage(MessageMessage message) throws InterceptException {
+  private void onMessage(MessageMessage message) throws InterceptException, InterruptedException {
     messageCount++;
     if (messageCount < 100) {
       AckMessage ack = new AckMessage(message.getHeader().getMessageId());
@@ -267,6 +267,7 @@ public class SystemClient {
     if (messageCount == 100) {
       System.out.println("Received all expected messages from subscription");
       sendUnsubscribe("subscription");
+      Thread.sleep(250);
       synchronized (waiter) {
         waiter.notifyAll();
       }
