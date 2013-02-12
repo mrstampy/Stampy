@@ -39,6 +39,7 @@ import asia.stampy.client.message.ClientMessageHeader;
 import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.StompMessageParser;
+import asia.stampy.common.UnparseableException;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
@@ -79,6 +80,8 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 
   /** <i>The default encoding for STOMP is UTF-8</i>. */
   public static Charset CHARSET = Charset.forName("UTF-8");
+
+  private UnparseableMessageHandler unparseableMessageHandler = new DefaultUnparseableMessageHandler();
 
   /*
    * (non-Javadoc)
@@ -154,9 +157,17 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
       if (isValidMessage(sm)) {
         notifyListeners(sm, session, hostPort);
       }
+    } catch (UnparseableException e) {
+      log.debug("Unparseable message, delegating to unparseable message handler", e);
+      try {
+        getUnparseableMessageHandler().unparseableMessage(msg, session, hostPort);
+      } catch (Exception e1) {
+        log.error("Unexpected error delegating to unparseable message handler", e1);
+        log.error("Could not parse message", e);
+      }
     } catch (Exception e) {
       try {
-        if(sm == null) {
+        if (sm == null) {
           errorHandle(e, session, hostPort);
         } else {
           errorHandle(sm, e, session, hostPort);
@@ -409,6 +420,25 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    */
   public void setExecutor(Executor executor) {
     this.executor = executor;
+  }
+
+  /**
+   * Returns the {@link UnparseableMessageHandler}, defaults to
+   * {@link DefaultUnparseableMessageHandler}.
+   * 
+   * @return
+   */
+  public UnparseableMessageHandler getUnparseableMessageHandler() {
+    return unparseableMessageHandler;
+  }
+
+  /**
+   * Inject the appropriate {@link UnparseableMessageHandler} on system startup.
+   * 
+   * @param unparseableMessageHandler
+   */
+  public void setUnparseableMessageHandler(UnparseableMessageHandler unparseableMessageHandler) {
+    this.unparseableMessageHandler = unparseableMessageHandler;
   }
 
 }

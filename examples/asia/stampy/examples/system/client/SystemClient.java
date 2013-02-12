@@ -105,6 +105,7 @@ public class SystemClient {
           break;
         case ERROR:
           setError((ErrorMessage) message);
+          System.out.println("Error message received: " + message);
           wakeup();
           break;
         case MESSAGE:
@@ -315,7 +316,6 @@ public class SystemClient {
     } else {
       System.err.println("Unexpected error message received");
     }
-    System.out.println(error);
     System.out.println();
     error = null;
   }

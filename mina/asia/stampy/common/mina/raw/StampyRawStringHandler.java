@@ -121,6 +121,14 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
         String concat = existing + msg;
         processMessage(concat, session, hostPort);
       }
+    } catch (UnparseableException e) {
+      log.debug("Unparseable message, delegating to unparseable message handler", e);
+      try {
+        getUnparseableMessageHandler().unparseableMessage(msg, session, hostPort);
+      } catch (Exception e1) {
+        log.error("Unexpected error delegating to unparseable message handler", e1);
+        log.error("Could not parse message", e);
+      }
     } catch (Exception e) {
       try {
         errorHandle(e, session, hostPort);
