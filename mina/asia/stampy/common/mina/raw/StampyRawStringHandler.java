@@ -170,13 +170,11 @@ public abstract class StampyRawStringHandler<ASMG extends AbstractStampyMinaMess
   }
 
   private void processStompMessage(String msg, IoSession session, HostPort hostPort) {
-    securityCheck(msg, session);
     messageParts.remove(hostPort);
     StampyMessage<?> sm = null;
     try {
       sm = getParser().parseMessage(msg);
       if (isValidMessage(sm)) {
-        securityCheck(sm, session);
         notifyListeners(sm, session, hostPort);
         sendResponseIfRequired(sm, session, hostPort);
       }

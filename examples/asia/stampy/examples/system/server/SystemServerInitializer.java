@@ -20,6 +20,7 @@ package asia.stampy.examples.system.server;
 
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.mina.StampyMinaMessageListener;
+import asia.stampy.examples.common.IDontNeedSecurity;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 import asia.stampy.server.mina.connect.ConnectListener;
@@ -55,6 +56,8 @@ public class SystemServerInitializer {
     RawServerMinaHandler handler = new RawServerMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setMessageGateway(gateway);
+    
+    handler.addMessageListener(new IDontNeedSecurity());
 
     handler.addMessageListener(new VersionListener());
 

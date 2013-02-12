@@ -22,6 +22,7 @@ import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.mina.RawClientMinaHandler;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.client.AutoTerminatingClientGateway;
+import asia.stampy.examples.common.IDontNeedSecurity;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
@@ -48,6 +49,8 @@ public class Initializer {
     RawClientMinaHandler handler = new RawClientMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setMessageGateway(gateway);
+    
+    handler.addMessageListener(new IDontNeedSecurity());
 
     gateway.setHandler(handler);
 

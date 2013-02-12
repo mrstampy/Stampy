@@ -145,13 +145,10 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
    */
   protected void asyncProcessing(IoSession session, HostPort hostPort, String msg) {
     try {
-      securityCheck(msg, session);
-
       StampyMessage<?> sm = getParser().parseMessage(msg);
 
       try {
         if (isValidMessage(sm)) {
-          securityCheck(sm, session);
           notifyListeners(sm, session, hostPort);
           sendResponseIfRequired(sm, session, hostPort);
         }
@@ -161,31 +158,6 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
     } catch (Exception e) {
       log.error("Unexpected exception processing message " + msg, e);
     }
-  }
-
-  /**
-   * Security check hook for the raw message. Override as required.
-   * 
-   * @param msg
-   *          the msg
-   * @param session
-   *          the session
-   */
-  protected void securityCheck(String msg, IoSession session) {
-
-  }
-
-  /**
-   * Security check hook for the marshalled {@link StampyMessage}. Override as
-   * required.
-   * 
-   * @param message
-   *          the message
-   * @param session
-   *          the session
-   */
-  protected void securityCheck(StampyMessage<?> message, IoSession session) {
-
   }
 
   /**
@@ -356,6 +328,10 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
    */
   public void setListeners(Collection<StampyMinaMessageListener> listeners) {
     this.listeners.addAll(listeners);
+  }
+
+  public int messageListenerSize() {
+    return listeners.size();
   }
 
   /**

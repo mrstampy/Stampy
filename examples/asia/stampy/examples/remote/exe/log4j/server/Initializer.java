@@ -19,6 +19,7 @@
 package asia.stampy.examples.remote.exe.log4j.server;
 
 import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.examples.common.IDontNeedSecurity;
 import asia.stampy.examples.remote.exe.common.RemoteExeMessageListener;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
@@ -46,6 +47,8 @@ public class Initializer {
     RawServerMinaHandler handler = new RawServerMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setMessageGateway(gateway);
+    
+    handler.addMessageListener(new IDontNeedSecurity());
 
     RemoteExeMessageListener remoteExe = new RemoteExeMessageListener();
     remoteExe.setGateway(gateway);
