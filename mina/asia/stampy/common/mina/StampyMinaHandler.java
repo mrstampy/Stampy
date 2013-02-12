@@ -156,23 +156,36 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
         notifyListeners(sm, session, hostPort);
       }
     } catch (UnparseableException e) {
-      log.debug("Unparseable message, delegating to unparseable message handler");
-      try {
-        getUnparseableMessageHandler().unparseableMessage(msg, session, hostPort);
-      } catch (Exception e1) {
-        log.error("Unexpected error delegating to unparseable message handler", e1);
-        log.error("Could not parse message", e);
-      }
+      handleUnparseableMessage(session, hostPort, msg, e);
     } catch (Exception e) {
+      handleUnexpectedError(session, hostPort, msg, sm, e);
+    }
+  }
+
+  protected void handleUnexpectedError(IoSession session, HostPort hostPort, String msg, StampyMessage<?> sm, Exception e) {
+    try {
+      if (sm == null) {
+        errorHandle(e, session, hostPort);
+      } else {
+        errorHandle(sm, e, session, hostPort);
+      }
+    } catch (Exception e1) {
+      log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
+      log.error("Unexpected exception sending error message for " + hostPort, e1);
+    }
+  }
+
+  protected void handleUnparseableMessage(IoSession session, HostPort hostPort, String msg, UnparseableException e) {
+    log.debug("Unparseable message, delegating to unparseable message handler");
+    try {
+      getUnparseableMessageHandler().unparseableMessage(msg, session, hostPort);
+    } catch (Exception e1) {
       try {
-        if (sm == null) {
-          errorHandle(e, session, hostPort);
-        } else {
-          errorHandle(sm, e, session, hostPort);
-        }
-      } catch (Exception e1) {
-        log.error("Unexpected exception sending error message for " + hostPort, e1);
-        log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
+        errorHandle(e, session, hostPort);
+      } catch(Exception e2) {
+        log.error("Could not parse message", e);
+        log.error("Unexpected error delegating to unparseable message handler", e1);
+        log.error("Unexpected exception sending error message for " + hostPort, e2);
       }
     }
   }
