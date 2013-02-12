@@ -59,8 +59,6 @@ import asia.stampy.server.message.error.ErrorMessage;
  * <br>
  * Subclasses are singletons, wire in appropriately.
  * 
- * @param <ASMG>
- *          the generic type
  * @see StampyRawStringHandler
  */
 public abstract class StampyMinaHandler extends IoHandlerAdapter {
@@ -426,7 +424,8 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * Returns the {@link UnparseableMessageHandler}, defaults to
    * {@link DefaultUnparseableMessageHandler}.
    * 
-   * @return
+   * @return the unparseable message handler
+   * 
    */
   public UnparseableMessageHandler getUnparseableMessageHandler() {
     return unparseableMessageHandler;
@@ -436,9 +435,22 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * Inject the appropriate {@link UnparseableMessageHandler} on system startup.
    * 
    * @param unparseableMessageHandler
+   *          the new unparseable message handler
    */
   public void setUnparseableMessageHandler(UnparseableMessageHandler unparseableMessageHandler) {
     this.unparseableMessageHandler = unparseableMessageHandler;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.apache.mina.core.service.IoHandlerAdapter#exceptionCaught(org.apache
+   * .mina.core.session.IoSession, java.lang.Throwable)
+   */
+  public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
+    HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
+
+    log.error("Unexpected exception for " + hostPort, cause);
+  }
 }
