@@ -24,11 +24,14 @@ import asia.stampy.client.mina.RawClientMinaHandler;
 import asia.stampy.client.mina.connected.ConnectedMessageListener;
 import asia.stampy.client.mina.disconnect.DisconnectListenerAndInterceptor;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.common.mina.StampyMinaMessageListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
- * example. It is expected that a DI framework such as <a
- * href="http://www.springsource.org/">Spring</a> or <a
+ * example, which tests the functionality of the various
+ * {@link StampyMinaMessageListener} implementations for a STOMP 1.2 compliant
+ * client communicating with a compliant server. It is expected that a DI
+ * framework such as <a href="http://www.springsource.org/">Spring</a> or <a
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */

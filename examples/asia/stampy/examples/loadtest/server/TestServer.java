@@ -21,7 +21,7 @@ package asia.stampy.examples.loadtest.server;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
- * The Class TestServer.
+ * Receives message from a test client and sends receipts if requested.
  */
 public class TestServer {
   private ServerMinaMessageGateway gateway;
@@ -42,21 +42,6 @@ public class TestServer {
   }
 
   /**
-   * The main method.
-   * 
-   * @param args
-   *          the arguments
-   */
-  public static void main(String[] args) {
-    TestServer server = new TestServer();
-    try {
-      server.init();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
    * Gets the gateway.
    * 
    * @return the gateway
@@ -73,6 +58,21 @@ public class TestServer {
    */
   public void setGateway(ServerMinaMessageGateway gateway) {
     this.gateway = gateway;
+  }
+
+  /**
+   * The main method.
+   * 
+   * @param args
+   *          the arguments
+   */
+  public static void main(String[] args) {
+    TestServer server = new TestServer();
+    try {
+      server.init();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
 }

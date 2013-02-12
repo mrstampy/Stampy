@@ -23,7 +23,8 @@ import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.examples.loadtest.server.TestServer;
 
 /**
- * Run the {@link TestServer} prior to running this client.
+ * Sends many messages to a {@link TestServer}, prints stats on the operation
+ * and terminates. Run the {@link TestServer} prior to running this client.
  */
 public class TestClient {
   private ClientMinaMessageGateway gateway;

@@ -21,7 +21,12 @@ package asia.stampy.examples.remote.exe.log4j.server;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
- * The Class Log4jLevelChangerTestServer.
+ * It is intended that binary payloads in STOMP messages are sent to a server be
+ * persisted in some manner ie. written to a database after passing security
+ * checks. This class demonstrates how to execute a Java binary payload on a
+ * remote server using the STOMP 1.2 protocol. Even something as simple as a log
+ * level change can have the effect of filling up the logs & crashing the
+ * server. DON'T DO THIS.
  */
 public class Log4jLevelChangerTestServer {
   private ServerMinaMessageGateway gateway;

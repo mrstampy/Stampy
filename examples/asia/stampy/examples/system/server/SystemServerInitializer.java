@@ -19,6 +19,7 @@
 package asia.stampy.examples.system.server;
 
 import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 import asia.stampy.server.mina.connect.ConnectListener;
@@ -30,8 +31,10 @@ import asia.stampy.server.mina.version.VersionListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
- * example. It is expected that a DI framework such as <a
- * href="http://www.springsource.org/">Spring</a> or <a
+ * example which tests the functionality of the various
+ * {@link StampyMinaMessageListener} implementations for a STOMP 1.2 compliant
+ * server communicating with a compliant client. It is expected that a DI
+ * framework such as <a href="http://www.springsource.org/">Spring</a> or <a
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
