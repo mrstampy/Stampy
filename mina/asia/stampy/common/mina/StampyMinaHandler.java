@@ -286,6 +286,8 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
   }
 
   private boolean isForType(StompMessageType[] messageTypes, StompMessageType messageType) {
+    if(messageTypes == null || messageTypes.length == 0) return false;
+    
     for (StompMessageType type : messageTypes) {
       if (type.equals(messageType)) return true;
     }
