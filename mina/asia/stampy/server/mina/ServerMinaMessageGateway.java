@@ -39,9 +39,7 @@ import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
-import asia.stampy.common.mina.SecurityMinaMessageListener;
 import asia.stampy.common.mina.StampyMinaMessageListener;
-import asia.stampy.common.mina.StampySecurityException;
 
 /**
  * This class is the reference implementation of a Stampy <a
@@ -136,7 +134,7 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
   }
 
   private void addServiceListeners() {
-    for(IoServiceListener l : getServiceListeners()) {
+    for (IoServiceListener l : getServiceListeners()) {
       acceptor.addListener(l);
     }
   }
@@ -267,13 +265,7 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
    * (asia.stampy.common.mina.StampyMinaMessageListener)
    */
   @Override
-  public final void addMessageListener(StampyMinaMessageListener listener) {
-    int size = getHandler().messageListenerSize();
-
-    if (size == 0 && !(listener instanceof SecurityMinaMessageListener)) {
-      throw new StampySecurityException();
-    }
-
+  public void addMessageListener(StampyMinaMessageListener listener) {
     getHandler().addMessageListener(listener);
   }
 

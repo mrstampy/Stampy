@@ -287,8 +287,8 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
   }
 
   private boolean isForType(StompMessageType[] messageTypes, StompMessageType messageType) {
-    if(messageTypes == null || messageTypes.length == 0) return false;
-    
+    if (messageTypes == null || messageTypes.length == 0) return false;
+
     for (StompMessageType type : messageTypes) {
       if (type.equals(messageType)) return true;
     }
@@ -302,7 +302,11 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * @param listener
    *          the listener
    */
-  public void addMessageListener(StampyMinaMessageListener listener) {
+  public final void addMessageListener(StampyMinaMessageListener listener) {
+    if (listeners.size() == 0 && !(listener instanceof SecurityMinaMessageListener)) {
+      throw new StampySecurityException();
+    }
+
     listeners.add(listener);
   }
 
@@ -331,10 +335,6 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    */
   public void setListeners(Collection<StampyMinaMessageListener> listeners) {
     this.listeners.addAll(listeners);
-  }
-
-  public int messageListenerSize() {
-    return listeners.size();
   }
 
   /**
