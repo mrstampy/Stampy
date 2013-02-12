@@ -24,6 +24,8 @@ import org.apache.mina.core.session.IoSession;
 
 /**
  * Implementations deal with messages that cannot be parsed into STOMP messages.
+ * 
+ * @see StampyMinaHandler#setUnparseableMessageHandler(UnparseableMessageHandler)
  */
 public interface UnparseableMessageHandler {
 

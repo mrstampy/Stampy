@@ -31,6 +31,8 @@ import asia.stampy.common.HostPort;
 /**
  * This default implementation of an {@link UnparseableMessageHandler} logs a
  * non-STOMP message at warning level.
+ * 
+ * @see StampyMinaHandler
  */
 @Resource
 public class DefaultUnparseableMessageHandler implements UnparseableMessageHandler {
