@@ -45,9 +45,6 @@ import asia.stampy.common.mina.StampyMinaHandler;
  * non-Stampy STOMP environments subclasses are to be used. While tested
  * successfully in simple cases it has not (yet) been battle-tested. Use at your
  * own risk.
- * 
- * @param <ASMG>
- *          the generic type
  */
 public abstract class StampyRawStringHandler extends StampyMinaHandler {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
