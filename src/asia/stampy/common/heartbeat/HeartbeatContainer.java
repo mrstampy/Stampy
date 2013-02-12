@@ -74,8 +74,8 @@ public class HeartbeatContainer {
    *          the host port
    */
   public void remove(HostPort hostPort) {
-    log.info("Removing PaceMaker for {}", hostPort);
     stop(hostPort);
+    log.info("Removing PaceMaker for {}", hostPort);
     paceMakers.remove(hostPort);
   }
 
