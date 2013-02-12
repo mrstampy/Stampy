@@ -46,7 +46,11 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
  * This class enforces login functionality via the implementation of a
- * {@link StampyLoginHandler}.
+ * {@link StampyLoginHandler}. Should the login handler throw a
+ * {@link TerminateSessionException} this class will send an error to the
+ * client, close the session and throw a {@link MessageListenerHaltException} to
+ * prevent downstream processing of the message by the remaining
+ * {@link StampyMinaMessageListener}s.
  */
 @Resource
 public class LoginMessageListener implements StampyMinaMessageListener {
