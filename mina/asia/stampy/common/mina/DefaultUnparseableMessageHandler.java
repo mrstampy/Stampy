@@ -20,8 +20,6 @@ package asia.stampy.common.mina;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.annotation.Resource;
-
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +32,7 @@ import asia.stampy.common.HostPort;
  * 
  * @see StampyMinaHandler
  */
-@Resource
-public class DefaultUnparseableMessageHandler implements UnparseableMessageHandler {
+class DefaultUnparseableMessageHandler implements UnparseableMessageHandler {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   /*
