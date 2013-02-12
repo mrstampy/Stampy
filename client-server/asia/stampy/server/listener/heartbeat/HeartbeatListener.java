@@ -29,13 +29,13 @@ import org.slf4j.LoggerFactory;
 import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.message.stomp.StompMessage;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 
 /**
  * This class intercepts incoming {@link StompMessageType#CONNECT} from a STOMP
@@ -61,12 +61,12 @@ public class HeartbeatListener implements StampyMessageListener {
 
   private HeartbeatContainer heartbeatContainer;
 
-  private AbstractStampyMinaMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
 
   /*
    * (non-Javadoc)
    * 
-   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   * @see asia.stampy.common.gateway.StampyMessageListener#getMessageTypes()
    */
   @Override
   public StompMessageType[] getMessageTypes() {
@@ -77,7 +77,7 @@ public class HeartbeatListener implements StampyMessageListener {
    * (non-Javadoc)
    * 
    * @see
-   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * asia.stampy.common.gateway.StampyMessageListener#isForMessage(asia.stampy
    * .common.message.StampyMessage)
    */
   @Override
@@ -89,10 +89,8 @@ public class HeartbeatListener implements StampyMessageListener {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
-   * stampy.common.message.StampyMessage,
-   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   * @see asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage, asia.stampy.common.HostPort)
    */
   @Override
   public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
@@ -163,18 +161,17 @@ public class HeartbeatListener implements StampyMessageListener {
    * 
    * @return the message gateway
    */
-  public AbstractStampyMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
   /**
-   * Inject the server {@link AbstractStampyMinaMessageGateway} on system
-   * startup.
+   * Inject the server {@link AbstractStampyMessageGateway} on system startup.
    * 
    * @param gateway
    *          the new message gateway
    */
-  public void setGateway(AbstractStampyMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
   }
 

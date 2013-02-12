@@ -37,7 +37,6 @@ import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
  * This class manages transactional boundaries, ensuring that a transaction has
@@ -59,7 +58,7 @@ public class TransactionListener implements StampyMessageListener {
   /*
    * (non-Javadoc)
    * 
-   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   * @see asia.stampy.common.gateway.StampyMessageListener#getMessageTypes()
    */
   @Override
   public StompMessageType[] getMessageTypes() {
@@ -70,7 +69,7 @@ public class TransactionListener implements StampyMessageListener {
    * (non-Javadoc)
    * 
    * @see
-   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * asia.stampy.common.gateway.StampyMessageListener#isForMessage(asia.stampy
    * .common.message.StampyMessage)
    */
   @Override
@@ -81,10 +80,9 @@ public class TransactionListener implements StampyMessageListener {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * @see asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
    * stampy.common.message.StampyMessage,
-   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   * asia.stampy.common.HostPort)
    */
   @Override
   public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
@@ -184,7 +182,7 @@ public class TransactionListener implements StampyMessageListener {
   }
 
   /**
-   * Inject the {@link ServerMinaMessageGateway} on system startup.
+   * Inject the {@link AbstractStampyMessageGateway} on system startup.
    * 
    * @param gateway
    *          the new gateway

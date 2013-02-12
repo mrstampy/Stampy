@@ -18,12 +18,8 @@
  */
 package asia.stampy.common.gateway;
 
-import asia.stampy.common.mina.StampyMinaHandler;
-
 /**
  * Implementations deal with messages that cannot be parsed into STOMP messages.
- * 
- * @see StampyMinaHandler#setUnparseableMessageHandler(UnparseableMessageHandler)
  */
 public interface UnparseableMessageHandler {
 

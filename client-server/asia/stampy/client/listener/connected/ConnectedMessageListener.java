@@ -63,7 +63,7 @@ public class ConnectedMessageListener implements StampyMessageListener {
   /*
    * (non-Javadoc)
    * 
-   * @see asia.stampy.common.mina.StampyMinaMessageListener#getMessageTypes()
+   * @see asia.stampy.common.gateway.StampyMessageListener#getMessageTypes()
    */
   @Override
   public StompMessageType[] getMessageTypes() {
@@ -74,7 +74,7 @@ public class ConnectedMessageListener implements StampyMessageListener {
    * (non-Javadoc)
    * 
    * @see
-   * asia.stampy.common.mina.StampyMinaMessageListener#isForMessage(asia.stampy
+   * asia.stampy.common.gateway.StampyMessageListener#isForMessage(asia.stampy
    * .common.message.StampyMessage)
    */
   @Override
@@ -86,9 +86,8 @@ public class ConnectedMessageListener implements StampyMessageListener {
    * (non-Javadoc)
    * 
    * @see
-   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
-   * stampy.common.message.StampyMessage,
-   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   * asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage, asia.stampy.common.HostPort)
    */
   @Override
   public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {

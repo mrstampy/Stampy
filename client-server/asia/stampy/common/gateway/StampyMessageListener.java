@@ -20,12 +20,11 @@ package asia.stampy.common.gateway;
 
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 
 /**
  * Implement to process specified {@link StampyMessage}s.
  * 
- * @see AbstractStampyMinaMessageGateway
+ * @see AbstractStampyMessageGateway
  */
 public interface StampyMessageListener {
 

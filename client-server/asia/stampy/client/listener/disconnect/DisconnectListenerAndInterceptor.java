@@ -122,9 +122,9 @@ public class DisconnectListenerAndInterceptor extends AbstractOutgoingMessageInt
    * (non-Javadoc)
    * 
    * @see
-   * asia.stampy.common.mina.StampyMinaMessageListener#messageReceived(asia.
+   * asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
    * stampy.common.message.StampyMessage,
-   * org.apache.mina.core.session.IoSession, asia.stampy.common.HostPort)
+   * asia.stampy.common.HostPort)
    */
   @Override
   public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {

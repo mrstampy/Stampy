@@ -18,16 +18,13 @@
  */
 package asia.stampy.common.gateway;
 
-import asia.stampy.common.mina.StampyMinaHandler;
-
 /**
  * Thrown when an instance of {@link SecurityMessageListener} has not been
  * configured first in the list.
  * 
  * @author burton
- * @see StampyMinaHandler#notifyListeners(asia.stampy.common.message.StampyMessage,
- *      org.apache.mina.core.session.IoSession,
- *      asia.stampy.common.gateway.HostPort)
+ * @see AbstractStampyMessageGateway#notifyMessageListeners(asia.stampy.common.message.StampyMessage,
+ *      HostPort)
  * 
  */
 public class StampySecurityException extends RuntimeException {

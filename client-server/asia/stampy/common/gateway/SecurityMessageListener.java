@@ -18,7 +18,6 @@
  */
 package asia.stampy.common.gateway;
 
-import asia.stampy.common.mina.StampyMinaHandler;
 
 /**
  * This is a tagging interface to ensure that any implementations implement at
@@ -26,9 +25,8 @@ import asia.stampy.common.mina.StampyMinaHandler;
  * list. It is up to applications using Stampy to ensure that appropriate
  * security checks are performed for their environment.
  * 
- * @see StampyMinaHandler#notifyListeners(asia.stampy.common.message.StampyMessage,
- *      org.apache.mina.core.session.IoSession,
- *      asia.stampy.common.gateway.HostPort)
+ * @see AbstractStampyMessageGateway#notifyMessageListeners(asia.stampy.common.message.StampyMessage, HostPort)
+ * 
  * @author burton
  * 
  */

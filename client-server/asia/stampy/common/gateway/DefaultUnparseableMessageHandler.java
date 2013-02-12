@@ -23,13 +23,9 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.mina.StampyMinaHandler;
-
 /**
  * This default implementation of an {@link UnparseableMessageHandler} logs a
  * non-STOMP message at warning level.
- * 
- * @see StampyMinaHandler
  */
 public class DefaultUnparseableMessageHandler implements UnparseableMessageHandler {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -38,9 +34,8 @@ public class DefaultUnparseableMessageHandler implements UnparseableMessageHandl
    * (non-Javadoc)
    * 
    * @see
-   * asia.stampy.common.mina.UnparseableMessageHandler#unparseableMessage(java
-   * .lang.String, org.apache.mina.core.session.IoSession,
-   * asia.stampy.common.HostPort)
+   * asia.stampy.common.gateway.UnparseableMessageHandler#unparseableMessage
+   * (java .lang.String, asia.stampy.common.HostPort)
    */
   @Override
   public void unparseableMessage(String message, HostPort hostPort) throws Exception {
