@@ -18,10 +18,10 @@
  */
 package asia.stampy.examples.remote.exe.log4j.client;
 
-import asia.stampy.client.AutoTerminatingClientGateway;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.mina.RawClientMinaHandler;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.examples.client.AutoTerminatingClientGateway;
 
 /**
  * This class programmatically initializes the Stampy classes required for this

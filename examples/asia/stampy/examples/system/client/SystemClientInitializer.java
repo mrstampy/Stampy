@@ -18,13 +18,13 @@
  */
 package asia.stampy.examples.system.client;
 
-import asia.stampy.client.AutoTerminatingClientGateway;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.mina.RawClientMinaHandler;
 import asia.stampy.client.mina.connected.ConnectedMessageListener;
 import asia.stampy.client.mina.disconnect.DisconnectListenerAndInterceptor;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.mina.StampyMinaMessageListener;
+import asia.stampy.examples.client.AutoTerminatingClientGateway;
 
 /**
  * This class programmatically initializes the Stampy classes required for this

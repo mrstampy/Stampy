@@ -16,7 +16,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.client;
+package asia.stampy.examples.client;
 
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 
