@@ -18,7 +18,10 @@
  */
 package asia.stampy.examples.system.server;
 
+import org.apache.mina.core.session.IoSession;
+
 import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.examples.common.IDontNeedSecurity;
 import asia.stampy.server.mina.RawServerMinaHandler;
@@ -52,6 +55,16 @@ public class SystemServerInitializer {
     ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();
     gateway.setPort(1234);
     gateway.setHeartbeat(1000);
+    gateway.setAutoShutdown(true);
+    gateway.addServiceListener(new MinaServiceAdapter() {
+      
+      @Override
+      public void sessionDestroyed(IoSession session) throws Exception {
+        System.out.println("Session destroyed, exiting...");
+        System.exit(0);
+      }
+
+    });
 
     RawServerMinaHandler handler = new RawServerMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);

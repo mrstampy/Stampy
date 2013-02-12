@@ -34,6 +34,7 @@ import org.apache.mina.filter.codec.prefixedstring.PrefixedStringCodecFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.AbstractStampyMessageGateway;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.StompMessageParser;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
@@ -59,7 +60,7 @@ import asia.stampy.server.message.error.ErrorMessage;
  *          the generic type
  * @see StampyRawStringHandler
  */
-public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGateway> extends IoHandlerAdapter {
+public abstract class StampyMinaHandler extends IoHandlerAdapter {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private Queue<StampyMinaMessageListener> listeners = new ConcurrentLinkedQueue<>();
@@ -68,7 +69,7 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
 
   private HeartbeatContainer heartbeatContainer;
 
-  private ASMG messageGateway;
+  private AbstractStampyMessageGateway messageGateway;
 
   private static final String ILLEGAL_ACCESS_ATTEMPT = "Illegal access attempt";
 
@@ -379,7 +380,7 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
    * 
    * @return the message gateway
    */
-  public ASMG getMessageGateway() {
+  public AbstractStampyMessageGateway getMessageGateway() {
     return messageGateway;
   }
 
@@ -389,7 +390,7 @@ public abstract class StampyMinaHandler<ASMG extends AbstractStampyMinaMessageGa
    * @param messageGateway
    *          the new message gateway
    */
-  public void setMessageGateway(ASMG messageGateway) {
+  public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
     this.messageGateway = messageGateway;
   }
 

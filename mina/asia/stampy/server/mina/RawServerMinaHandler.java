@@ -29,13 +29,14 @@ import org.slf4j.LoggerFactory;
 import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.interceptor.InterceptException;
+import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
 
 /**
  * The Class RawServerMinaHandler.
  */
 @Resource
-public class RawServerMinaHandler extends StampyRawStringHandler<ServerMinaMessageGateway> {
+public class RawServerMinaHandler extends StampyRawStringHandler {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private ServerHandlerAdapter adapter = new ServerHandlerAdapter();
@@ -93,10 +94,9 @@ public class RawServerMinaHandler extends StampyRawStringHandler<ServerMinaMessa
    * asia.stampy.common.mina.StampyMinaHandler#setMessageGateway(asia.stampy
    * .common.AbstractStampyMessageGateway)
    */
-  @Override
-  public void setMessageGateway(ServerMinaMessageGateway messageGateway) {
+  public void setMessageGateway(AbstractStampyMinaMessageGateway messageGateway) {
     super.setMessageGateway(messageGateway);
-    adapter.setMessageGateway(messageGateway);
+    adapter.setMessageGateway((ServerMinaMessageGateway)messageGateway);
   }
 
 }

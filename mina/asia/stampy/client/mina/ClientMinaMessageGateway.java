@@ -39,10 +39,8 @@ import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.SecurityMinaMessageListener;
-import asia.stampy.common.mina.StampyMinaHandler;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.common.mina.StampySecurityException;
-import asia.stampy.common.mina.StampyServiceAdapter;
 
 /**
  * This class is the reference implementation of a Stampy <a
@@ -52,8 +50,6 @@ import asia.stampy.common.mina.StampyServiceAdapter;
 public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  private StampyServiceAdapter serviceAdapter = new StampyServiceAdapter();
-  private StampyMinaHandler<ClientMinaMessageGateway> handler;
   private NioSocketConnector connector = new NioSocketConnector();
   private int maxMessageSize = Integer.MAX_VALUE;
   private String host;
@@ -65,7 +61,7 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 
     log.trace("Initializing Stampy MINA connector");
 
-    connector.setHandler(handler);
+    connector.setHandler(getHandler());
 
     connector.addListener(serviceAdapter);
 
@@ -94,6 +90,7 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 
     if (connector == null || connector.isDisposed()) {
       connector = new NioSocketConnector();
+      addServiceListeners();
     }
 
     if (!connector.isActive()) init();
@@ -105,6 +102,12 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
       log.info("Stampy MINA ClientMinaMessageGateway connected to {}:{}", host, port);
     } else {
       log.error("Could not connect to {}:{}", host, port);
+    }
+  }
+
+  private void addServiceListeners() {
+    for (IoServiceListener l : getServiceListeners()) {
+      connector.addListener(l);
     }
   }
 
@@ -204,11 +207,11 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
   @Override
   public final void addMessageListener(StampyMinaMessageListener listener) {
     int size = getHandler().messageListenerSize();
-    
-    if(size == 0 && !(listener instanceof SecurityMinaMessageListener)) {
+
+    if (size == 0 && !(listener instanceof SecurityMinaMessageListener)) {
       throw new StampySecurityException();
     }
-    
+
     getHandler().addMessageListener(listener);
   }
 
@@ -256,7 +259,7 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
    * (org.apache.mina.core.service.IoServiceListener)
    */
   @Override
-  public void addServiceListener(IoServiceListener listener) {
+  protected void addServiceListenerImpl(IoServiceListener listener) {
     connector.addListener(listener);
   }
 
@@ -268,7 +271,7 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
    * (org.apache.mina.core.service.IoServiceListener)
    */
   @Override
-  public void removeServiceListener(IoServiceListener listener) {
+  protected void removeServiceListenerImpl(IoServiceListener listener) {
     connector.removeListener(listener);
   }
 
@@ -327,25 +330,6 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
    */
   public void setPort(int port) {
     this.port = port;
-  }
-
-  /**
-   * Gets the handler.
-   * 
-   * @return the handler
-   */
-  public StampyMinaHandler<ClientMinaMessageGateway> getHandler() {
-    return handler;
-  }
-
-  /**
-   * Sets the handler.
-   * 
-   * @param handler
-   *          the new handler
-   */
-  public void setHandler(StampyMinaHandler<ClientMinaMessageGateway> handler) {
-    this.handler = handler;
   }
 
 }

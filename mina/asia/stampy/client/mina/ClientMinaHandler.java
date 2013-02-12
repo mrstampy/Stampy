@@ -27,7 +27,7 @@ import asia.stampy.common.mina.StampyMinaHandler;
  * The Class ClientMinaHandler.
  */
 @Resource
-public class ClientMinaHandler extends StampyMinaHandler<ClientMinaMessageGateway> {
+public class ClientMinaHandler extends StampyMinaHandler {
 
   private ClientHandlerAdapter adapter = new ClientHandlerAdapter();
 

@@ -27,7 +27,7 @@ import asia.stampy.common.mina.raw.StampyRawStringHandler;
  * The Class RawClientMinaHandler.
  */
 @Resource
-public class RawClientMinaHandler extends StampyRawStringHandler<ClientMinaMessageGateway> {
+public class RawClientMinaHandler extends StampyRawStringHandler {
 
   private ClientHandlerAdapter adapter = new ClientHandlerAdapter();
 

@@ -18,7 +18,9 @@
  */
 package asia.stampy.common.mina;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.mina.core.service.IoServiceListener;
 
@@ -29,6 +31,10 @@ import asia.stampy.common.AbstractStampyMessageGateway;
  * the implementation of clients and servers.
  */
 public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMessageGateway {
+
+  private List<IoServiceListener> serviceListeners = new ArrayList<>();
+  protected StampyServiceAdapter serviceAdapter = new StampyServiceAdapter();
+  private StampyMinaHandler handler;
 
   /**
    * Adds the message listener.
@@ -69,7 +75,12 @@ public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMes
    * @param listener
    *          the listener
    */
-  public abstract void addServiceListener(IoServiceListener listener);
+  public void addServiceListener(IoServiceListener listener) {
+    serviceListeners.add(listener);
+    addServiceListenerImpl(listener);
+  }
+
+  protected abstract void addServiceListenerImpl(IoServiceListener listener);
 
   /**
    * Removes the MINA service listener.
@@ -77,6 +88,34 @@ public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMes
    * @param listener
    *          the listener
    */
-  public abstract void removeServiceListener(IoServiceListener listener);
+  public void removeServiceListener(IoServiceListener listener) {
+    serviceListeners.remove(listener);
+    removeServiceListenerImpl(listener);
+  }
+  
+  public List<IoServiceListener> getServiceListeners() {
+    return serviceListeners;
+  }
+
+  protected abstract void removeServiceListenerImpl(IoServiceListener listener);
+
+  /**
+   * Gets the handler.
+   * 
+   * @return the handler
+   */
+  public StampyMinaHandler getHandler() {
+    return handler;
+  }
+
+  /**
+   * Sets the handler.
+   * 
+   * @param handler
+   *          the new handler
+   */
+  public void setHandler(StampyMinaHandler handler) {
+    this.handler = handler;
+  }
 
 }
