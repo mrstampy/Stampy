@@ -38,6 +38,7 @@ import asia.stampy.common.HostPort;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.InterceptException;
+import asia.stampy.common.mina.MessageListenerHaltException;
 import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.common.mina.StampyMinaMessageListener;
 import asia.stampy.server.message.error.ErrorMessage;
@@ -125,7 +126,7 @@ public class LoginMessageListener implements StampyMinaMessageListener {
   }
 
   private void logIn(IoSession session, HostPort hostPort, ConnectHeader header) throws AlreadyLoggedInException,
-      NotLoggedInException {
+      NotLoggedInException, MessageListenerHaltException {
     if (loggedInConnections.contains(hostPort)) throw new AlreadyLoggedInException(hostPort + " is already logged in");
 
     if (!isForHeader(header)) throw new NotLoggedInException("login and passcode not specified, cannot log in");
@@ -134,9 +135,11 @@ public class LoginMessageListener implements StampyMinaMessageListener {
       getLoginHandler().login(header.getLogin(), header.getPasscode());
       loggedInConnections.add(hostPort);
     } catch (TerminateSessionException e) {
+      log.error("Login handler has terminated the session", e);
       sendErrorMessage(e.getMessage(), hostPort);
       CloseFuture cf = session.close(false);
       cf.awaitUninterruptibly();
+      throw new MessageListenerHaltException();
     }
   }
 

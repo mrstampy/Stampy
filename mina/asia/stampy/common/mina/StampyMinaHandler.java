@@ -157,6 +157,8 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
       }
     } catch (UnparseableException e) {
       handleUnparseableMessage(session, hostPort, msg, e);
+    } catch (MessageListenerHaltException e) {
+      // halting
     } catch (Exception e) {
       handleUnexpectedError(session, hostPort, msg, sm, e);
     }
@@ -296,11 +298,16 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    *           the exception
    */
   protected void notifyListeners(StampyMessage<?> sm, IoSession session, HostPort hostPort) throws Exception {
+    int idx = 0;
     for (StampyMinaMessageListener listener : listeners) {
+      if(idx == 0 && !(listener instanceof SecurityMinaMessageListener)) {
+        System.out.println("BOOO!!!!");
+      }
       if (isForType(listener.getMessageTypes(), sm.getMessageType()) && listener.isForMessage(sm)) {
         log.trace("Evaluating message {} with listener {}", sm, listener);
         listener.messageReceived(sm, session, hostPort);
       }
+      idx++;
     }
   }
 
