@@ -24,9 +24,10 @@ import asia.stampy.common.gateway.HostPort;
 /**
  * The Class AbstractOutgoingTextInterceptor.
  */
-public abstract class AbstractOutgoingTextInterceptor implements StampyOutgoingTextInterceptor {
+public abstract class AbstractOutgoingTextInterceptor<SVR extends AbstractStampyMessageGateway> implements
+    StampyOutgoingTextInterceptor {
 
-  private AbstractStampyMessageGateway gateway;
+  private SVR gateway;
 
   /*
    * (non-Javadoc)
@@ -46,7 +47,7 @@ public abstract class AbstractOutgoingTextInterceptor implements StampyOutgoingT
    * 
    * @return the gateway
    */
-  public AbstractStampyMessageGateway getGateway() {
+  public SVR getGateway() {
     return gateway;
   }
 
@@ -56,7 +57,7 @@ public abstract class AbstractOutgoingTextInterceptor implements StampyOutgoingT
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
+  public void setGateway(SVR gateway) {
     this.gateway = gateway;
   }
 

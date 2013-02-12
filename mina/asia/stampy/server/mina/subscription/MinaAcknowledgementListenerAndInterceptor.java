@@ -27,12 +27,12 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.MinaServiceAdapter;
-import asia.stampy.server.listener.subscription.AcknowledgementListenerAndInterceptor;
+import asia.stampy.server.listener.subscription.AbstractAcknowledgementListenerAndInterceptor;
+import asia.stampy.server.listener.subscription.StampyAcknowledgementHandler;
+import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
  * This class assists in the publication of {@link StompMessageType#MESSAGE}
@@ -42,20 +42,13 @@ import asia.stampy.server.listener.subscription.AcknowledgementListenerAndInterc
  * invoked.
  */
 @Resource
-public class MinaAcknowledgementListenerAndInterceptor extends AcknowledgementListenerAndInterceptor {
+public class MinaAcknowledgementListenerAndInterceptor extends
+    AbstractAcknowledgementListenerAndInterceptor<ServerMinaMessageGateway> {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.message.interceptor.AbstractOutgoingMessageInterceptor
-   * #setGateway(asia.stampy.common.AbstractStampyMessageGateway)
-   */
   @Override
-  public void setGateway(AbstractStampyMessageGateway gateway) {
-    super.setGateway(gateway);
-    ((AbstractStampyMinaMessageGateway) gateway).addServiceListener(new MinaServiceAdapter() {
+  protected void ensureCleanup() {
+    getGateway().addServiceListener(new MinaServiceAdapter() {
 
       @Override
       public void sessionDestroyed(IoSession session) throws Exception {

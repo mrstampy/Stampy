@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import asia.stampy.client.listener.disconnect.DisconnectListenerAndInterceptor;
 import asia.stampy.client.message.disconnect.DisconnectMessage;
 import asia.stampy.common.gateway.MessageListenerHaltException;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -35,9 +34,9 @@ import asia.stampy.common.mina.AbstractMinaListenerTest;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DisconnectListenerAndInterceptorTest extends AbstractMinaListenerTest {
+public class MinaDisconnectListenerAndInterceptorTest extends AbstractMinaListenerTest {
 
-  private DisconnectListenerAndInterceptor disconnect = new DisconnectListenerAndInterceptor();
+  private MinaDisconnectListenerAndInterceptor disconnect = new MinaDisconnectListenerAndInterceptor();
 
   @After
   public void after() throws Exception {
@@ -65,7 +64,7 @@ public class DisconnectListenerAndInterceptorTest extends AbstractMinaListenerTe
     assertTrue(disconnect.isForMessage(receipt));
   }
 
-  @Test(expected=MessageListenerHaltException.class)
+  @Test(expected = MessageListenerHaltException.class)
   public void testMessageReceived() throws Exception {
     disconnect.setGateway(clientGateway);
     disconnect.setReceiptId("test");

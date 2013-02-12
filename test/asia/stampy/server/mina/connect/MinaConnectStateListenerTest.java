@@ -45,7 +45,7 @@ import asia.stampy.server.listener.connect.AlreadyConnectedException;
 import asia.stampy.server.listener.connect.NotConnectedException;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ConnectStateListenerTest extends AbstractMinaListenerTest {
+public class MinaConnectStateListenerTest extends AbstractMinaListenerTest {
   private MinaConnectStateListener connect = new MinaConnectStateListener();
 
   @Before

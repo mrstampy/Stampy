@@ -33,6 +33,7 @@ import asia.stampy.client.message.ack.AckHeader;
 import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.client.message.nack.NackHeader;
 import asia.stampy.client.message.nack.NackMessage;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
@@ -49,8 +50,8 @@ import asia.stampy.server.message.message.MessageMessage;
  * invoked.
  */
 @Resource
-public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessageInterceptor implements
-    StampyMessageListener {
+public abstract class AbstractAcknowledgementListenerAndInterceptor<SVR extends AbstractStampyMessageGateway> extends
+    AbstractOutgoingMessageInterceptor<SVR> implements StampyMessageListener {
   private static final StompMessageType[] TYPES = { StompMessageType.ACK, StompMessageType.NACK,
       StompMessageType.MESSAGE };
 
@@ -97,8 +98,7 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
    * (non-Javadoc)
    * 
    * @see asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
-   * stampy.common.message.StampyMessage,
-   * asia.stampy.common.HostPort)
+   * stampy.common.message.StampyMessage, asia.stampy.common.HostPort)
    */
   @Override
   public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
@@ -202,6 +202,7 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
 
   /**
    * Sets the ack timeout millis. Initialize appropriately on system startup.
+   * Defaults to 60 seconds (60000).
    * 
    * @param ackTimeoutMillis
    *          the new ack timeout millis
@@ -209,6 +210,23 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
   public void setAckTimeoutMillis(long ackTimeoutMillis) {
     this.ackTimeoutMillis = ackTimeoutMillis;
   }
+
+  /**
+   * Sets the gateway.
+   * 
+   * @param gateway
+   *          the new gateway
+   */
+  public void setGateway(SVR gateway) {
+    super.setGateway(gateway);
+    ensureCleanup();
+  }
+
+  /**
+   * Configure the gateway to clean up the map of expected acks on session
+   * termination.
+   */
+  protected abstract void ensureCleanup();
 
   /**
    * Gets the handler.

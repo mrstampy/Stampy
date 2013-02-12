@@ -25,9 +25,10 @@ import asia.stampy.common.message.StampyMessage;
 /**
  * The Class AbstractOutgoingMessageInterceptor.
  */
-public abstract class AbstractOutgoingMessageInterceptor implements StampyOutgoingMessageInterceptor {
+public abstract class AbstractOutgoingMessageInterceptor<SVR extends AbstractStampyMessageGateway> implements
+    StampyOutgoingMessageInterceptor {
 
-  private AbstractStampyMessageGateway gateway;
+  private SVR gateway;
 
   /*
    * (non-Javadoc)
@@ -48,7 +49,7 @@ public abstract class AbstractOutgoingMessageInterceptor implements StampyOutgoi
    * 
    * @return the gateway
    */
-  public AbstractStampyMessageGateway getGateway() {
+  public SVR getGateway() {
     return gateway;
   }
 
@@ -58,7 +59,7 @@ public abstract class AbstractOutgoingMessageInterceptor implements StampyOutgoi
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
+  public void setGateway(SVR gateway) {
     this.gateway = gateway;
   }
 

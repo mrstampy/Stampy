@@ -54,14 +54,14 @@ import asia.stampy.common.message.StompMessageType;
  * @see PaceMaker
  */
 @Resource
-public class HeartbeatListener implements StampyMessageListener {
+public abstract class AbstractHeartbeatListener<SVR extends AbstractStampyMessageGateway> implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP,
       StompMessageType.DISCONNECT };
 
   private HeartbeatContainer heartbeatContainer;
 
-  private AbstractStampyMessageGateway gateway;
+  private SVR gateway;
 
   /*
    * (non-Javadoc)
@@ -161,7 +161,7 @@ public class HeartbeatListener implements StampyMessageListener {
    * 
    * @return the message gateway
    */
-  public AbstractStampyMessageGateway getGateway() {
+  public SVR getGateway() {
     return gateway;
   }
 
@@ -171,7 +171,7 @@ public class HeartbeatListener implements StampyMessageListener {
    * @param gateway
    *          the new message gateway
    */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
+  public void setGateway(SVR gateway) {
     this.gateway = gateway;
   }
 

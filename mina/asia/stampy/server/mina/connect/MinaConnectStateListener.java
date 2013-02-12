@@ -20,8 +20,6 @@ package asia.stampy.server.mina.connect;
 
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.annotation.Resource;
 
@@ -29,12 +27,10 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
 import asia.stampy.common.mina.MinaServiceAdapter;
-import asia.stampy.server.listener.connect.ConnectStateListener;
+import asia.stampy.server.listener.connect.AbstractConnectStateListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
@@ -45,21 +41,12 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * <br>
  */
 @Resource
-public class MinaConnectStateListener extends ConnectStateListener {
+public class MinaConnectStateListener extends AbstractConnectStateListener<ServerMinaMessageGateway> {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  private Queue<HostPort> connectedClients = new ConcurrentLinkedQueue<>();
-
-  /**
-   * Inject the {@link AbstractStampyMinaMessageGateway} on system startup.
-   * 
-   * @param gateway
-   *          the new gateway
-   */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
-    super.setGateway(gateway);
-
-    ((ServerMinaMessageGateway) gateway).addServiceListener(new MinaServiceAdapter() {
+  @Override
+  protected void ensureCleanup() {
+    getGateway().addServiceListener(new MinaServiceAdapter() {
 
       @Override
       public void sessionDestroyed(IoSession session) throws Exception {

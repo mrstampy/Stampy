@@ -49,11 +49,11 @@ import asia.stampy.server.message.receipt.ReceiptMessage;
  * header populated.
  */
 @Resource
-public class ReceiptListener implements StampyMessageListener {
+public abstract class AbstractReceiptListener<SVR extends AbstractStampyMessageGateway> implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static StompMessageType[] TYPES = { ABORT, ACK, BEGIN, COMMIT, DISCONNECT, NACK, SEND, SUBSCRIBE, UNSUBSCRIBE };
 
-  private AbstractStampyMessageGateway gateway;
+  private SVR gateway;
 
   /*
    * (non-Javadoc)
@@ -101,7 +101,7 @@ public class ReceiptListener implements StampyMessageListener {
    * 
    * @return the gateway
    */
-  public AbstractStampyMessageGateway getGateway() {
+  public SVR getGateway() {
     return gateway;
   }
 
@@ -111,7 +111,7 @@ public class ReceiptListener implements StampyMessageListener {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
+  public void setGateway(SVR gateway) {
     this.gateway = gateway;
   }
 

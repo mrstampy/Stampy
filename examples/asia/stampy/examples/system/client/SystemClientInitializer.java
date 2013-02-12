@@ -18,10 +18,10 @@
  */
 package asia.stampy.examples.system.client;
 
-import asia.stampy.client.listener.connected.ConnectedMessageListener;
-import asia.stampy.client.listener.disconnect.DisconnectListenerAndInterceptor;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.mina.RawClientMinaHandler;
+import asia.stampy.client.mina.connected.MinaConnectedMessageListener;
+import asia.stampy.client.mina.disconnect.MinaDisconnectListenerAndInterceptor;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.client.AutoTerminatingClientGateway;
@@ -54,15 +54,15 @@ public class SystemClientInitializer {
     RawClientMinaHandler handler = new RawClientMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
-    
+
     gateway.addMessageListener(new IDontNeedSecurity());
 
-    ConnectedMessageListener cml = new ConnectedMessageListener();
+    MinaConnectedMessageListener cml = new MinaConnectedMessageListener();
     cml.setHeartbeatContainer(heartbeatContainer);
     cml.setGateway(gateway);
     gateway.addMessageListener(cml);
 
-    DisconnectListenerAndInterceptor disconnect = new DisconnectListenerAndInterceptor();
+    MinaDisconnectListenerAndInterceptor disconnect = new MinaDisconnectListenerAndInterceptor();
     disconnect.setCloseOnDisconnectMessage(false);
     gateway.addMessageListener(disconnect);
     gateway.addOutgoingMessageInterceptor(disconnect);

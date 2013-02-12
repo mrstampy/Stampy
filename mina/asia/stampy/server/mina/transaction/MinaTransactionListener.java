@@ -27,11 +27,10 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.MinaServiceAdapter;
-import asia.stampy.server.listener.transaction.TransactionListener;
+import asia.stampy.server.listener.transaction.AbstractTransactionListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
@@ -40,19 +39,12 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * {@link StompMessageType#COMMIT} and that a transaction is began only once.
  */
 @Resource
-public class MinaTransactionListener extends TransactionListener {
+public class MinaTransactionListener extends AbstractTransactionListener<ServerMinaMessageGateway> {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  /**
-   * Inject the {@link ServerMinaMessageGateway} on system startup.
-   * 
-   * @param gateway
-   *          the new gateway
-   */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
-    super.setGateway(gateway);
-
-    ((ServerMinaMessageGateway) gateway).addServiceListener(new MinaServiceAdapter() {
+  @Override
+  protected void ensureCleanup() {
+    getGateway().addServiceListener(new MinaServiceAdapter() {
 
       @Override
       public void sessionDestroyed(IoSession session) throws Exception {
@@ -63,6 +55,7 @@ public class MinaTransactionListener extends TransactionListener {
         }
       }
     });
+
   }
 
 }

@@ -24,14 +24,14 @@ import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.examples.common.IDontNeedSecurity;
-import asia.stampy.server.listener.connect.ConnectResponseListener;
-import asia.stampy.server.listener.heartbeat.HeartbeatListener;
-import asia.stampy.server.listener.receipt.ReceiptListener;
 import asia.stampy.server.listener.version.VersionListener;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
+import asia.stampy.server.mina.connect.MinaConnectResponseListener;
 import asia.stampy.server.mina.connect.MinaConnectStateListener;
+import asia.stampy.server.mina.heartbeat.MinaHeartbeatListener;
 import asia.stampy.server.mina.login.MinaLoginMessageListener;
+import asia.stampy.server.mina.receipt.MinaReceiptListener;
 import asia.stampy.server.mina.subscription.MinaAcknowledgementListenerAndInterceptor;
 import asia.stampy.server.mina.transaction.MinaTransactionListener;
 
@@ -59,7 +59,7 @@ public class SystemServerInitializer {
     gateway.setHeartbeat(1000);
     gateway.setAutoShutdown(true);
     gateway.addServiceListener(new MinaServiceAdapter() {
-      
+
       @Override
       public void sessionDestroyed(IoSession session) throws Exception {
         System.out.println("Session destroyed, exiting...");
@@ -71,7 +71,7 @@ public class SystemServerInitializer {
     RawServerMinaHandler handler = new RawServerMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
-    
+
     gateway.addMessageListener(new IDontNeedSecurity());
 
     gateway.addMessageListener(new VersionListener());
@@ -85,7 +85,7 @@ public class SystemServerInitializer {
     connect.setGateway(gateway);
     gateway.addMessageListener(connect);
 
-    HeartbeatListener heartbeat = new HeartbeatListener();
+    MinaHeartbeatListener heartbeat = new MinaHeartbeatListener();
     heartbeat.setHeartbeatContainer(heartbeatContainer);
     heartbeat.setGateway(gateway);
     gateway.addMessageListener(heartbeat);
@@ -102,12 +102,12 @@ public class SystemServerInitializer {
     acknowledgement.setAckTimeoutMillis(200);
     gateway.addMessageListener(acknowledgement);
     gateway.addOutgoingMessageInterceptor(acknowledgement);
-    
-    ReceiptListener receipt = new ReceiptListener();
+
+    MinaReceiptListener receipt = new MinaReceiptListener();
     receipt.setGateway(gateway);
     gateway.addMessageListener(receipt);
-    
-    ConnectResponseListener connectResponse = new ConnectResponseListener();
+
+    MinaConnectResponseListener connectResponse = new MinaConnectResponseListener();
     connectResponse.setGateway(gateway);
     gateway.addMessageListener(connectResponse);
 

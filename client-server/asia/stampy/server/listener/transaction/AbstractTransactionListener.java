@@ -45,12 +45,12 @@ import asia.stampy.common.message.StompMessageType;
  * {@link StompMessageType#COMMIT} and that a transaction is began only once.
  */
 @Resource
-public class TransactionListener implements StampyMessageListener {
+public abstract class AbstractTransactionListener<SVR extends AbstractStampyMessageGateway> implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   /** The active transactions. */
   protected Map<HostPort, Queue<String>> activeTransactions = new ConcurrentHashMap<>();
-  private AbstractStampyMessageGateway gateway;
+  private SVR gateway;
 
   private static StompMessageType[] TYPES = { StompMessageType.ABORT, StompMessageType.BEGIN, StompMessageType.COMMIT,
       StompMessageType.DISCONNECT };
@@ -81,8 +81,7 @@ public class TransactionListener implements StampyMessageListener {
    * (non-Javadoc)
    * 
    * @see asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
-   * stampy.common.message.StampyMessage,
-   * asia.stampy.common.HostPort)
+   * stampy.common.message.StampyMessage, asia.stampy.common.HostPort)
    */
   @Override
   public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
@@ -177,7 +176,7 @@ public class TransactionListener implements StampyMessageListener {
    * 
    * @return the gateway
    */
-  public AbstractStampyMessageGateway getGateway() {
+  public SVR getGateway() {
     return gateway;
   }
 
@@ -187,8 +186,14 @@ public class TransactionListener implements StampyMessageListener {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
+  public void setGateway(SVR gateway) {
     this.gateway = gateway;
   }
+
+  /**
+   * Configure the gateway to clean up the map of active transactions on session
+   * termination.
+   */
+  protected abstract void ensureCleanup();
 
 }

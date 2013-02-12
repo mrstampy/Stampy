@@ -18,31 +18,33 @@
  */
 package asia.stampy.server.listener.connect;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.lang.invoke.MethodHandles;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import asia.stampy.client.message.connect.ConnectHeader;
+import asia.stampy.client.message.connect.ConnectMessage;
+import asia.stampy.client.message.stomp.StompMessage;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
+import asia.stampy.common.message.interceptor.InterceptException;
+import asia.stampy.server.message.connected.ConnectedMessage;
 
 /**
- * This class ensures that a {@link StompMessageType#CONNECT} or.
- * 
- * {@link StompMessageType#STOMP} frame is the first frame a client sends, that
- * no additional connect frames are sent, and that a
- * {@link StompMessageType#DISCONNECT} frame initializes the state.<br>
- * <br>
+ * This class sends a CONNECTED response to a CONNECT or STOMP message.
  */
 @Resource
-public class ConnectStateListener implements StampyMessageListener {
-  private Queue<HostPort> connectedClients = new ConcurrentLinkedQueue<>();
-  private AbstractStampyMessageGateway gateway;
+public abstract class AbstractConnectResponseListener<SVR extends AbstractStampyMessageGateway> implements StampyMessageListener {
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP };
 
-  private static StompMessageType[] TYPES = StompMessageType.values();
+  private SVR gateway;
 
   /*
    * (non-Javadoc)
@@ -69,49 +71,36 @@ public class ConnectStateListener implements StampyMessageListener {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
-   * stampy.common.message.StampyMessage,
-   * asia.stampy.common.HostPort)
+   * @see asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage, asia.stampy.common.HostPort)
    */
   @Override
   public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     switch (message.getMessageType()) {
-    case ABORT:
-    case ACK:
-    case BEGIN:
-    case COMMIT:
-    case NACK:
-    case SEND:
-    case SUBSCRIBE:
-    case UNSUBSCRIBE:
-      checkConnected(hostPort);
-      break;
     case CONNECT:
+      sendConnected(((ConnectMessage) message).getHeader(), hostPort);
+      return;
     case STOMP:
-      checkDisconnected(hostPort);
-      connectedClients.add(hostPort);
-      break;
-    case DISCONNECT:
-      connectedClients.remove(hostPort);
-      break;
+      sendConnected(((StompMessage) message).getHeader(), hostPort);
+      return;
     default:
-      throw new IllegalArgumentException("Unexpected message type " + message.getMessageType());
-
+      return;
     }
-
   }
 
-  private void checkDisconnected(HostPort hostPort) throws AlreadyConnectedException {
-    if (!connectedClients.contains(hostPort)) return;
+  private void sendConnected(ConnectHeader header, HostPort hostPort) throws InterceptException {
+    log.debug("Sending connected message to {}", hostPort);
+    ConnectedMessage message = new ConnectedMessage("1.2");
 
-    throw new AlreadyConnectedException(hostPort + " is already connected");
-  }
+    int requested = message.getHeader().getIncomingHeartbeat();
+    if (requested >= 0 || getGateway().getHeartbeat() >= 0) {
+      int heartbeat = Math.max(requested, getGateway().getHeartbeat());
+      message.getHeader().setHeartbeat(heartbeat, header.getOutgoingHeartbeat());
+    }
+    message.getHeader().setSession(hostPort.toString());
 
-  private void checkConnected(HostPort hostPort) throws NotConnectedException {
-    if (connectedClients.contains(hostPort)) return;
-
-    throw new NotConnectedException("CONNECT message required for " + hostPort);
+    getGateway().sendMessage(message, hostPort);
+    log.debug("Sent connected message to {}", hostPort);
   }
 
   /**
@@ -119,7 +108,7 @@ public class ConnectStateListener implements StampyMessageListener {
    * 
    * @return the gateway
    */
-  public AbstractStampyMessageGateway getGateway() {
+  public SVR getGateway() {
     return gateway;
   }
 
@@ -129,7 +118,7 @@ public class ConnectStateListener implements StampyMessageListener {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
+  public void setGateway(SVR gateway) {
     this.gateway = gateway;
   }
 

@@ -27,12 +27,13 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.MessageListenerHaltException;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.mina.MinaServiceAdapter;
-import asia.stampy.server.listener.login.LoginMessageListener;
+import asia.stampy.server.listener.login.AbstractLoginMessageListener;
+import asia.stampy.server.listener.login.StampyLoginHandler;
+import asia.stampy.server.listener.login.TerminateSessionException;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
@@ -44,19 +45,12 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * {@link StampyMessageListener}s.
  */
 @Resource
-public class MinaLoginMessageListener extends LoginMessageListener {
+public class MinaLoginMessageListener extends AbstractLoginMessageListener<ServerMinaMessageGateway> {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  /**
-   * Inject the server {@link AbstractStampyMessageGateway} on system startup.
-   * 
-   * @param gateway
-   *          the new gateway
-   */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
-    super.setGateway(gateway);
-
-    ((ServerMinaMessageGateway) gateway).addServiceListener(new MinaServiceAdapter() {
+  @Override
+  protected void ensureCleanup() {
+    getGateway().addServiceListener(new MinaServiceAdapter() {
 
       @Override
       public void sessionDestroyed(IoSession session) throws Exception {

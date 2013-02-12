@@ -50,7 +50,7 @@ import asia.stampy.server.message.error.ErrorMessage;
  * {@link StampyMessageListener}s.
  */
 @Resource
-public class LoginMessageListener implements StampyMessageListener {
+public abstract class AbstractLoginMessageListener<SVR extends AbstractStampyMessageGateway> implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static StompMessageType[] TYPES = StompMessageType.values();
 
@@ -58,7 +58,7 @@ public class LoginMessageListener implements StampyMessageListener {
   protected Queue<HostPort> loggedInConnections = new ConcurrentLinkedQueue<>();
 
   private StampyLoginHandler loginHandler;
-  private AbstractStampyMessageGateway gateway;
+  private SVR gateway;
 
   /*
    * (non-Javadoc)
@@ -85,10 +85,8 @@ public class LoginMessageListener implements StampyMessageListener {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
-   * stampy.common.message.StampyMessage,
-   * asia.stampy.common.HostPort)
+   * @see asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
+   * stampy.common.message.StampyMessage, asia.stampy.common.HostPort)
    */
   @Override
   public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
@@ -183,7 +181,7 @@ public class LoginMessageListener implements StampyMessageListener {
    * 
    * @return the gateway
    */
-  public AbstractStampyMessageGateway getGateway() {
+  public SVR getGateway() {
     return gateway;
   }
 
@@ -193,8 +191,15 @@ public class LoginMessageListener implements StampyMessageListener {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
+  public void setGateway(SVR gateway) {
     this.gateway = gateway;
+    ensureCleanup();
   }
+
+  /**
+   * Configure the gateway to clean up the queue of logged in connections on
+   * session termination.
+   */
+  protected abstract void ensureCleanup();
 
 }

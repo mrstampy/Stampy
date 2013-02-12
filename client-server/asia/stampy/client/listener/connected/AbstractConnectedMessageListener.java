@@ -51,14 +51,15 @@ import asia.stampy.server.message.connected.ConnectedMessage;
  * @see PaceMaker
  */
 @Resource
-public class ConnectedMessageListener implements StampyMessageListener {
+public abstract class AbstractConnectedMessageListener<CLNT extends AbstractStampyMessageGateway> implements
+    StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private static StompMessageType[] TYPES = { StompMessageType.CONNECTED };
 
   private HeartbeatContainer heartbeatContainer;
 
-  private AbstractStampyMessageGateway gateway;
+  private CLNT gateway;
 
   /*
    * (non-Javadoc)
@@ -85,8 +86,7 @@ public class ConnectedMessageListener implements StampyMessageListener {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
+   * @see asia.stampy.common.gateway.StampyMessageListener#messageReceived(asia.
    * stampy.common.message.StampyMessage, asia.stampy.common.HostPort)
    */
   @Override
@@ -133,7 +133,7 @@ public class ConnectedMessageListener implements StampyMessageListener {
    * 
    * @return the message gateway
    */
-  public AbstractStampyMessageGateway getGateway() {
+  public CLNT getGateway() {
     return gateway;
   }
 
@@ -143,7 +143,7 @@ public class ConnectedMessageListener implements StampyMessageListener {
    * @param gateway
    *          the new message gateway
    */
-  public void setGateway(AbstractStampyMessageGateway gateway) {
+  public void setGateway(CLNT gateway) {
     this.gateway = gateway;
   }
 
