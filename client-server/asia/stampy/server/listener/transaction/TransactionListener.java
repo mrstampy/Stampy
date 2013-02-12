@@ -16,10 +16,9 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina.transaction;
+package asia.stampy.server.listener.transaction;
 
 import java.lang.invoke.MethodHandles;
-import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,31 +26,32 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.annotation.Resource;
 
-import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asia.stampy.client.message.abort.AbortMessage;
 import asia.stampy.client.message.begin.BeginMessage;
 import asia.stampy.client.message.commit.CommitMessage;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
  * This class manages transactional boundaries, ensuring that a transaction has
- * been started prior to an {@link StompMessageType#ABORT} or
+ * been started prior to an {@link StompMessageType#ABORT} or.
+ * 
  * {@link StompMessageType#COMMIT} and that a transaction is began only once.
  */
 @Resource
 public class TransactionListener implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  private Map<HostPort, Queue<String>> activeTransactions = new ConcurrentHashMap<>();
-  private ServerMinaMessageGateway gateway;
+  /** The active transactions. */
+  protected Map<HostPort, Queue<String>> activeTransactions = new ConcurrentHashMap<>();
+  private AbstractStampyMessageGateway gateway;
 
   private static StompMessageType[] TYPES = { StompMessageType.ABORT, StompMessageType.BEGIN, StompMessageType.COMMIT,
       StompMessageType.DISCONNECT };
@@ -179,7 +179,7 @@ public class TransactionListener implements StampyMessageListener {
    * 
    * @return the gateway
    */
-  public ServerMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
@@ -189,20 +189,8 @@ public class TransactionListener implements StampyMessageListener {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(ServerMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
-
-    gateway.addServiceListener(new MinaServiceAdapter() {
-
-      @Override
-      public void sessionDestroyed(IoSession session) throws Exception {
-        HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
-        if (activeTransactions.containsKey(hostPort)) {
-          log.debug("{} session terminated with outstanding transaction, cleaning up", hostPort);
-          activeTransactions.remove(hostPort);
-        }
-      }
-    });
   }
 
 }

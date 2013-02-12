@@ -26,13 +26,17 @@ import asia.stampy.common.mina.StampyMinaHandler;
  * 
  * @author burton
  * @see StampyMinaHandler#notifyListeners(asia.stampy.common.message.StampyMessage,
- *      org.apache.mina.core.session.IoSession, asia.stampy.common.gateway.HostPort)
+ *      org.apache.mina.core.session.IoSession,
+ *      asia.stampy.common.gateway.HostPort)
  * 
  */
 public class StampySecurityException extends RuntimeException {
 
   private static final long serialVersionUID = -9157111717358793044L;
 
+  /**
+   * Instantiates a new stampy security exception.
+   */
   public StampySecurityException() {
     super(
         "An instance of SecurityMinaMessageListener has not been configured first in the list of StampyMinaMessageListeners");

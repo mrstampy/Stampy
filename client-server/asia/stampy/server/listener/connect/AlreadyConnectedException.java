@@ -16,22 +16,22 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina.transaction;
+package asia.stampy.server.listener.connect;
 
 /**
  * The Class TransactionAlreadyStartedException.
  */
-public class TransactionAlreadyStartedException extends Exception {
+public class AlreadyConnectedException extends Exception {
 
-  private static final long serialVersionUID = 4327171405667138826L;
+  private static final long serialVersionUID = 6714733758151973447L;
 
   /**
-   * Instantiates a new transaction already started exception.
+   * Instantiates a new already connected exception.
    * 
    * @param message
    *          the message
    */
-  public TransactionAlreadyStartedException(String message) {
+  public AlreadyConnectedException(String message) {
     super(message);
   }
 

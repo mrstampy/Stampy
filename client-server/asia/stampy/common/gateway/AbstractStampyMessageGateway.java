@@ -245,8 +245,6 @@ public abstract class AbstractStampyMessageGateway {
    * 
    * @param sm
    *          the sm
-   * @param session
-   *          the session
    * @param hostPort
    *          the host port
    * @throws Exception
@@ -408,11 +406,10 @@ public abstract class AbstractStampyMessageGateway {
   }
 
   /**
-   * Returns the {@link UnparseableMessageHandler}, defaults to
-   * {@link DefaultUnparseableMessageHandler}.
+   * Returns the {@link UnparseableMessageHandler}, defaults to.
    * 
    * @return the unparseable message handler
-   * 
+   *         {@link DefaultUnparseableMessageHandler}.
    */
   public UnparseableMessageHandler getUnparseableMessageHandler() {
     return unparseableMessageHandler;

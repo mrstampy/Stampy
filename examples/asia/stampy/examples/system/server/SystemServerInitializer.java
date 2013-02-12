@@ -30,10 +30,10 @@ import asia.stampy.server.listener.receipt.ReceiptListener;
 import asia.stampy.server.listener.version.VersionListener;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
-import asia.stampy.server.mina.connect.ConnectStateListener;
-import asia.stampy.server.mina.login.LoginMessageListener;
-import asia.stampy.server.mina.subscription.AcknowledgementListenerAndInterceptor;
-import asia.stampy.server.mina.transaction.TransactionListener;
+import asia.stampy.server.mina.connect.MinaConnectStateListener;
+import asia.stampy.server.mina.login.MinaLoginMessageListener;
+import asia.stampy.server.mina.subscription.MinaAcknowledgementListenerAndInterceptor;
+import asia.stampy.server.mina.transaction.MinaTransactionListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
@@ -76,12 +76,12 @@ public class SystemServerInitializer {
 
     gateway.addMessageListener(new VersionListener());
 
-    LoginMessageListener login = new LoginMessageListener();
+    MinaLoginMessageListener login = new MinaLoginMessageListener();
     login.setGateway(gateway);
     login.setLoginHandler(new SystemLoginHandler());
     gateway.addMessageListener(login);
 
-    ConnectStateListener connect = new ConnectStateListener();
+    MinaConnectStateListener connect = new MinaConnectStateListener();
     connect.setGateway(gateway);
     gateway.addMessageListener(connect);
 
@@ -90,13 +90,13 @@ public class SystemServerInitializer {
     heartbeat.setGateway(gateway);
     gateway.addMessageListener(heartbeat);
 
-    TransactionListener transaction = new TransactionListener();
+    MinaTransactionListener transaction = new MinaTransactionListener();
     transaction.setGateway(gateway);
     gateway.addMessageListener(transaction);
 
     SystemAcknowledgementHandler sys = new SystemAcknowledgementHandler();
 
-    AcknowledgementListenerAndInterceptor acknowledgement = new AcknowledgementListenerAndInterceptor();
+    MinaAcknowledgementListenerAndInterceptor acknowledgement = new MinaAcknowledgementListenerAndInterceptor();
     acknowledgement.setHandler(sys);
     acknowledgement.setGateway(gateway);
     acknowledgement.setAckTimeoutMillis(200);

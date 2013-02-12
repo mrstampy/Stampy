@@ -16,10 +16,8 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina.subscription;
+package asia.stampy.server.listener.subscription;
 
-import java.lang.invoke.MethodHandles;
-import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Timer;
@@ -30,23 +28,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.mina.core.session.IoSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import asia.stampy.client.message.ack.AckHeader;
 import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.client.message.nack.NackHeader;
 import asia.stampy.client.message.nack.NackMessage;
-import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.AbstractOutgoingMessageInterceptor;
 import asia.stampy.common.message.interceptor.InterceptException;
-import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
-import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.server.message.message.MessageMessage;
 
 /**
@@ -59,13 +51,13 @@ import asia.stampy.server.message.message.MessageMessage;
 @Resource
 public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessageInterceptor implements
     StampyMessageListener {
-  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static final StompMessageType[] TYPES = { StompMessageType.ACK, StompMessageType.NACK,
       StompMessageType.MESSAGE };
 
   private StampyAcknowledgementHandler handler;
 
-  private Map<HostPort, Queue<String>> messages = new ConcurrentHashMap<>();
+  /** The messages. */
+  protected Map<HostPort, Queue<String>> messages = new ConcurrentHashMap<>();
 
   private Timer ackTimer = new Timer("Stampy Acknowledgement Timer", true);
 
@@ -198,29 +190,6 @@ public class AcknowledgementListenerAndInterceptor extends AbstractOutgoingMessa
     if (ids == null) return;
 
     ids.remove(messageId);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.message.interceptor.AbstractOutgoingMessageInterceptor
-   * #setGateway(asia.stampy.common.AbstractStampyMessageGateway)
-   */
-  @Override
-  public void setGateway(AbstractStampyMessageGateway gateway) {
-    super.setGateway(gateway);
-    ((AbstractStampyMinaMessageGateway) gateway).addServiceListener(new MinaServiceAdapter() {
-
-      @Override
-      public void sessionDestroyed(IoSession session) throws Exception {
-        HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
-        if (messages.containsKey(hostPort)) {
-          log.debug("{} session terminated, cleaning up message interceptor", hostPort);
-          messages.remove(hostPort);
-        }
-      }
-    });
   }
 
   /**

@@ -16,35 +16,34 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina.login;
+package asia.stampy.server.listener.login;
 
 import java.lang.invoke.MethodHandles;
-import java.net.InetSocketAddress;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.message.stomp.StompMessage;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.MessageListenerHaltException;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.InterceptException;
-import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
- * This class enforces login functionality via the implementation of a
+ * This class enforces login functionality via the implementation of a.
+ * 
  * {@link StampyLoginHandler}. Should the login handler throw a
  * {@link TerminateSessionException} this class will send an error to the
  * client, close the session and throw a {@link MessageListenerHaltException} to
@@ -56,10 +55,11 @@ public class LoginMessageListener implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static StompMessageType[] TYPES = StompMessageType.values();
 
-  private Queue<HostPort> loggedInConnections = new ConcurrentLinkedQueue<>();
+  /** The logged in connections. */
+  protected Queue<HostPort> loggedInConnections = new ConcurrentLinkedQueue<>();
 
   private StampyLoginHandler loginHandler;
-  private ServerMinaMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
 
   /*
    * (non-Javadoc)
@@ -184,7 +184,7 @@ public class LoginMessageListener implements StampyMessageListener {
    * 
    * @return the gateway
    */
-  public ServerMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
@@ -194,20 +194,8 @@ public class LoginMessageListener implements StampyMessageListener {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(ServerMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
-
-    gateway.addServiceListener(new MinaServiceAdapter() {
-
-      @Override
-      public void sessionDestroyed(IoSession session) throws Exception {
-        HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
-        if (loggedInConnections.contains(hostPort)) {
-          log.debug("{} session terminated before DISCONNECT message received, cleaning up", hostPort);
-          loggedInConnections.remove(hostPort);
-        }
-      }
-    });
   }
 
 }

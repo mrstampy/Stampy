@@ -16,22 +16,22 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina.transaction;
+package asia.stampy.server.listener.login;
 
 /**
- * The Class TransactionNotStartedException.
+ * The Class TerminateSessionException.
  */
-public class TransactionNotStartedException extends Exception {
+public class TerminateSessionException extends Exception {
 
-  private static final long serialVersionUID = -651656641322030058L;
+  private static final long serialVersionUID = 8889716568822665712L;
 
   /**
-   * Instantiates a new transaction not started exception.
+   * Instantiates a new terminate session exception.
    * 
    * @param message
    *          the message
    */
-  public TransactionNotStartedException(String message) {
+  public TerminateSessionException(String message) {
     super(message);
   }
 

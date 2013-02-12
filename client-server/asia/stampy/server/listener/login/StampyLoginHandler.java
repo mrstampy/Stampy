@@ -16,23 +16,27 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina.connect;
+package asia.stampy.server.listener.login;
 
 /**
- * The Class TransactionAlreadyStartedException.
+ * The Interface StampyLoginHandler.
  */
-public class NotConnectedException extends Exception {
-
-  private static final long serialVersionUID = -255334241693552005L;
+public interface StampyLoginHandler {
 
   /**
-   * Instantiates a new not connected exception.
+   * Implementations are to perform any required login functionality. If the
+   * login fails a {@link NotLoggedInException} is to be thrown. If the session
+   * is to be terminated a {@link TerminateSessionException} is to be thrown.
    * 
-   * @param message
-   *          the message
+   * @param username
+   *          the username
+   * @param password
+   *          the password
+   * @throws NotLoggedInException
+   *           the not logged in exception
+   * @throws TerminateSessionException
+   *           the terminate session exception
    */
-  public NotConnectedException(String message) {
-    super(message);
-  }
+  void login(String username, String password) throws NotLoggedInException, TerminateSessionException;
 
 }

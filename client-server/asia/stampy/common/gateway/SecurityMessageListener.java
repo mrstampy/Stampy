@@ -22,12 +22,13 @@ import asia.stampy.common.mina.StampyMinaHandler;
 
 /**
  * This is a tagging interface to ensure that any implementations implement at
- * least one {@link SecurityMessageListener}, and that it is called first in
- * the list. It is up to applications using Stampy to ensure that appropriate
+ * least one {@link SecurityMessageListener}, and that it is called first in the
+ * list. It is up to applications using Stampy to ensure that appropriate
  * security checks are performed for their environment.
  * 
  * @see StampyMinaHandler#notifyListeners(asia.stampy.common.message.StampyMessage,
- *      org.apache.mina.core.session.IoSession, asia.stampy.common.gateway.HostPort)
+ *      org.apache.mina.core.session.IoSession,
+ *      asia.stampy.common.gateway.HostPort)
  * @author burton
  * 
  */

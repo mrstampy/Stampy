@@ -18,7 +18,7 @@
  */
 package asia.stampy.examples.system.server;
 
-import asia.stampy.server.mina.subscription.StampyAcknowledgementHandler;
+import asia.stampy.server.listener.subscription.StampyAcknowledgementHandler;
 
 /**
  * The Class SystemAcknowledgementHandler.

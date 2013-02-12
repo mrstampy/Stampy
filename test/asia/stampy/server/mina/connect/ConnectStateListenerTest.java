@@ -18,12 +18,15 @@
  */
 package asia.stampy.server.mina.connect;
 
-import static asia.stampy.common.message.StompMessageType.*;
+import static asia.stampy.common.message.StompMessageType.ABORT;
 import static asia.stampy.common.message.StompMessageType.ACK;
 import static asia.stampy.common.message.StompMessageType.BEGIN;
 import static asia.stampy.common.message.StompMessageType.COMMIT;
+import static asia.stampy.common.message.StompMessageType.CONNECT;
+import static asia.stampy.common.message.StompMessageType.DISCONNECT;
 import static asia.stampy.common.message.StompMessageType.NACK;
 import static asia.stampy.common.message.StompMessageType.SEND;
+import static asia.stampy.common.message.StompMessageType.STOMP;
 import static asia.stampy.common.message.StompMessageType.SUBSCRIBE;
 import static asia.stampy.common.message.StompMessageType.UNSUBSCRIBE;
 import static junit.framework.Assert.fail;
@@ -38,10 +41,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.AbstractMinaListenerTest;
+import asia.stampy.server.listener.connect.AlreadyConnectedException;
+import asia.stampy.server.listener.connect.NotConnectedException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectStateListenerTest extends AbstractMinaListenerTest {
-  private ConnectStateListener connect = new ConnectStateListener();
+  private MinaConnectStateListener connect = new MinaConnectStateListener();
 
   @Before
   public void before() throws Exception {

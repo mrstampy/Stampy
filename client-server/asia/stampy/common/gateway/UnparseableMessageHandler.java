@@ -32,11 +32,10 @@ public interface UnparseableMessageHandler {
    * 
    * @param message
    *          the message
-   * @param session
-   *          the session
    * @param hostPort
    *          the host port
    * @throws Exception
+   *           the exception
    */
   void unparseableMessage(String message, HostPort hostPort) throws Exception;
 

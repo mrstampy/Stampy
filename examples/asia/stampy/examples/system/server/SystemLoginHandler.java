@@ -18,9 +18,9 @@
  */
 package asia.stampy.examples.system.server;
 
-import asia.stampy.server.mina.login.NotLoggedInException;
-import asia.stampy.server.mina.login.StampyLoginHandler;
-import asia.stampy.server.mina.login.TerminateSessionException;
+import asia.stampy.server.listener.login.NotLoggedInException;
+import asia.stampy.server.listener.login.StampyLoginHandler;
+import asia.stampy.server.listener.login.TerminateSessionException;
 
 /**
  * The Class SystemLoginHandler.

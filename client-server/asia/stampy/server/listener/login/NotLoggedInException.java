@@ -16,22 +16,22 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina.login;
+package asia.stampy.server.listener.login;
 
 /**
- * The Class TerminateSessionException.
+ * The Class NotLoggedInException.
  */
-public class TerminateSessionException extends Exception {
+public class NotLoggedInException extends Exception {
 
-  private static final long serialVersionUID = 8889716568822665712L;
+  private static final long serialVersionUID = 6115947456180110688L;
 
   /**
-   * Instantiates a new terminate session exception.
+   * Instantiates a new not logged in exception.
    * 
    * @param message
    *          the message
    */
-  public TerminateSessionException(String message) {
+  public NotLoggedInException(String message) {
     super(message);
   }
 

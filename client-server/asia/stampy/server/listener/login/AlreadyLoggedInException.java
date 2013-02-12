@@ -16,7 +16,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina.login;
+package asia.stampy.server.listener.login;
 
 /**
  * The Class AlreadyLoggedInException.

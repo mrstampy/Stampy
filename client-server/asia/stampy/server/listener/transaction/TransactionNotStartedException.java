@@ -16,22 +16,22 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina.login;
+package asia.stampy.server.listener.transaction;
 
 /**
- * The Class NotLoggedInException.
+ * The Class TransactionNotStartedException.
  */
-public class NotLoggedInException extends Exception {
+public class TransactionNotStartedException extends Exception {
 
-  private static final long serialVersionUID = 6115947456180110688L;
+  private static final long serialVersionUID = -651656641322030058L;
 
   /**
-   * Instantiates a new not logged in exception.
+   * Instantiates a new transaction not started exception.
    * 
    * @param message
    *          the message
    */
-  public NotLoggedInException(String message) {
+  public TransactionNotStartedException(String message) {
     super(message);
   }
 
