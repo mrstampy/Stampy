@@ -62,7 +62,7 @@ public class HeartbeatListener implements StampyMinaMessageListener {
 
   private HeartbeatContainer heartbeatContainer;
 
-  private AbstractStampyMinaMessageGateway messageGateway;
+  private AbstractStampyMinaMessageGateway gateway;
 
   /*
    * (non-Javadoc)
@@ -165,18 +165,18 @@ public class HeartbeatListener implements StampyMinaMessageListener {
    * @return the message gateway
    */
   public AbstractStampyMinaMessageGateway getMessageGateway() {
-    return messageGateway;
+    return gateway;
   }
 
   /**
    * Inject the server {@link AbstractStampyMinaMessageGateway} on system
    * startup.
    * 
-   * @param messageGateway
+   * @param gateway
    *          the new message gateway
    */
-  public void setGateway(AbstractStampyMinaMessageGateway messageGateway) {
-    this.messageGateway = messageGateway;
+  public void setGateway(AbstractStampyMinaMessageGateway gateway) {
+    this.gateway = gateway;
   }
 
 }

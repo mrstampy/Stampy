@@ -68,7 +68,7 @@ public class SystemServerInitializer {
 
     RawServerMinaHandler handler = new RawServerMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
-    handler.setMessageGateway(gateway);
+    handler.setGateway(gateway);
     
     handler.addMessageListener(new IDontNeedSecurity());
 

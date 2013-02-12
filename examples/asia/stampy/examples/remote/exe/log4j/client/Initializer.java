@@ -48,7 +48,7 @@ public class Initializer {
 
     RawClientMinaHandler handler = new RawClientMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
-    handler.setMessageGateway(gateway);
+    handler.setGateway(gateway);
     
     handler.addMessageListener(new IDontNeedSecurity());
 

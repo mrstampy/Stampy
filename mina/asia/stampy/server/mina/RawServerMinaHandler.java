@@ -91,12 +91,12 @@ public class RawServerMinaHandler extends StampyRawStringHandler {
    * (non-Javadoc)
    * 
    * @see
-   * asia.stampy.common.mina.StampyMinaHandler#setMessageGateway(asia.stampy
+   * asia.stampy.common.mina.StampyMinaHandler#setGateway(asia.stampy
    * .common.AbstractStampyMessageGateway)
    */
-  public void setMessageGateway(AbstractStampyMinaMessageGateway messageGateway) {
-    super.setMessageGateway(messageGateway);
-    adapter.setMessageGateway((ServerMinaMessageGateway)messageGateway);
+  public void setGateway(AbstractStampyMinaMessageGateway gateway) {
+    super.setGateway(gateway);
+    adapter.setGateway((ServerMinaMessageGateway)gateway);
   }
 
 }

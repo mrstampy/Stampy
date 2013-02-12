@@ -44,7 +44,7 @@ import asia.stampy.server.message.receipt.ReceiptMessage;
 class ServerHandlerAdapter {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  private ServerMinaMessageGateway messageGateway;
+  private ServerMinaMessageGateway gateway;
 
   /**
    * Checks if is valid message.
@@ -135,8 +135,8 @@ class ServerHandlerAdapter {
     ConnectedMessage message = new ConnectedMessage("1.2");
 
     int requested = message.getHeader().getIncomingHeartbeat();
-    if (requested >= 0 || messageGateway.getHeartbeat() >= 0) {
-      int heartbeat = Math.max(requested, messageGateway.getHeartbeat());
+    if (requested >= 0 || gateway.getHeartbeat() >= 0) {
+      int heartbeat = Math.max(requested, gateway.getHeartbeat());
       message.getHeader().setHeartbeat(heartbeat, header.getOutgoingHeartbeat());
       message.getHeader().setSession(Long.toString(session.getId()));
     }
@@ -158,17 +158,17 @@ class ServerHandlerAdapter {
    * @return the message gateway
    */
   public ServerMinaMessageGateway getMessageGateway() {
-    return messageGateway;
+    return gateway;
   }
 
   /**
    * Sets the message gateway.
    * 
-   * @param messageGateway
+   * @param gateway
    *          the new message gateway
    */
-  public void setMessageGateway(ServerMinaMessageGateway messageGateway) {
-    this.messageGateway = messageGateway;
+  public void setGateway(ServerMinaMessageGateway gateway) {
+    this.gateway = gateway;
   }
 
 }

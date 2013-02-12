@@ -137,11 +137,11 @@ public class PaceMaker {
   /**
    * Sets the message gateway. Must be called upon instantiation.
    * 
-   * @param messageGateway
+   * @param gateway
    *          the new message gateway
    */
-  public void setGateway(AbstractStampyMessageGateway messageGateway) {
-    this.gateway = messageGateway;
+  public void setGateway(AbstractStampyMessageGateway gateway) {
+    this.gateway = gateway;
   }
 
   /**

@@ -69,7 +69,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 
   private HeartbeatContainer heartbeatContainer;
 
-  private AbstractStampyMessageGateway messageGateway;
+  private AbstractStampyMessageGateway gateway;
 
   private static final String ILLEGAL_ACCESS_ATTEMPT = "Illegal access attempt";
 
@@ -242,7 +242,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
   protected void errorHandle(Exception e, IoSession session, HostPort hostPort) throws Exception {
     ErrorMessage message = new ErrorMessage("n/a");
     message.getHeader().setMessageHeader(e.getMessage());
-    getMessageGateway().sendMessage(message.toStompMessage(true), hostPort);
+    getGateway().sendMessage(message.toStompMessage(true), hostPort);
   }
 
   /**
@@ -380,18 +380,18 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * 
    * @return the message gateway
    */
-  public AbstractStampyMessageGateway getMessageGateway() {
-    return messageGateway;
+  public AbstractStampyMessageGateway getGateway() {
+    return gateway;
   }
 
   /**
    * Sets the message gateway.
    * 
-   * @param messageGateway
+   * @param gateway
    *          the new message gateway
    */
-  public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
-    this.messageGateway = messageGateway;
+  public void setGateway(AbstractStampyMessageGateway gateway) {
+    this.gateway = gateway;
   }
 
   /**

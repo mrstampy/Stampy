@@ -53,13 +53,13 @@ public class SystemClientInitializer {
 
     RawClientMinaHandler handler = new RawClientMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
-    handler.setMessageGateway(gateway);
+    handler.setGateway(gateway);
     
     handler.addMessageListener(new IDontNeedSecurity());
 
     ConnectedMessageListener cml = new ConnectedMessageListener();
     cml.setHeartbeatContainer(heartbeatContainer);
-    cml.setMessageGateway(gateway);
+    cml.setGateway(gateway);
     handler.addMessageListener(cml);
 
     DisconnectListenerAndInterceptor disconnect = new DisconnectListenerAndInterceptor();

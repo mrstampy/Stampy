@@ -59,7 +59,7 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
 
   private HeartbeatContainer heartbeatContainer;
 
-  private AbstractStampyMessageGateway messageGateway;
+  private AbstractStampyMessageGateway gateway;
 
   /*
    * (non-Javadoc)
@@ -98,14 +98,14 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
 
     int requested = cm.getHeader().getIncomingHeartbeat();
 
-    if (requested <= 0 || messageGateway.getHeartbeat() <= 0) return;
+    if (requested <= 0 || gateway.getHeartbeat() <= 0) return;
 
-    int heartbeat = Math.max(requested, messageGateway.getHeartbeat());
+    int heartbeat = Math.max(requested, gateway.getHeartbeat());
 
     log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
     PaceMaker paceMaker = new PaceMaker(heartbeat);
     paceMaker.setHostPort(hostPort);
-    paceMaker.setGateway(getMessageGateway());
+    paceMaker.setGateway(getGateway());
     paceMaker.start();
 
     getHeartbeatContainer().add(hostPort, paceMaker);
@@ -135,18 +135,18 @@ public class ConnectedMessageListener implements StampyMinaMessageListener {
    * 
    * @return the message gateway
    */
-  public AbstractStampyMessageGateway getMessageGateway() {
-    return messageGateway;
+  public AbstractStampyMessageGateway getGateway() {
+    return gateway;
   }
 
   /**
    * Inject the client {@link AbstractStampyMessageGateway} on system startup.
    * 
-   * @param messageGateway
+   * @param gateway
    *          the new message gateway
    */
-  public void setMessageGateway(AbstractStampyMessageGateway messageGateway) {
-    this.messageGateway = messageGateway;
+  public void setGateway(AbstractStampyMessageGateway gateway) {
+    this.gateway = gateway;
   }
 
 }
