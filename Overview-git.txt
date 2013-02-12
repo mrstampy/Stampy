@@ -44,10 +44,12 @@ The MINA RI provides a STOMP 1.2 [client](https://github.com/mrstampy/Stampy/blo
 
 #### Server StampyMinaMessageListeners
 
-* [ConnectListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/connect/ConnectListener.java)
+* [ConnectStateListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/connect/ConnectStateListener.java)
+* [ConnectResponseListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/connect/ConnectResponseListener.java)
 * [HeartbeatListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/heartbeat/HeartbeatListener.java)
 * [LoginMessageListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/login/LoginMessageListener.java)
 * [AcknowledgementListenerAndInterceptor](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/subscription/AcknowledgementListenerAndInterceptor.java)
+* [ReceiptListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/receipt/ReceiptListener.java)
 * [TransactionListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/transaction/TransactionListener.java)
 * [VersionListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/version/VersionListener.java)
 
