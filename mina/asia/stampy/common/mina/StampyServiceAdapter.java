@@ -148,12 +148,17 @@ public class StampyServiceAdapter extends MinaServiceAdapter {
    */
   public void sendMessage(String stompMessage, HostPort hostPort) {
     if (!hasSession(hostPort)) {
+      log.error("No session for {}, cannot send message {}", hostPort, stompMessage);
       return;
     }
 
     IoSession session = getSession(hostPort);
-    session.write(stompMessage);
-    log.trace("Sent message {} to {}", stompMessage, hostPort);
+    if (session.isConnected() && !session.isClosing()) {
+      session.write(stompMessage);
+      log.trace("Sent message {} to {}", stompMessage, hostPort);
+    } else {
+      log.error("Session is not active for {}, cannot send message {}", hostPort, stompMessage);
+    }
   }
 
   /**
