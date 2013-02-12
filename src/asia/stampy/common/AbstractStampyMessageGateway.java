@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
@@ -43,6 +45,9 @@ public abstract class AbstractStampyMessageGateway {
 
   /** The text interceptors. */
   protected Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<>();
+
+  private Lock stampyInterceptorLock = new ReentrantLock(true);
+  private Lock textInterceptorLock = new ReentrantLock(true);
 
   private boolean autoShutdown;
 
@@ -136,11 +141,16 @@ public abstract class AbstractStampyMessageGateway {
    * @throws InterceptException
    *           the intercept exception
    */
-  protected void interceptOutgoingMessage(StampyMessage<?> message) throws InterceptException {
-    for (StampyOutgoingMessageInterceptor interceptor : interceptors) {
-      if (isForType(interceptor.getMessageTypes(), message.getMessageType()) && interceptor.isForMessage(message)) {
-        interceptor.interceptMessage(message);
+  protected final void interceptOutgoingMessage(StampyMessage<?> message) throws InterceptException {
+    stampyInterceptorLock.lock();
+    try {
+      for (StampyOutgoingMessageInterceptor interceptor : interceptors) {
+        if (isForType(interceptor.getMessageTypes(), message.getMessageType()) && interceptor.isForMessage(message)) {
+          interceptor.interceptMessage(message);
+        }
       }
+    } finally {
+      stampyInterceptorLock.unlock();
     }
   }
 
@@ -152,9 +162,14 @@ public abstract class AbstractStampyMessageGateway {
    * @throws InterceptException
    *           the intercept exception
    */
-  protected void interceptOutgoingMessage(String message) throws InterceptException {
-    for (StampyOutgoingTextInterceptor interceptor : textInterceptors) {
-      interceptor.interceptMessage(message);
+  protected final void interceptOutgoingMessage(String message) throws InterceptException {
+    textInterceptorLock.lock();
+    try {
+      for (StampyOutgoingTextInterceptor interceptor : textInterceptors) {
+        interceptor.interceptMessage(message);
+      }
+    } finally {
+      textInterceptorLock.unlock();
     }
   }
 
