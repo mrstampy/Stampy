@@ -20,10 +20,12 @@ package asia.stampy.common.mina;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.mina.core.service.IoServiceListener;
 
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
+import asia.stampy.common.gateway.HostPort;
 
 /**
  * Defines the <a href="https://mina.apache.org">MINA</a>-specific methods for
@@ -82,6 +84,17 @@ public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMes
    */
   public void setHandler(StampyMinaHandler handler) {
     this.handler = handler;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.AbstractStampyMessageGateway#getConnectedHostPorts()
+   */
+  @Override
+  public Set<HostPort> getConnectedHostPorts() {
+    return serviceAdapter.getHostPorts();
   }
 
 }

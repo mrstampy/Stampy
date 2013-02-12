@@ -20,7 +20,6 @@ package asia.stampy.server.mina;
 
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -184,17 +183,6 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
     log.info("shutdown() invoked, disposing the acceptor");
     serviceAdapter.closeAllSessions();
     acceptor.dispose(false);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.AbstractStampyMessageGateway#getConnectedHostPorts()
-   */
-  @Override
-  public Set<HostPort> getConnectedHostPorts() {
-    return serviceAdapter.getHostPorts();
   }
 
   /*
