@@ -24,7 +24,7 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
 /**
- * The Class MinaServiceAdapter.
+ * Convenience adapter to ignore unused interface methods.
  */
 public class MinaServiceAdapter implements IoServiceListener {
 
