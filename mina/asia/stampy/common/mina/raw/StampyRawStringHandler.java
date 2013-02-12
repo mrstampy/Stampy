@@ -173,20 +173,11 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
         notifyListeners(sm, session, hostPort);
       }
     } catch (Exception e) {
-      try {
-        if (sm == null) {
-          errorHandle(e, session, hostPort);
-        } else {
-          errorHandle(sm, e, session, hostPort);
-        }
-      } catch (Exception e1) {
-        log.error("Unexpected exception sending error message " + msg + " for " + hostPort, e1);
-        log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
-      }
+      handleUnexpectedError(session, hostPort, msg, sm, e);
     }
   }
 
-  private boolean isStompMessage(String msg) throws IOException {
+  private boolean isStompMessage(String msg) throws Exception {
     BufferedReader reader = null;
     try {
       reader = new BufferedReader(new StringReader(msg));
@@ -194,13 +185,9 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
 
       StompMessageType type = StompMessageType.valueOf(stompMessageType);
       return type != null;
-    } catch (Exception e) {
-      log.error("Unexpected exception parsing " + msg, e);
     } finally {
       if (reader != null) reader.close();
     }
-
-    return false;
   }
 
 }

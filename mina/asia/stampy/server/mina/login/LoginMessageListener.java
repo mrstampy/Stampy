@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.mina.core.future.CloseFuture;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,8 +135,8 @@ public class LoginMessageListener implements StampyMinaMessageListener {
       loggedInConnections.add(hostPort);
     } catch (TerminateSessionException e) {
       sendErrorMessage(e.getMessage(), hostPort);
-      session.close(false);
-      throw new RuntimeException(e);
+      CloseFuture cf = session.close(false);
+      cf.awaitUninterruptibly();
     }
   }
 
