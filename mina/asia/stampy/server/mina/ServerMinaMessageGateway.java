@@ -306,7 +306,7 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
   }
 
   /**
-   * Gets the max message size.
+   * Gets the max message size.  Defaults to Integer.MAX_VALUE.
    * 
    * @return the max message size
    */
