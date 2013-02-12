@@ -21,7 +21,8 @@ package asia.stampy.client;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
 
 /**
- * The Class AutoTerminatingClientGateway.
+ * Used by client examples to terminate the Java process when
+ * {@link ClientMinaMessageGateway#shutdown()} is invoked.
  */
 public class AutoTerminatingClientGateway extends ClientMinaMessageGateway {
 
