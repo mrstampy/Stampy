@@ -50,6 +50,10 @@ The MINA RI provides a STOMP 1.2 [client](https://github.com/mrstampy/Stampy/blo
 * [TransactionListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/transaction/TransactionListener.java)
 * [VersionListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/version/VersionListener.java)
 
+#### [SecurityMinaMessageListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/common/mina/SecurityMinaMessageListener.java)
+
+At least one user implemented version of this sub interface of StampyMinaMessageListener must be added and one must be first in the list, else a security exception is thrown. Implementations are to provide adequate security checks for their system.
+
 ## stampy-examples
 
 ### Dependencies
