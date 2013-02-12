@@ -170,7 +170,6 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
         errorHandle(sm, e, session, hostPort);
       }
     } catch (Exception e1) {
-      log.error("Unexpected exception processing message " + msg + " for " + hostPort, e);
       log.error("Unexpected exception sending error message for " + hostPort, e1);
     }
   }
@@ -181,10 +180,9 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
       getUnparseableMessageHandler().unparseableMessage(msg, session, hostPort);
     } catch (Exception e1) {
       try {
-        errorHandle(e, session, hostPort);
+        errorHandle(e1, session, hostPort);
       } catch(Exception e2) {
         log.error("Could not parse message " + msg + " for " + hostPort, e);
-        log.error("Unexpected error delegating to unparseable message handler", e1);
         log.error("Unexpected exception sending error message for " + hostPort, e2);
       }
     }
