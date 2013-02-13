@@ -49,7 +49,7 @@ public abstract class AbstractTransactionListener<SVR extends AbstractStampyMess
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   /** The active transactions. */
-  protected Map<HostPort, Queue<String>> activeTransactions = new ConcurrentHashMap<>();
+  protected Map<HostPort, Queue<String>> activeTransactions = new ConcurrentHashMap<HostPort, Queue<String>>();
   private SVR gateway;
 
   private static StompMessageType[] TYPES = { StompMessageType.ABORT, StompMessageType.BEGIN, StompMessageType.COMMIT,
@@ -153,7 +153,7 @@ public abstract class AbstractTransactionListener<SVR extends AbstractStampyMess
   private Queue<String> getTransactions(HostPort hostPort) {
     Queue<String> transactions = activeTransactions.get(hostPort);
     if (transactions == null) {
-      transactions = new ConcurrentLinkedQueue<>();
+      transactions = new ConcurrentLinkedQueue<String>();
       activeTransactions.put(hostPort, transactions);
     }
 

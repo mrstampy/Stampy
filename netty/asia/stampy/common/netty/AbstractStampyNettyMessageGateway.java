@@ -45,7 +45,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
 
   private StampyNettyChannelHandler handler;
 
-  private List<ChannelHandler> handlers = new ArrayList<>();
+  private List<ChannelHandler> handlers = new ArrayList<ChannelHandler>();
 
   protected void initializeChannel(final Bootstrap bootstrap) {
     ChannelPipelineFactory factory = new ChannelPipelineFactory() {

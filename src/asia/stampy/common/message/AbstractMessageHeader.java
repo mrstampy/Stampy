@@ -35,7 +35,7 @@ public abstract class AbstractMessageHeader implements StampyMessageHeader {
   /** The Constant CONTENT_LENGTH. */
   public static final String CONTENT_LENGTH = "content-length";
 
-  private Map<String, String> headers = new HashMap<>();
+  private Map<String, String> headers = new HashMap<String, String>();
 
   /**
    * Sets the content length.
@@ -144,7 +144,7 @@ public abstract class AbstractMessageHeader implements StampyMessageHeader {
    */
   @Override
   public Map<String, String> getHeaders() {
-    return new HashMap<>(headers);
+    return new HashMap<String, String>(headers);
   }
 
   /*

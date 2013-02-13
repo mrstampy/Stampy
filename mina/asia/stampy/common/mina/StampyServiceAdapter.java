@@ -42,7 +42,7 @@ import asia.stampy.common.gateway.HostPort;
 public class StampyServiceAdapter extends MinaServiceAdapter {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  private Map<HostPort, IoSession> sessions = new ConcurrentHashMap<>();
+  private Map<HostPort, IoSession> sessions = new ConcurrentHashMap<HostPort, IoSession>();
 
   private boolean autoShutdown;
 

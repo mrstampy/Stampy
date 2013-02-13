@@ -49,7 +49,7 @@ import asia.stampy.common.parsing.UnparseableException;
 public abstract class StampyRawStringHandler extends StampyMinaHandler {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  private Map<HostPort, String> messageParts = new ConcurrentHashMap<>();
+  private Map<HostPort, String> messageParts = new ConcurrentHashMap<HostPort, String>();
 
   /*
    * (non-Javadoc)

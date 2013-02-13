@@ -41,7 +41,7 @@ import asia.stampy.common.message.StompMessageType;
 public abstract class AbstractConnectStateListener<SVR extends AbstractStampyMessageGateway> implements
     StampyMessageListener {
 
-  protected Queue<HostPort> connectedClients = new ConcurrentLinkedQueue<>();
+  protected Queue<HostPort> connectedClients = new ConcurrentLinkedQueue<HostPort>();
   private SVR gateway;
 
   private static StompMessageType[] TYPES = StompMessageType.values();

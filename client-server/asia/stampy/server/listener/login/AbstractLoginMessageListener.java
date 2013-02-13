@@ -55,7 +55,7 @@ public abstract class AbstractLoginMessageListener<SVR extends AbstractStampyMes
   private static StompMessageType[] TYPES = StompMessageType.values();
 
   /** The logged in connections. */
-  protected Queue<HostPort> loggedInConnections = new ConcurrentLinkedQueue<>();
+  protected Queue<HostPort> loggedInConnections = new ConcurrentLinkedQueue<HostPort>();
 
   private StampyLoginHandler loginHandler;
   private SVR gateway;

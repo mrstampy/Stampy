@@ -41,7 +41,7 @@ import asia.stampy.common.message.StompMessageType;
  */
 public class TestServerMessageListener implements StampyMessageListener {
 
-  private Map<HostPort, AtomicInteger> acks = new ConcurrentHashMap<>();
+  private Map<HostPort, AtomicInteger> acks = new ConcurrentHashMap<HostPort, AtomicInteger>();
 
   private boolean connect = false;
   private boolean disconnect = false;

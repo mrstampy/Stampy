@@ -49,10 +49,10 @@ public abstract class AbstractStampyMessageGateway {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   /** The interceptors. */
-  protected Queue<StampyOutgoingMessageInterceptor> interceptors = new ConcurrentLinkedQueue<>();
+  protected Queue<StampyOutgoingMessageInterceptor> interceptors = new ConcurrentLinkedQueue<StampyOutgoingMessageInterceptor>();
 
   /** The text interceptors. */
-  protected Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<>();
+  protected Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<StampyOutgoingTextInterceptor>();
 
   private List<StampyMessageListener> listeners = Collections.synchronizedList(new ArrayList<StampyMessageListener>());
 

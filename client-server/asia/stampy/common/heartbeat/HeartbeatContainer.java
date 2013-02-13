@@ -37,7 +37,7 @@ import asia.stampy.common.gateway.HostPort;
 public class HeartbeatContainer {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  private Map<HostPort, PaceMaker> paceMakers = new ConcurrentHashMap<>();
+  private Map<HostPort, PaceMaker> paceMakers = new ConcurrentHashMap<HostPort, PaceMaker>();
 
   /**
    * Stops heartbeats to the specified {@link HostPort}.

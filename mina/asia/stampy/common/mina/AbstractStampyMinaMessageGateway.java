@@ -33,7 +33,7 @@ import asia.stampy.common.gateway.HostPort;
  */
 public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMessageGateway {
 
-  private List<IoServiceListener> serviceListeners = new ArrayList<>();
+  private List<IoServiceListener> serviceListeners = new ArrayList<IoServiceListener>();
   protected StampyServiceAdapter serviceAdapter = new StampyServiceAdapter();
   private StampyMinaHandler handler;
 

@@ -72,7 +72,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
 
   private UnparseableMessageHandler unparseableMessageHandler = new DefaultUnparseableMessageHandler();
 
-  private Map<HostPort, Channel> sessions = new ConcurrentHashMap<>();
+  private Map<HostPort, Channel> sessions = new ConcurrentHashMap<HostPort, Channel>();
 
   /*
    * (non-Javadoc)

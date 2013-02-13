@@ -58,7 +58,7 @@ public abstract class AbstractAcknowledgementListenerAndInterceptor<SVR extends 
   private StampyAcknowledgementHandler handler;
 
   /** The messages. */
-  protected Map<HostPort, Queue<String>> messages = new ConcurrentHashMap<>();
+  protected Map<HostPort, Queue<String>> messages = new ConcurrentHashMap<HostPort, Queue<String>>();
 
   private Timer ackTimer = new Timer("Stampy Acknowledgement Timer", true);
 
@@ -131,7 +131,7 @@ public abstract class AbstractAcknowledgementListenerAndInterceptor<SVR extends 
 
     Queue<String> queue = messages.get(hostPort);
     if (queue == null) {
-      queue = new ConcurrentLinkedQueue<>();
+      queue = new ConcurrentLinkedQueue<String>();
       messages.put(hostPort, queue);
     }
 
