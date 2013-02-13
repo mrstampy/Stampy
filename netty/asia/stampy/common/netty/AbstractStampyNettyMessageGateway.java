@@ -142,6 +142,8 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
    *          the max length
    */
   public void setupChannelPipeline(ChannelPipeline pipeline, int maxLength) {
+    addHandlers(pipeline);
+
     StringEncoder encoder = new StringEncoder(CHARSET);
     StringDecoder decoder = new StringDecoder(CHARSET);
 
@@ -153,13 +155,13 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
     pipeline.addLast("stampyChannelHandler", getStampyChannelHandler());
   }
 
-  /**
+  /*
    * Adds the handlers.
    * 
    * @param pipeline
    *          the pipeline
    */
-  protected void addHandlers(ChannelPipeline pipeline) {
+  private void addHandlers(ChannelPipeline pipeline) {
     for (ChannelHandler handler : handlers) {
       pipeline.addLast(handler.toString(), handler);
     }
