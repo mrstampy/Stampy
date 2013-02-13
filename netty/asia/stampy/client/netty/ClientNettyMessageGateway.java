@@ -51,7 +51,7 @@ public class ClientNettyMessageGateway extends AbstractStampyNettyMessageGateway
     ClientBootstrap bootstrap = new ClientBootstrap(factory);
     ChannelPipeline pipeline = new DefaultChannelPipeline();
     addHandlers(pipeline);
-    getStampyChannelHandler().setupChannelPipeline(pipeline, getMaxMessageSize());
+    setupChannelPipeline(pipeline, getMaxMessageSize());
     bootstrap.setPipeline(pipeline);
 
     return bootstrap;

@@ -18,12 +18,17 @@
  */
 package asia.stampy.common.netty;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
+import org.jboss.netty.handler.codec.frame.Delimiters;
+import org.jboss.netty.handler.codec.string.StringDecoder;
+import org.jboss.netty.handler.codec.string.StringEncoder;
 
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
@@ -33,6 +38,9 @@ import asia.stampy.common.message.interceptor.InterceptException;
  * The Class AbstractStampyNettyMessageGateway.
  */
 public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMessageGateway {
+
+  /** <i>The default encoding for STOMP is UTF-8</i>. */
+  public static Charset CHARSET = Charset.forName("UTF-8");
 
   private StampyNettyChannelHandler stampyChannelHandler;
 
@@ -123,6 +131,26 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
    */
   public void removeHandler(ChannelHandler handler) {
     handlers.remove(handler);
+  }
+
+  /**
+   * Setup channel pipeline.
+   * 
+   * @param pipeline
+   *          the pipeline
+   * @param maxLength
+   *          the max length
+   */
+  public void setupChannelPipeline(ChannelPipeline pipeline, int maxLength) {
+    StringEncoder encoder = new StringEncoder(CHARSET);
+    StringDecoder decoder = new StringDecoder(CHARSET);
+
+    DelimiterBasedFrameDecoder delimiter = new DelimiterBasedFrameDecoder(maxLength, Delimiters.nulDelimiter());
+
+    pipeline.addLast("frameDecoder", delimiter);
+    pipeline.addLast("stringDecoder", decoder);
+    pipeline.addLast("stringEncoder", encoder);
+    pipeline.addLast("stampyChannelHandler", getStampyChannelHandler());
   }
 
   /**

@@ -20,7 +20,6 @@ package asia.stampy.common.netty;
 
 import java.lang.invoke.MethodHandles;
 import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -32,15 +31,10 @@ import org.apache.commons.lang.StringUtils;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
-import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
-import org.jboss.netty.handler.codec.frame.Delimiters;
-import org.jboss.netty.handler.codec.string.StringDecoder;
-import org.jboss.netty.handler.codec.string.StringEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,9 +67,6 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
   private static final String ILLEGAL_ACCESS_ATTEMPT = "Illegal access attempt";
 
   private Executor executor = Executors.newSingleThreadExecutor();
-
-  /** <i>The default encoding for STOMP is UTF-8</i>. */
-  public static Charset CHARSET = Charset.forName("UTF-8");
 
   private UnparseableMessageHandler unparseableMessageHandler = new DefaultUnparseableMessageHandler();
 
@@ -117,26 +108,6 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
     };
 
     getExecutor().execute(runnable);
-  }
-
-  /**
-   * Setup channel pipeline.
-   * 
-   * @param pipeline
-   *          the pipeline
-   * @param maxLength
-   *          the max length
-   */
-  public void setupChannelPipeline(ChannelPipeline pipeline, int maxLength) {
-    StringEncoder encoder = new StringEncoder(CHARSET);
-    StringDecoder decoder = new StringDecoder(CHARSET);
-
-    DelimiterBasedFrameDecoder delimiter = new DelimiterBasedFrameDecoder(maxLength, Delimiters.nulDelimiter());
-
-    pipeline.addLast("frameDecoder", delimiter);
-    pipeline.addLast("stringDecoder", decoder);
-    pipeline.addLast("stringEncoder", encoder);
-    pipeline.addLast("stampyChannelHandler", this);
   }
 
   /**
