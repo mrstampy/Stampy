@@ -72,46 +72,47 @@
 			and <a href="asia/stampy/server/mina/ServerMinaMessageGateway.html">server</a>
 			implementation. By themselves they are not fully STOMP 1.2 compliant.
 			Compliancy and configuration are obtained by adding <a
-				href="asia/stampy/common/mina/StampyMinaMessageListener.html">StampyMinaMessageListener</a>
+				href="asia/stampy/common/StampyMessageListener.html">StampyMessageListener</a>
 			implementations to the client and server instances. <b>Note that
 				the order of adding the listeners to the gateways is important</b>. The
 			following reference implementations are included in the distribution:
 		</p>
 
-		<h4>Client StampyMinaMessageListeners</h4>
-		<ul>
-			<li><a
-				href="asia/stampy/client/mina/connected/ConnectedMessageListener.html">ConnectedMessageListener</a></li>
-			<li><a
-				href="asia/stampy/client/mina/disconnect/DisconnectListenerAndInterceptor.html">DisconnectListenerAndInterceptor</a></li>
-		</ul>
-
-		<h4>Server StampyMinaMessageListeners</h4>
-		<ul>
-			<li><a
-				href="asia/stampy/server/mina/connect/ConnectStateListener.html">ConnectListener</a></li>
-			<li><a
-				href="asia/stampy/server/mina/connect/ConnectResponseListener.html">ConnectResponseListener</a></li>
-			<li><a
-				href="asia/stampy/server/mina/heartbeat/HeartbeatListener.html">HeartbeatListener</a></li>
-			<li><a
-				href="asia/stampy/server/mina/login/LoginMessageListener.html">LoginMessageListener</a></li>
-			<li><a
-				href="asia/stampy/server/mina/subscription/AcknowledgementListenerAndInterceptor.html">AcknowledgementListenerAndInterceptor</a></li>
-			<li><a
-				href="asia/stampy/server/mina/receipt/ReceiptListener.html">ReceiptListener</a></li>
-			<li><a
-				href="asia/stampy/server/mina/transaction/TransactionListener.html">TransactionListener</a></li>
-			<li><a
-				href="asia/stampy/server/mina/version/VersionListener.html">VersionListener</a></li>
-		</ul>
-
-		<h4><a href="asia/stampy/common/mina/SecurityMinaMessageListener.html">SecurityMinaMessageListener</a></h4>
+		<h4>
+			<a href="asia/stampy/common/gateway/SecurityMessageListener.html">SecurityMessageListener</a>
+		</h4>
 		At least one user implemented version of this sub interface of
-		StampyMinaMessageListener must be added and one must be first in the
-		list, else a security exception is thrown. Implementations are to
-		provide adequate security checks for their system.
-		
+		StampyMessageListener must be added and one must be first in the list,
+		else a security exception is thrown. Implementations are to provide
+		adequate security checks for their system.
+	<h4>MINA Client StampyMessageListeners</h4>
+	<ul>
+		<li><a
+			href="asia/stampy/client/mina/connected/MinaConnectedMessageListener.html">MinaConnectedMessageListener</a></li>
+		<li><a
+			href="asia/stampy/client/mina/disconnect/MinaDisconnectListenerAndInterceptor.html">MinaDisconnectListenerAndInterceptor</a></li>
+	</ul>
+
+	<h4>MINA Server StampyMessageListeners</h4>
+	<ul>
+		<li><a
+			href="asia/stampy/server/mina/connect/MinaConnectStateListener.html">MinaConnectListener</a></li>
+		<li><a
+			href="asia/stampy/server/mina/connect/MinaConnectResponseListener.html">MinaConnectResponseListener</a></li>
+		<li><a
+			href="asia/stampy/server/mina/heartbeat/MinaHeartbeatListener.html">MinaHeartbeatListener</a></li>
+		<li><a
+			href="asia/stampy/server/mina/login/MinaLoginMessageListener.html">MinaLoginMessageListener</a></li>
+		<li><a
+			href="asia/stampy/server/mina/subscription/MinaAcknowledgementListenerAndInterceptor.html">MinaAcknowledgementListenerAndInterceptor</a></li>
+		<li><a
+			href="asia/stampy/server/mina/receipt/MinaReceiptListener.html">MinaReceiptListener</a></li>
+		<li><a
+			href="asia/stampy/server/mina/transaction/MinaTransactionListener.html">MinaTransactionListener</a></li>
+		<li><a
+			href="asia/stampy/server/listener/version/VersionListener.html">VersionListener</a></li>
+	</ul>
+
 	<h2>stampy-examples</h2>
 	<h3>Dependencies</h3>
 	<ul>

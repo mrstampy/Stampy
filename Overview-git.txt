@@ -1,8 +1,10 @@
-This library provides [Java class](https://github.com/mrstampy/Stampy/blob/master/src/asia/stampy/common/message/StampyMessage.java) representations of [STOMP 1.2](http://stomp.github.com/) messages and a [structure](https://github.com/mrstampy/Stampy/blob/master/src/asia/stampy/common/AbstractStampyMessageGateway.java) for implementing clients and servers. A reference implementation using [Apache MINA](https://mina.apache.org) is provided. The following artifacts will soon be available:
+This library provides [Java class](https://github.com/mrstampy/Stampy/blob/master/src/asia/stampy/common/message/StampyMessage.java) representations of [STOMP 1.2](http://stomp.github.com/) messages and a [structure](https://github.com/mrstampy/Stampy/blob/master/src/asia/stampy/common/AbstractStampyMessageGateway.java) for implementing clients and servers. Reference implementations using [Netty](https://netty.io) and [Apache MINA](https://mina.apache.org) are provided. The following artifacts will soon be available:
 
 * stampy-core - the core Stampy classes
-* stampy-MINA-client-server-RI - the MINA reference implementation, includes stampy-core
-* stampy-examples - example code, includes stampy-MINA-client-server-RI
+* stampy-client-server - convenience superclasses to create custom STOMP clients and servers
+* stampy-NETTY-client-server-RI - the NETTY reference implementation, includes stampy-client-server
+* stampy-MINA-client-server-RI - the MINA reference implementation, includes stampy-client-server
+* stampy-examples - example code, includes stampy-MINA-client-server-RI and stampy-NETTY-client-server-RI
 * stampy-all - the whole Stampy project
 
 ## Design considerations
@@ -11,7 +13,7 @@ This library provides [Java class](https://github.com/mrstampy/Stampy/blob/maste
 * DI framework-friendly
 * Minimal dependencies
 * Massively multithreaded, many clients can communicate with a server simultaneously
-* Fast (11 microseconds per message during testing)
+* Fast (11 microseconds per message during testing with the MINA RI, 6 microseconds per with NETTY)
 * Reliable
 * Extensible
 * Security focused
@@ -25,42 +27,83 @@ This library provides [Java class](https://github.com/mrstampy/Stampy/blob/maste
 * `dependency org="commons-codec" name="commons-codec" rev="1.7"`
 
 ### Description
-The core classes provide implementations of the various STOMP messages and a structure for building clients and servers.
+The core classes provide implementations of the various STOMP messages.
+
+## stampy-client-server
+
+### Dependencies
+
+* `dependency org="asia.stampy" name="stampy-core" rev="$version"`
+
+### Description
+
+Provides convenience superclasses to quickly create STOMP clients and servers.  The Netty RI took ~ 4 hours to write.
+
+## stampy-NETTY-client-server-RI
+
+### Dependencies
+
+* `dependency org="asia.stampy" name="stampy-client-server" rev="$version"`
+* `dependency org="io.netty" name="netty" rev="3.6.1.Final"`
+
+### Description
+The NETTY RI provides a STOMP 1.2 [client](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/client/netty/ClientNettyMessageGateway.java) and [server](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/ServerNettyMessageGateway.java) implementation. By themselves they are not fully STOMP 1.2 compliant. Compliancy and configuration are obtained by adding [StampyMessageListener](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/common/gateway/StampyMessageListener.java) implementations to the client and server instances. **Note that the order of adding the listeners to the gateways is important**. The following reference implementations will be included in the distribution:
+
+#### [SecurityMessageListener](https://github.com/mrstampy/Stampy/blob/master/client-server/asia/stampy/common/gateway/SecurityMessageListener.java)
+
+At least one user implemented version of this sub interface of StampyMessageListener must be added and one must be first in the list, else a security exception is thrown. Implementations are to provide adequate security checks for their system.
+
+#### Client StampyMessageListeners
+
+* [NettyConnectedMessageListener](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/client/netty/connected/NettyConnectedMessageListener.java)
+* [NettyDisconnectListenerAndInterceptor](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/client/netty/disconnect/NettyDisconnectListenerAndInterceptor.java)
+
+#### Server StampyMessageListeners
+
+* [NettyConnectStateListener](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/connect/NettyConnectStateListener.java)
+* [NettyConnectResponseListener](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/connect/NettyConnectResponseListener.java)
+* [NettyHeartbeatListener](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/heartbeat/NettyHeartbeatListener.java)
+* [NettyLoginMessageListener](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/login/NettyLoginMessageListener.java)
+* [NettyAcknowledgementListenerAndInterceptor](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/subscription/NettyAcknowledgementListenerAndInterceptor.java)
+* [NettyReceiptListener](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/receipt/NettyReceiptListener.java)
+* [NettyTransactionListener](https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/transaction/NettyTransactionListener.java)
+* [VersionListener](https://github.com/mrstampy/Stampy/blob/master/client-server/asia/stampy/server/listener/version/VersionListener.java)
 
 ## stampy-MINA-client-server-RI
 
 ### Dependencies
 
-* `dependency org="asia.stampy" name="stampy-core" rev="$version"`
+* `dependency org="asia.stampy" name="stampy-client-server" rev="$version"`
 * `dependency org="org.apache.mina" name="mina-core" rev="2.0.7"`
 
 ### Description
-The MINA RI provides a STOMP 1.2 [client](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/client/mina/ClientMinaMessageGateway.java) and [server](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/ServerMinaMessageGateway.java) implementation. By themselves they are not fully STOMP 1.2 compliant. Compliancy and configuration are obtained by adding [StampyMinaMessageListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/common/mina/StampyMinaMessageListener.java) implementations to the client and server instances. **Note that the order of adding the listeners to the gateways is important**. The following reference implementations will be included in the distribution:
+The MINA RI provides a STOMP 1.2 [client](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/client/mina/ClientMinaMessageGateway.java) and [server](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/ServerMinaMessageGateway.java) implementation. By themselves they are not fully STOMP 1.2 compliant. Compliancy and configuration are obtained by adding [StampyMessageListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/common/gateway/StampyMessageListener.java) implementations to the client and server instances. **Note that the order of adding the listeners to the gateways is important**. The following reference implementations will be included in the distribution:
 
-#### Client StampyMinaMessageListeners
+#### [SecurityMessageListener](https://github.com/mrstampy/Stampy/blob/master/client-server/asia/stampy/common/gateway/SecurityMessageListener.java)
 
-* [ConnectedMessageListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/client/mina/connected/ConnectedMessageListener.java)
-* [DisconnectListenerAndInterceptor](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/client/mina/disconnect/DisconnectListenerAndInterceptor.java)
+At least one user implemented version of this sub interface of StampyMessageListener must be added and one must be first in the list, else a security exception is thrown. Implementations are to provide adequate security checks for their system.
 
-#### Server StampyMinaMessageListeners
+#### Client StampyMessageListeners
 
-* [ConnectStateListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/connect/ConnectStateListener.java)
-* [ConnectResponseListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/connect/ConnectResponseListener.java)
-* [HeartbeatListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/heartbeat/HeartbeatListener.java)
-* [LoginMessageListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/login/LoginMessageListener.java)
-* [AcknowledgementListenerAndInterceptor](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/subscription/AcknowledgementListenerAndInterceptor.java)
-* [ReceiptListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/receipt/ReceiptListener.java)
-* [TransactionListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/transaction/TransactionListener.java)
-* [VersionListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/version/VersionListener.java)
+* [MinaConnectedMessageListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/client/mina/connected/MinaConnectedMessageListener.java)
+* [MinaDisconnectListenerAndInterceptor](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/client/mina/disconnect/MinaDisconnectListenerAndInterceptor.java)
 
-#### [SecurityMinaMessageListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/common/mina/SecurityMinaMessageListener.java)
+#### Server StampyMessageListeners
 
-At least one user implemented version of this sub interface of StampyMinaMessageListener must be added and one must be first in the list, else a security exception is thrown. Implementations are to provide adequate security checks for their system.
+* [MinaConnectStateListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/connect/MinaConnectStateListener.java)
+* [MinaConnectResponseListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/connect/MinaConnectResponseListener.java)
+* [MinaHeartbeatListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/heartbeat/MinaHeartbeatListener.java)
+* [MinaLoginMessageListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/login/MinaLoginMessageListener.java)
+* [MinaAcknowledgementListenerAndInterceptor](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/subscription/MinaAcknowledgementListenerAndInterceptor.java)
+* [MinaReceiptListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/receipt/MinaReceiptListener.java)
+* [MinaTransactionListener](https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/transaction/MinaTransactionListener.java)
+* [VersionListener](https://github.com/mrstampy/Stampy/blob/master/client-server/asia/stampy/server/listener/version/VersionListener.java)
 
 ## stampy-examples
 
 ### Dependencies
 
+* `dependency org="asia.stampy" name="stampy-NETTY-client-server-RI" rev="$version"`
 * `dependency org="asia.stampy" name="stampy-MINA-client-server-RI" rev="$version"`
 * `dependency org="log4j" name="log4j" rev="1.2.17"`
 * `dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.6"`
