@@ -27,31 +27,28 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.lang.StringUtils;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelHandler.Sharable;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
-import org.jboss.netty.channel.ChannelHandler.Sharable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.client.message.ClientMessageHeader;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.DefaultUnparseableMessageHandler;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.MessageListenerHaltException;
+import asia.stampy.common.gateway.StampyHandlerHelper;
 import asia.stampy.common.gateway.UnparseableMessageHandler;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.parsing.StompMessageParser;
 import asia.stampy.common.parsing.UnparseableException;
-import asia.stampy.server.message.error.ErrorMessage;
 
 /**
  * The Class StampyNettyChannelHandler.
@@ -74,6 +71,8 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
 
   private Map<HostPort, Channel> sessions = new ConcurrentHashMap<HostPort, Channel>();
 
+  private StampyHandlerHelper helper = new StampyHandlerHelper();
+
   /*
    * (non-Javadoc)
    * 
@@ -86,9 +85,9 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
     final HostPort hostPort = createHostPort(ctx);
     log.debug("Received raw message {} from {}", e.getMessage(), hostPort);
 
-    resetHeartbeat(hostPort);
+    helper.resetHeartbeat(hostPort);
 
-    if (!isValidObject(e.getMessage())) {
+    if (!helper.isValidObject(e.getMessage())) {
       log.error("Object {} is not a valid STOMP message, closing connection {}", e.getMessage(), hostPort);
       illegalAccess(ctx);
       return;
@@ -96,7 +95,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
 
     final String msg = (String) e.getMessage();
 
-    if (isHeartbeat(msg)) {
+    if (helper.isHeartbeat(msg)) {
       log.trace("Received heartbeat");
       return;
     }
@@ -211,7 +210,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
     }
 
     if (hostPort == null) hostPort = new HostPort((InetSocketAddress) channel.getRemoteAddress());
-    resetHeartbeat(hostPort);
+    helper.resetHeartbeat(hostPort);
 
     channel.write(message);
   }
@@ -252,97 +251,12 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
 
       if (isValidMessage(sm)) getGateway().notifyMessageListeners(sm, hostPort);
     } catch (UnparseableException e) {
-      handleUnparseableMessage(hostPort, msg, e);
+      helper.handleUnparseableMessage(hostPort, msg, e);
     } catch (MessageListenerHaltException e) {
       // halting
     } catch (Exception e) {
-      handleUnexpectedError(hostPort, msg, sm, e);
+      helper.handleUnexpectedError(hostPort, msg, sm, e);
     }
-  }
-
-  /**
-   * Handle unexpected error.
-   * 
-   * @param hostPort
-   *          the host port
-   * @param msg
-   *          the msg
-   * @param sm
-   *          the sm
-   * @param e
-   *          the e
-   */
-  protected void handleUnexpectedError(HostPort hostPort, String msg, StampyMessage<?> sm, Exception e) {
-    try {
-      if (sm == null) {
-        errorHandle(e, hostPort);
-      } else {
-        errorHandle(sm, e, hostPort);
-      }
-    } catch (Exception e1) {
-      log.error("Unexpected exception sending error message for " + hostPort, e1);
-    }
-  }
-
-  /**
-   * Handle unparseable message.
-   * 
-   * @param hostPort
-   *          the host port
-   * @param msg
-   *          the msg
-   * @param e
-   *          the e
-   */
-  protected void handleUnparseableMessage(HostPort hostPort, String msg, UnparseableException e) {
-    log.debug("Unparseable message, delegating to unparseable message handler");
-    try {
-      getUnparseableMessageHandler().unparseableMessage(msg, hostPort);
-    } catch (Exception e1) {
-      try {
-        errorHandle(e1, hostPort);
-      } catch (Exception e2) {
-        log.error("Could not parse message " + msg + " for " + hostPort, e);
-        log.error("Unexpected exception sending error message for " + hostPort, e2);
-      }
-    }
-  }
-
-  /**
-   * Error handle. Logs the error.
-   * 
-   * @param message
-   *          the message
-   * @param e
-   *          the e
-   * @param hostPort
-   *          the host port
-   * @throws Exception
-   *           the exception
-   */
-  protected void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws Exception {
-    log.error("Handling error, sending error message to " + hostPort, e);
-    String receipt = message.getHeader().getHeaderValue(ClientMessageHeader.RECEIPT);
-    ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
-    error.getHeader().setMessageHeader("Could not execute " + message.getMessageType() + " - " + e.getMessage());
-    getGateway().sendMessage(error.toStompMessage(true), hostPort);
-  }
-
-  /**
-   * Error handle. Logs the error.
-   * 
-   * @param e
-   *          the e
-   * @param hostPort
-   *          the host port
-   * @throws Exception
-   *           the exception
-   */
-  protected void errorHandle(Exception e, HostPort hostPort) throws Exception {
-    log.error("Handling error, sending error message to " + hostPort, e);
-    ErrorMessage error = new ErrorMessage("n/a");
-    error.getHeader().setMessageHeader(e.getMessage());
-    getGateway().sendMessage(error.toStompMessage(true), hostPort);
   }
 
   /**
@@ -356,17 +270,6 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
   protected abstract boolean isValidMessage(StampyMessage<?> message);
 
   /**
-   * Checks if the message is a heartbeat.
-   * 
-   * @param msg
-   *          the msg
-   * @return true, if is heartbeat
-   */
-  protected boolean isHeartbeat(String msg) {
-    return msg.equals(PaceMaker.HB1) || msg.equals(PaceMaker.HB2);
-  }
-
-  /**
    * Illegal access.
    * 
    * @param ctx
@@ -377,27 +280,6 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
     cf.awaitUninterruptibly();
     cf = ctx.getChannel().close();
     cf.awaitUninterruptibly();
-  }
-
-  /**
-   * Checks if is valid object. Must be a string.
-   * 
-   * @param message
-   *          the message
-   * @return true, if is valid object
-   */
-  protected boolean isValidObject(Object message) {
-    return message instanceof String;
-  }
-
-  /**
-   * Reset heartbeat.
-   * 
-   * @param hostPort
-   *          the host port
-   */
-  protected void resetHeartbeat(HostPort hostPort) {
-    getHeartbeatContainer().reset(hostPort);
   }
 
   /**
@@ -417,6 +299,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    */
   public void setParser(StompMessageParser parser) {
     this.parser = parser;
+    helper.setParser(parser);
   }
 
   /**
@@ -436,6 +319,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    */
   public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
     this.heartbeatContainer = heartbeatContainer;
+    helper.setHeartbeatContainer(heartbeatContainer);
   }
 
   /**
@@ -455,6 +339,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    */
   public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
+    helper.setGateway(gateway);
   }
 
   /**
@@ -474,6 +359,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    */
   public void setUnparseableMessageHandler(UnparseableMessageHandler unparseableMessageHandler) {
     this.unparseableMessageHandler = unparseableMessageHandler;
+    helper.setUnparseableMessageHandler(unparseableMessageHandler);
   }
 
   /*

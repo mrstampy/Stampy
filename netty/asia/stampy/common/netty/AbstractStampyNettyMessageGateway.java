@@ -28,6 +28,7 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.DefaultChannelPipeline;
+import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 
@@ -49,7 +50,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
 
   protected void initializeChannel(final Bootstrap bootstrap) {
     ChannelPipelineFactory factory = new ChannelPipelineFactory() {
-      
+
       @Override
       public ChannelPipeline getPipeline() throws Exception {
         ChannelPipeline pipeline = new DefaultChannelPipeline();
@@ -57,7 +58,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
         return pipeline;
       }
     };
-    
+
     bootstrap.setPipelineFactory(factory);
   }
 
@@ -129,7 +130,9 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
   }
 
   /**
-   * Adds the handler.
+   * Adds the Channel Handler for inclusion in the created Channel. Note that on
+   * the server the handler will be shared across all connections, and as such
+   * must be able to act as a singleton ie. no {@link FrameDecoder}s here.
    * 
    * @param handler
    *          the handler

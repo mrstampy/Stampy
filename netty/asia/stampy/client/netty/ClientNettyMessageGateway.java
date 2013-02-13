@@ -82,7 +82,7 @@ public class ClientNettyMessageGateway extends AbstractStampyNettyMessageGateway
     } else if (client.isConnected()) {
       log.warn("Already connected");
     } else {
-      log.error("Acceptor in unrecognized state: isBound {}, isConnected {}, ", client.isBound(), client.isConnected());
+      log.error("Connector in unrecognized state: isBound {}, isConnected {}, ", client.isBound(), client.isConnected());
     }
   }
 

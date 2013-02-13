@@ -63,9 +63,9 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
     final HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
     log.trace("Received raw message {} from {}", message, hostPort);
 
-    resetHeartbeat(hostPort);
+    helper.resetHeartbeat(hostPort);
 
-    if (!isValidObject(message)) {
+    if (!helper.isValidObject(message)) {
       log.error("Object {} is not a valid STOMP message, closing connection {}", message, hostPort);
       illegalAccess(session);
       return;
@@ -112,22 +112,22 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
         processMessage(concat, hostPort);
       }
     } catch (UnparseableException e) {
-      handleUnparseableMessage(hostPort, msg, e);
+      helper.handleUnparseableMessage(hostPort, msg, e);
     } catch (MessageListenerHaltException e) {
       // halting
     } catch (Exception e) {
-      handleUnexpectedError(hostPort, msg, null, e);
+      helper.handleUnexpectedError(hostPort, msg, null, e);
     }
   }
 
   private void processNewMessage(HostPort hostPort, String msg) throws Exception, UnparseableException, IOException {
-    if (isHeartbeat(msg)) {
+    if (helper.isHeartbeat(msg)) {
       log.trace("Received heartbeat");
       return;
     } else if (isStompMessage(msg)) {
       processMessage(msg, hostPort);
     } else {
-      handleUnparseableMessage(hostPort, msg, null);
+      helper.handleUnparseableMessage(hostPort, msg, null);
     }
   }
 
@@ -171,7 +171,7 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
     } catch (MessageListenerHaltException e) {
       throw e;
     } catch (Exception e) {
-      handleUnexpectedError(hostPort, msg, sm, e);
+      helper.handleUnexpectedError(hostPort, msg, sm, e);
     }
   }
 

@@ -24,7 +24,6 @@ import java.nio.charset.Charset;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
@@ -32,20 +31,18 @@ import org.apache.mina.filter.codec.prefixedstring.PrefixedStringCodecFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asia.stampy.client.message.ClientMessageHeader;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.DefaultUnparseableMessageHandler;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.MessageListenerHaltException;
+import asia.stampy.common.gateway.StampyHandlerHelper;
 import asia.stampy.common.gateway.UnparseableMessageHandler;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
 import asia.stampy.common.parsing.StompMessageParser;
 import asia.stampy.common.parsing.UnparseableException;
-import asia.stampy.server.message.error.ErrorMessage;
 
 /**
  * This class is an abstract implementation of a MINA IoHandler for the receipt
@@ -79,6 +76,8 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 
   private UnparseableMessageHandler unparseableMessageHandler = new DefaultUnparseableMessageHandler();
 
+  protected StampyHandlerHelper helper = new StampyHandlerHelper();
+
   /*
    * (non-Javadoc)
    * 
@@ -91,9 +90,9 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
     final HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
     log.debug("Received raw message {} from {}", message, hostPort);
 
-    resetHeartbeat(hostPort);
+    helper.resetHeartbeat(hostPort);
 
-    if (!isValidObject(message)) {
+    if (!helper.isValidObject(message)) {
       log.error("Object {} is not a valid STOMP message, closing connection {}", message, hostPort);
       illegalAccess(session);
       return;
@@ -101,7 +100,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 
     final String msg = (String) message;
 
-    if (isHeartbeat(msg)) {
+    if (helper.isHeartbeat(msg)) {
       log.trace("Received heartbeat");
       return;
     }
@@ -150,37 +149,11 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 
       if (isValidMessage(sm)) getGateway().notifyMessageListeners(sm, hostPort);
     } catch (UnparseableException e) {
-      handleUnparseableMessage(hostPort, msg, e);
+      helper.handleUnparseableMessage(hostPort, msg, e);
     } catch (MessageListenerHaltException e) {
       // halting
     } catch (Exception e) {
-      handleUnexpectedError(hostPort, msg, sm, e);
-    }
-  }
-
-  protected void handleUnexpectedError(HostPort hostPort, String msg, StampyMessage<?> sm, Exception e) {
-    try {
-      if (sm == null) {
-        errorHandle(e, hostPort);
-      } else {
-        errorHandle(sm, e, hostPort);
-      }
-    } catch (Exception e1) {
-      log.error("Unexpected exception sending error message for " + hostPort, e1);
-    }
-  }
-
-  protected void handleUnparseableMessage(HostPort hostPort, String msg, UnparseableException e) {
-    log.debug("Unparseable message, delegating to unparseable message handler");
-    try {
-      getUnparseableMessageHandler().unparseableMessage(msg, hostPort);
-    } catch (Exception e1) {
-      try {
-        errorHandle(e1, hostPort);
-      } catch (Exception e2) {
-        log.error("Could not parse message " + msg + " for " + hostPort, e);
-        log.error("Unexpected exception sending error message for " + hostPort, e2);
-      }
+      helper.handleUnexpectedError(hostPort, msg, sm, e);
     }
   }
 
@@ -193,75 +166,6 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
   protected void illegalAccess(IoSession session) {
     session.write(ILLEGAL_ACCESS_ATTEMPT);
     session.close(false);
-  }
-
-  /**
-   * Checks if is valid object. Must be a string.
-   * 
-   * @param message
-   *          the message
-   * @return true, if is valid object
-   */
-  protected boolean isValidObject(Object message) {
-    return message instanceof String;
-  }
-
-  /**
-   * Checks if the message is a heartbeat.
-   * 
-   * @param msg
-   *          the msg
-   * @return true, if is heartbeat
-   */
-  protected boolean isHeartbeat(String msg) {
-    return msg.equals(PaceMaker.HB1) || msg.equals(PaceMaker.HB2);
-  }
-
-  /**
-   * Error handle. Logs the error.
-   * 
-   * @param message
-   *          the message
-   * @param e
-   *          the e
-   * @param hostPort
-   *          the host port
-   * @throws Exception
-   *           the exception
-   */
-  protected void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws Exception {
-    log.error("Handling error, sending error message to " + hostPort, e);
-    String receipt = message.getHeader().getHeaderValue(ClientMessageHeader.RECEIPT);
-    ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
-    error.getHeader().setMessageHeader("Could not execute " + message.getMessageType() + " - " + e.getMessage());
-    getGateway().sendMessage(error.toStompMessage(true), hostPort);
-  }
-
-  /**
-   * Error handle. Logs the error.
-   * 
-   * @param e
-   *          the e
-   * @param hostPort
-   *          the host port
-   * @throws Exception
-   *           the exception
-   */
-  protected void errorHandle(Exception e, HostPort hostPort) throws Exception {
-    log.error("Handling error, sending error message to " + hostPort, e);
-    ErrorMessage error = new ErrorMessage("n/a");
-    error.getHeader().setMessageHeader(e.getMessage());
-    getGateway().sendMessage(error.toStompMessage(true), hostPort);
-  }
-
-  /**
-   * Reset heartbeat.
-   * 
-   * @param hostPort
-   *          the host port
-   */
-  protected void resetHeartbeat(HostPort hostPort) {
-    getHeartbeatContainer().reset(hostPort);
   }
 
   /**
@@ -291,6 +195,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    */
   public void setParser(StompMessageParser parser) {
     this.parser = parser;
+    helper.setParser(parser);
   }
 
   /**
@@ -310,6 +215,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    */
   public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
     this.heartbeatContainer = heartbeatContainer;
+    helper.setHeartbeatContainer(heartbeatContainer);
   }
 
   /**
@@ -329,6 +235,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    */
   public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
+    helper.setGateway(gateway);
   }
 
   /**
@@ -369,6 +276,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    */
   public void setUnparseableMessageHandler(UnparseableMessageHandler unparseableMessageHandler) {
     this.unparseableMessageHandler = unparseableMessageHandler;
+    helper.setUnparseableMessageHandler(unparseableMessageHandler);
   }
 
   /*
