@@ -46,8 +46,6 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private NioSocketAcceptor acceptor = new NioSocketAcceptor();
-  private int maxMessageSize = Integer.MAX_VALUE;
-  private int port;
 
   private void init() {
     log.trace("Initializing Stampy MINA acceptor");
@@ -208,43 +206,4 @@ public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
   protected void removeServiceListenerImpl(IoServiceListener listener) {
     acceptor.removeListener(listener);
   }
-
-  /**
-   * Gets the max message size. Defaults to Integer.MAX_VALUE.
-   * 
-   * @return the max message size
-   */
-  public int getMaxMessageSize() {
-    return maxMessageSize;
-  }
-
-  /**
-   * Sets the max message size.
-   * 
-   * @param maxMessageSize
-   *          the new max message size
-   */
-  public void setMaxMessageSize(int maxMessageSize) {
-    this.maxMessageSize = maxMessageSize;
-  }
-
-  /**
-   * Gets the port.
-   * 
-   * @return the port
-   */
-  public int getPort() {
-    return port;
-  }
-
-  /**
-   * Sets the port.
-   * 
-   * @param port
-   *          the new port
-   */
-  public void setPort(int port) {
-    this.port = port;
-  }
-
 }

@@ -23,8 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.jboss.netty.bootstrap.Bootstrap;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.channel.DefaultChannelPipeline;
 import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
 import org.jboss.netty.handler.codec.frame.Delimiters;
 import org.jboss.netty.handler.codec.string.StringDecoder;
@@ -45,6 +47,12 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
   private StampyNettyChannelHandler handler;
 
   private List<ChannelHandler> handlers = new ArrayList<>();
+
+  protected void initializeChannel(Bootstrap bootstrap) {
+    ChannelPipeline pipeline = new DefaultChannelPipeline();
+    setupChannelPipeline(pipeline, getMaxMessageSize());
+    bootstrap.setPipeline(pipeline);
+  }
 
   /*
    * (non-Javadoc)
@@ -158,8 +166,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
   /*
    * Adds the handlers.
    * 
-   * @param pipeline
-   *          the pipeline
+   * @param pipeline the pipeline
    */
   private void addHandlers(ChannelPipeline pipeline) {
     for (ChannelHandler handler : handlers) {

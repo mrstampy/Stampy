@@ -27,8 +27,6 @@ import javax.annotation.Resource;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.DefaultChannelPipeline;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,17 +42,13 @@ public class ServerNettyMessageGateway extends AbstractStampyNettyMessageGateway
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private NioServerSocketChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
       Executors.newCachedThreadPool());
-  private int maxMessageSize = Integer.MAX_VALUE;
 
   private Channel server;
 
-  private int port;
-
   private ServerBootstrap init() {
     ServerBootstrap bootstrap = new ServerBootstrap(factory);
-    ChannelPipeline pipeline = new DefaultChannelPipeline();
-    setupChannelPipeline(pipeline, getMaxMessageSize());
-    bootstrap.setPipeline(pipeline);
+    initializeChannel(bootstrap);
+
     return bootstrap;
   }
 
@@ -100,44 +94,6 @@ public class ServerNettyMessageGateway extends AbstractStampyNettyMessageGateway
     cf.awaitUninterruptibly();
     server = null;
     log.info("Server has been shut down");
-  }
-
-  /**
-   * Gets the max message size.
-   * 
-   * @return the max message size
-   */
-  public int getMaxMessageSize() {
-    return maxMessageSize;
-  }
-
-  /**
-   * Sets the max message size.
-   * 
-   * @param maxMessageSize
-   *          the new max message size
-   */
-  public void setMaxMessageSize(int maxMessageSize) {
-    this.maxMessageSize = maxMessageSize;
-  }
-
-  /**
-   * Gets the port.
-   * 
-   * @return the port
-   */
-  public int getPort() {
-    return port;
-  }
-
-  /**
-   * Sets the port.
-   * 
-   * @param port
-   *          the new port
-   */
-  public void setPort(int port) {
-    this.port = port;
   }
 
 }

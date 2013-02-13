@@ -46,9 +46,7 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private NioSocketConnector connector = new NioSocketConnector();
-  private int maxMessageSize = Integer.MAX_VALUE;
   private String host;
-  private int port;
 
   private void init() {
     serviceAdapter.setGateway(this);
@@ -94,9 +92,9 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
 
     cf.await(2000);
     if (connector.isActive()) {
-      log.info("Stampy MINA ClientMinaMessageGateway connected to {}:{}", host, port);
+      log.info("Stampy MINA ClientMinaMessageGateway connected to {}:{}", host, getPort());
     } else {
-      log.error("Could not connect to {}:{}", host, port);
+      log.error("Could not connect to {}:{}", host, getPort());
     }
   }
 
@@ -206,25 +204,6 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
   }
 
   /**
-   * Gets the max message size. Defaults to Integer.MAX_VALUE.
-   * 
-   * @return the max message size
-   */
-  public int getMaxMessageSize() {
-    return maxMessageSize;
-  }
-
-  /**
-   * Sets the max message size.
-   * 
-   * @param maxMessageSize
-   *          the new max message size
-   */
-  public void setMaxMessageSize(int maxMessageSize) {
-    this.maxMessageSize = maxMessageSize;
-  }
-
-  /**
    * Gets the host.
    * 
    * @return the host
@@ -241,25 +220,6 @@ public class ClientMinaMessageGateway extends AbstractStampyMinaMessageGateway {
    */
   public void setHost(String host) {
     this.host = host;
-  }
-
-  /**
-   * Gets the port.
-   * 
-   * @return the port
-   */
-  public int getPort() {
-    return port;
-  }
-
-  /**
-   * Sets the port.
-   * 
-   * @param port
-   *          the new port
-   */
-  public void setPort(int port) {
-    this.port = port;
   }
 
 }

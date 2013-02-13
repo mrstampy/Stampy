@@ -25,8 +25,6 @@ import java.util.concurrent.Executors;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.DefaultChannelPipeline;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,17 +39,13 @@ public class ClientNettyMessageGateway extends AbstractStampyNettyMessageGateway
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
       Executors.newCachedThreadPool());
-  private int maxMessageSize = Integer.MAX_VALUE;
   private String host;
-  private int port;
 
   private Channel client;
 
   private ClientBootstrap init() {
     ClientBootstrap bootstrap = new ClientBootstrap(factory);
-    ChannelPipeline pipeline = new DefaultChannelPipeline();
-    setupChannelPipeline(pipeline, getMaxMessageSize());
-    bootstrap.setPipeline(pipeline);
+    initializeChannel(bootstrap);
 
     return bootstrap;
   }
@@ -108,25 +102,6 @@ public class ClientNettyMessageGateway extends AbstractStampyNettyMessageGateway
   }
 
   /**
-   * Gets the max message size.
-   * 
-   * @return the max message size
-   */
-  public int getMaxMessageSize() {
-    return maxMessageSize;
-  }
-
-  /**
-   * Sets the max message size.
-   * 
-   * @param maxMessageSize
-   *          the new max message size
-   */
-  public void setMaxMessageSize(int maxMessageSize) {
-    this.maxMessageSize = maxMessageSize;
-  }
-
-  /**
    * Gets the host.
    * 
    * @return the host
@@ -143,25 +118,6 @@ public class ClientNettyMessageGateway extends AbstractStampyNettyMessageGateway
    */
   public void setHost(String host) {
     this.host = host;
-  }
-
-  /**
-   * Gets the port.
-   * 
-   * @return the port
-   */
-  public int getPort() {
-    return port;
-  }
-
-  /**
-   * Sets the port.
-   * 
-   * @param port
-   *          the new port
-   */
-  public void setPort(int port) {
-    this.port = port;
   }
 
 }

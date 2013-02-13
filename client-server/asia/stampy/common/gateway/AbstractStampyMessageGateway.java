@@ -62,6 +62,10 @@ public abstract class AbstractStampyMessageGateway {
 
   private UnparseableMessageHandler unparseableMessageHandler = new DefaultUnparseableMessageHandler();
 
+  private int port;
+
+  private int maxMessageSize = Integer.MAX_VALUE;
+
   /**
    * Broadcasts a {@link StampyMessage} to all connected clients from the server
    * or to the server from a client. Use this method for all STOMP messages.
@@ -423,5 +427,21 @@ public abstract class AbstractStampyMessageGateway {
    */
   public void setUnparseableMessageHandler(UnparseableMessageHandler unparseableMessageHandler) {
     this.unparseableMessageHandler = unparseableMessageHandler;
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
+  }
+
+  public int getMaxMessageSize() {
+    return maxMessageSize;
+  }
+
+  public void setMaxMessageSize(int maxMessageSize) {
+    this.maxMessageSize = maxMessageSize;
   }
 }
