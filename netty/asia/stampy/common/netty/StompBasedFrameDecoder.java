@@ -20,6 +20,7 @@ package asia.stampy.common.netty;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelHandler.Sharable;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
@@ -28,9 +29,11 @@ import org.jboss.netty.handler.codec.frame.TooLongFrameException;
 
 /**
  * {@link LineBasedFrameDecoder} converted to be STOMP message aware.
+ * 
  * @author burton
- *
+ * 
  */
+@Sharable
 public class StompBasedFrameDecoder extends FrameDecoder {
 
   /** Maximum length of a frame we're willing to decode. */
@@ -74,9 +77,9 @@ public class StompBasedFrameDecoder extends FrameDecoder {
   }
 
   @Override
-  protected Object decode(final ChannelHandlerContext ctx, final Channel channel, final ChannelBuffer buffer)
-      throws Exception {
-    final int eol = findEndOfLine(buffer);
+  protected Object decode(final ChannelHandlerContext ctx, final Channel channel,
+      final ChannelBuffer buffer) throws Exception {
+    final int eol = findEndOfMessage(buffer);
     if (eol != -1) {
       final ChannelBuffer frame;
       final int length = eol - buffer.readerIndex();
@@ -123,7 +126,7 @@ public class StompBasedFrameDecoder extends FrameDecoder {
    * Returns the index in the buffer of the end of line found. Returns -1 if no
    * end of line was found in the buffer.
    */
-  private static int findEndOfLine(final ChannelBuffer buffer) {
+  private static int findEndOfMessage(final ChannelBuffer buffer) {
     final int wIdx = buffer.writerIndex();
     final int rIdx = buffer.readerIndex();
     for (int i = buffer.readerIndex(); i < wIdx; i++) {

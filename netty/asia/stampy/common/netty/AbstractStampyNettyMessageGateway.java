@@ -26,6 +26,7 @@ import java.util.Set;
 import org.jboss.netty.bootstrap.Bootstrap;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.DefaultChannelPipeline;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
@@ -46,10 +47,18 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
 
   private List<ChannelHandler> handlers = new ArrayList<>();
 
-  protected void initializeChannel(Bootstrap bootstrap) {
-    ChannelPipeline pipeline = new DefaultChannelPipeline();
-    setupChannelPipeline(pipeline, getMaxMessageSize());
-    bootstrap.setPipeline(pipeline);
+  protected void initializeChannel(final Bootstrap bootstrap) {
+    ChannelPipelineFactory factory = new ChannelPipelineFactory() {
+      
+      @Override
+      public ChannelPipeline getPipeline() throws Exception {
+        ChannelPipeline pipeline = new DefaultChannelPipeline();
+        setupChannelPipeline(pipeline, getMaxMessageSize());
+        return pipeline;
+      }
+    };
+    
+    bootstrap.setPipelineFactory(factory);
   }
 
   /*

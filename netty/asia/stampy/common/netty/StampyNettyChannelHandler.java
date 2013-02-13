@@ -35,6 +35,7 @@ import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.jboss.netty.channel.ChannelHandler.Sharable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,7 @@ import asia.stampy.server.message.error.ErrorMessage;
 /**
  * The Class StampyNettyChannelHandler.
  */
+@Sharable
 public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHandler {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -185,8 +187,8 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    *          the message
    */
   public void broadcastMessage(String message) {
-    for (HostPort hostPort : sessions.keySet()) {
-      sendMessage(message, hostPort);
+    for (Channel channel : sessions.values()) {
+      sendMessage(message, null, channel);
     }
   }
 
@@ -199,14 +201,18 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    *          the host port
    */
   public void sendMessage(String message, HostPort hostPort) {
-    if (!isConnected(hostPort)) {
-      log.error("{} is not connected, cannot send message {}", hostPort, message);
+    sendMessage(message, hostPort, sessions.get(hostPort));
+  }
+
+  private synchronized void sendMessage(String message, HostPort hostPort, Channel channel) {
+    if (channel == null || !channel.isConnected()) {
+      log.error("Channel is not connected, cannot send message {}", message);
       return;
     }
 
+    if (hostPort == null) hostPort = new HostPort((InetSocketAddress) channel.getRemoteAddress());
     resetHeartbeat(hostPort);
 
-    Channel channel = sessions.get(hostPort);
     channel.write(message);
   }
 

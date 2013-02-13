@@ -19,7 +19,10 @@
 package asia.stampy.common.gateway;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -51,7 +54,7 @@ public abstract class AbstractStampyMessageGateway {
   /** The text interceptors. */
   protected Queue<StampyOutgoingTextInterceptor> textInterceptors = new ConcurrentLinkedQueue<>();
 
-  private Queue<StampyMessageListener> listeners = new ConcurrentLinkedQueue<>();
+  private List<StampyMessageListener> listeners = Collections.synchronizedList(new ArrayList<StampyMessageListener>());
 
   private Lock stampyInterceptorLock = new ReentrantLock(true);
   private Lock textInterceptorLock = new ReentrantLock(true);
@@ -275,6 +278,14 @@ public abstract class AbstractStampyMessageGateway {
     }
 
     listeners.add(listener);
+  }
+  
+  public final void addMessageListener(StampyMessageListener listener, int idx) {
+    if(idx == 0 && !(listener instanceof SecurityMessageListener)) {
+      throw new StampySecurityException();
+    }
+    
+    listeners.add(idx, listener);
   }
 
   /**

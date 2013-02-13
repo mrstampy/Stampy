@@ -61,17 +61,16 @@ public class TestServerMessageListener implements StampyMessageListener {
   public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     switch (message.getMessageType()) {
     case ACK:
-      acks.get(hostPort).getAndIncrement();
+      getAckCounter(hostPort).getAndIncrement();
       break;
     case CONNECT:
       connect = true;
       start = System.nanoTime();
-      acks.put(hostPort, new AtomicInteger());
       break;
     case DISCONNECT:
       disconnect = true;
       end = System.nanoTime();
-      stats(acks.get(hostPort));
+      stats(getAckCounter(hostPort));
       acks.remove(hostPort);
       break;
     default:
@@ -79,6 +78,16 @@ public class TestServerMessageListener implements StampyMessageListener {
       break;
 
     }
+  }
+  
+  private AtomicInteger getAckCounter(HostPort hostPort) {
+    AtomicInteger ai = acks.get(hostPort);
+    if(ai == null) {
+      ai = new AtomicInteger();
+      acks.put(hostPort, ai);
+    }
+    
+    return ai;
   }
 
   private void stats(AtomicInteger ai) {

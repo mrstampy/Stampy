@@ -87,6 +87,7 @@ public class HeartbeatContainer {
    *          the host port
    */
   public void reset(HostPort hostPort) {
+    if(hostPort == null) return;
     log.trace("Resetting PaceMaker for {}", hostPort);
     PaceMaker paceMaker = paceMakers.get(hostPort);
     if (paceMaker != null) paceMaker.reset();

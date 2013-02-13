@@ -41,7 +41,7 @@ public class TestClient {
     setGateway(NettyInitializer.initialize());
     listener = new TestClientMessageListener();
     listener.setGateway(gateway);
-    gateway.addMessageListener(listener);
+    gateway.addMessageListener(listener, 1);
 
     gateway.connect();
     gateway.broadcastMessage(new ConnectMessage("localhost"));

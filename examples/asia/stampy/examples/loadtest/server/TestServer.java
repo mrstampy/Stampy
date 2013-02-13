@@ -36,7 +36,7 @@ public class TestServer {
   public void init() throws Exception {
     setGateway(NettyInitializer.initialize());
 
-    gateway.addMessageListener(new TestServerMessageListener());
+    gateway.addMessageListener(new TestServerMessageListener(), 1);
 
     gateway.connect();
     System.out.println("Stampy server started");
