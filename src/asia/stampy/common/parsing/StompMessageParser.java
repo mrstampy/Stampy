@@ -84,13 +84,13 @@ public class StompMessageParser {
       List<String> headers = new ArrayList<String>();
       String hdr = reader.readLine();
 
-      while (hdr != null && !hdr.isEmpty()) {
+      while (StringUtils.isNotEmpty(hdr)) {
         headers.add(hdr);
         hdr = reader.readLine();
       }
 
       String body = reader.readLine();
-      body = body.equals(EOM) ? null : fillBody(body, reader);
+      body = body == null || body.equals(EOM) ? null : fillBody(body, reader);
 
       MSG msg = createStampyMessage(type, headers);
 

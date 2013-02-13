@@ -27,8 +27,6 @@ import org.jboss.netty.bootstrap.Bootstrap;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.DefaultChannelPipeline;
-import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
-import org.jboss.netty.handler.codec.frame.Delimiters;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 
@@ -155,9 +153,9 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
     StringEncoder encoder = new StringEncoder(CHARSET);
     StringDecoder decoder = new StringDecoder(CHARSET);
 
-    DelimiterBasedFrameDecoder delimiter = new DelimiterBasedFrameDecoder(maxLength, Delimiters.nulDelimiter());
+    StompBasedFrameDecoder stomp = new StompBasedFrameDecoder(maxLength);
 
-    pipeline.addLast("frameDecoder", delimiter);
+    pipeline.addLast("stompDecoder", stomp);
     pipeline.addLast("stringDecoder", decoder);
     pipeline.addLast("stringEncoder", encoder);
     pipeline.addLast("stampyChannelHandler", getHandler());

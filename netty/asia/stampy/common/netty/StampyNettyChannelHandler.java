@@ -138,7 +138,6 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    */
   public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
     HostPort hostPort = createHostPort(ctx);
-//    log.info("New connection on {}", hostPort);
     sessions.put(hostPort, ctx.getChannel());
     ctx.sendUpstream(e);
   }
@@ -155,7 +154,6 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    */
   public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
     HostPort hostPort = createHostPort(ctx);
-//    log.info("Connection disconnected on {}", hostPort);
     sessions.remove(hostPort);
     ctx.sendUpstream(e);
   }
@@ -482,7 +480,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    */
   public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
     HostPort hostPort = createHostPort(ctx);
-    log.error("Unexpected Netty exception for " + hostPort, e);
+    log.error("Unexpected Netty exception for " + hostPort, e.getCause());
   }
 
   /**
