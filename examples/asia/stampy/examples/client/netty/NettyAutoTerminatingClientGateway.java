@@ -16,15 +16,16 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.examples.client;
+package asia.stampy.examples.client.netty;
 
 import asia.stampy.client.mina.ClientMinaMessageGateway;
+import asia.stampy.client.netty.ClientNettyMessageGateway;
 
 /**
  * Used by client examples to terminate the Java process when
  * {@link ClientMinaMessageGateway#shutdown()} is invoked.
  */
-public class AutoTerminatingClientGateway extends ClientMinaMessageGateway {
+public class NettyAutoTerminatingClientGateway extends ClientNettyMessageGateway {
 
   /*
    * (non-Javadoc)

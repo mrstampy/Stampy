@@ -39,12 +39,13 @@ import asia.stampy.client.message.stomp.StompMessage;
 import asia.stampy.client.message.subscribe.SubscribeHeader.Ack;
 import asia.stampy.client.message.subscribe.SubscribeMessage;
 import asia.stampy.client.message.unsubscribe.UnsubscribeMessage;
-import asia.stampy.client.mina.ClientMinaMessageGateway;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.InterceptException;
+import asia.stampy.examples.system.client.netty.SystemNettyClientInitializer;
 import asia.stampy.examples.system.server.SystemLoginHandler;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.message.MessageMessage;
@@ -68,7 +69,7 @@ public class SystemClient {
   private static final StompMessageType[] CLIENT_TYPES = { ACK, NACK, SEND, ABORT, BEGIN, COMMIT, SUBSCRIBE,
       UNSUBSCRIBE };
 
-  private ClientMinaMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
 
   private ErrorMessage error;
 
@@ -89,7 +90,7 @@ public class SystemClient {
    *           the exception
    */
   public void init() throws Exception {
-    setGateway(SystemClientInitializer.initialize());
+    setGateway(SystemNettyClientInitializer.initialize());
     gateway.addMessageListener(new StampyMessageListener() {
 
       @Override
@@ -454,7 +455,7 @@ public class SystemClient {
    * 
    * @return the gateway
    */
-  public ClientMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
@@ -464,7 +465,7 @@ public class SystemClient {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(ClientMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
   }
 

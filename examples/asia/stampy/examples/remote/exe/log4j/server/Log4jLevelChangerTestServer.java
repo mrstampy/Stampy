@@ -18,7 +18,8 @@
  */
 package asia.stampy.examples.remote.exe.log4j.server;
 
-import asia.stampy.server.mina.ServerMinaMessageGateway;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
+import asia.stampy.examples.remote.exe.log4j.server.netty.NettyInitializer;
 
 /**
  * It is intended that binary payloads in STOMP messages are sent to a server be
@@ -29,7 +30,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * server. DON'T DO THIS.
  */
 public class Log4jLevelChangerTestServer {
-  private ServerMinaMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
 
   /**
    * Inits.
@@ -38,7 +39,7 @@ public class Log4jLevelChangerTestServer {
    *           the exception
    */
   public void init() throws Exception {
-    setGateway(Initializer.initialize());
+    setGateway(NettyInitializer.initialize());
     gateway.addMessageListener(new TestServerMessageListener());
     gateway.connect();
     System.out.println("Stampy server started");
@@ -64,7 +65,7 @@ public class Log4jLevelChangerTestServer {
    * 
    * @return the gateway
    */
-  public ServerMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
@@ -74,7 +75,7 @@ public class Log4jLevelChangerTestServer {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(ServerMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
   }
 

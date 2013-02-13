@@ -19,8 +19,9 @@
 package asia.stampy.examples.loadtest.client.netty;
 
 import asia.stampy.client.netty.ClientNettyChannelHandler;
-import asia.stampy.client.netty.ClientNettyMessageGateway;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.examples.client.netty.NettyAutoTerminatingClientGateway;
 import asia.stampy.examples.common.IDontNeedSecurity;
 
 /**
@@ -30,17 +31,17 @@ import asia.stampy.examples.common.IDontNeedSecurity;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
-public class Initializer {
+public class NettyInitializer {
 
   /**
    * Initialize.
    * 
    * @return the client mina message gateway
    */
-  public static ClientNettyMessageGateway initialize() {
+  public static AbstractStampyMessageGateway initialize() {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-    ClientNettyMessageGateway gateway = new ClientNettyMessageGateway();
+    NettyAutoTerminatingClientGateway gateway = new NettyAutoTerminatingClientGateway();
     gateway.setAutoShutdown(true);
     gateway.setPort(1234);
     gateway.setHost("localhost");
@@ -51,7 +52,7 @@ public class Initializer {
 
     gateway.addMessageListener(new IDontNeedSecurity());
 
-    gateway.setStampyChannelHandler(handler);
+    gateway.setHandler(handler);
 
     return gateway;
 

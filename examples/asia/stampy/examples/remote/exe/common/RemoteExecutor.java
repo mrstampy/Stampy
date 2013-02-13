@@ -19,8 +19,8 @@
 package asia.stampy.examples.remote.exe.common;
 
 import asia.stampy.client.message.send.SendMessage;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
-import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
  * Executes a {@link Remoteable} object and if a receipt has been specified,
@@ -29,7 +29,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  */
 public class RemoteExecutor {
 
-  private ServerMinaMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
 
   /**
    * Process stomp message.
@@ -55,7 +55,7 @@ public class RemoteExecutor {
    * 
    * @return the gateway
    */
-  public ServerMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
@@ -65,7 +65,7 @@ public class RemoteExecutor {
    * @param messageSender
    *          the new gateway
    */
-  public void setGateway(ServerMinaMessageGateway messageSender) {
+  public void setGateway(AbstractStampyMessageGateway messageSender) {
     this.gateway = messageSender;
   }
 }

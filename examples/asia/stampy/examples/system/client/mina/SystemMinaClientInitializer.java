@@ -16,15 +16,15 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.examples.system.client.netty;
+package asia.stampy.examples.system.client.mina;
 
-import asia.stampy.client.netty.ClientNettyChannelHandler;
-import asia.stampy.client.netty.connected.NettyConnectedMessageListener;
-import asia.stampy.client.netty.disconnect.NettyDisconnectListenerAndInterceptor;
+import asia.stampy.client.mina.RawClientMinaHandler;
+import asia.stampy.client.mina.connected.MinaConnectedMessageListener;
+import asia.stampy.client.mina.disconnect.MinaDisconnectListenerAndInterceptor;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.examples.client.netty.NettyAutoTerminatingClientGateway;
+import asia.stampy.examples.client.mina.MinaAutoTerminatingClientGateway;
 import asia.stampy.examples.common.IDontNeedSecurity;
 
 /**
@@ -36,7 +36,7 @@ import asia.stampy.examples.common.IDontNeedSecurity;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
-public class SystemNettyClientInitializer {
+public class SystemMinaClientInitializer {
 
   /**
    * Initialize.
@@ -46,29 +46,29 @@ public class SystemNettyClientInitializer {
   public static AbstractStampyMessageGateway initialize() {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-    NettyAutoTerminatingClientGateway gateway = new NettyAutoTerminatingClientGateway();
+    MinaAutoTerminatingClientGateway gateway = new MinaAutoTerminatingClientGateway();
     gateway.setPort(1234);
     gateway.setHost("localhost");
     gateway.setHeartbeat(1000);
 
-    ClientNettyChannelHandler channelHandler = new ClientNettyChannelHandler();
-    channelHandler.setGateway(gateway);
-    channelHandler.setHeartbeatContainer(heartbeatContainer);
+    RawClientMinaHandler handler = new RawClientMinaHandler();
+    handler.setHeartbeatContainer(heartbeatContainer);
+    handler.setGateway(gateway);
 
     gateway.addMessageListener(new IDontNeedSecurity());
 
-    NettyConnectedMessageListener cml = new NettyConnectedMessageListener();
+    MinaConnectedMessageListener cml = new MinaConnectedMessageListener();
     cml.setHeartbeatContainer(heartbeatContainer);
     cml.setGateway(gateway);
     gateway.addMessageListener(cml);
 
-    NettyDisconnectListenerAndInterceptor disconnect = new NettyDisconnectListenerAndInterceptor();
+    MinaDisconnectListenerAndInterceptor disconnect = new MinaDisconnectListenerAndInterceptor();
     disconnect.setCloseOnDisconnectMessage(false);
     gateway.addMessageListener(disconnect);
     gateway.addOutgoingMessageInterceptor(disconnect);
     disconnect.setGateway(gateway);
 
-    gateway.setHandler(channelHandler);
+    gateway.setHandler(handler);
 
     return gateway;
 

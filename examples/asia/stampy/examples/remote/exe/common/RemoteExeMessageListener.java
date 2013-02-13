@@ -19,11 +19,11 @@
 package asia.stampy.examples.remote.exe.common;
 
 import asia.stampy.client.message.send.SendMessage;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
  * Processes SEND messages with {@link Remoteable} bodies.
@@ -31,7 +31,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * @see RemoteExeMessageEvent
  */
 public class RemoteExeMessageListener implements StampyMessageListener {
-  private ServerMinaMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
   private static StompMessageType[] TYPES = { StompMessageType.SEND };
 
   /*
@@ -78,7 +78,7 @@ public class RemoteExeMessageListener implements StampyMessageListener {
    * 
    * @return the gateway
    */
-  public ServerMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
@@ -88,7 +88,7 @@ public class RemoteExeMessageListener implements StampyMessageListener {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(ServerMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
   }
 

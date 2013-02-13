@@ -22,9 +22,12 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.common.IDontNeedSecurity;
+import asia.stampy.examples.system.server.SystemAcknowledgementHandler;
+import asia.stampy.examples.system.server.SystemLoginHandler;
 import asia.stampy.server.listener.version.VersionListener;
 import asia.stampy.server.netty.ServerNettyChannelHandler;
 import asia.stampy.server.netty.ServerNettyMessageGateway;
@@ -52,7 +55,7 @@ public class SystemNettyServerInitializer {
    * 
    * @return the server mina message gateway
    */
-  public static ServerNettyMessageGateway initialize() {
+  public static AbstractStampyMessageGateway initialize() {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
     ServerNettyMessageGateway gateway = new ServerNettyMessageGateway();
@@ -109,7 +112,7 @@ public class SystemNettyServerInitializer {
     connectResponse.setGateway(gateway);
     gateway.addMessageListener(connectResponse);
 
-    gateway.setStampyChannelHandler(channelHandler);
+    gateway.setHandler(channelHandler);
 
     return gateway;
   }

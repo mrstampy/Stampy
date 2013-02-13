@@ -42,7 +42,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
   /** <i>The default encoding for STOMP is UTF-8</i>. */
   public static Charset CHARSET = Charset.forName("UTF-8");
 
-  private StampyNettyChannelHandler stampyChannelHandler;
+  private StampyNettyChannelHandler handler;
 
   private List<ChannelHandler> handlers = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
    */
   @Override
   public void broadcastMessage(String stompMessage) throws InterceptException {
-    getStampyChannelHandler().broadcastMessage(stompMessage);
+    getHandler().broadcastMessage(stompMessage);
   }
 
   /*
@@ -67,7 +67,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
    */
   @Override
   public void sendMessage(String stompMessage, HostPort hostPort) throws InterceptException {
-    getStampyChannelHandler().sendMessage(stompMessage, hostPort);
+    getHandler().sendMessage(stompMessage, hostPort);
   }
 
   /*
@@ -79,7 +79,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
    */
   @Override
   public boolean isConnected(HostPort hostPort) {
-    return getStampyChannelHandler().isConnected(hostPort);
+    return getHandler().isConnected(hostPort);
   }
 
   /*
@@ -91,7 +91,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
    */
   @Override
   public Set<HostPort> getConnectedHostPorts() {
-    return getStampyChannelHandler().getConnectedHostPorts();
+    return getHandler().getConnectedHostPorts();
   }
 
   /**
@@ -99,8 +99,8 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
    * 
    * @return the stampy channel handler
    */
-  public StampyNettyChannelHandler getStampyChannelHandler() {
-    return stampyChannelHandler;
+  public StampyNettyChannelHandler getHandler() {
+    return handler;
   }
 
   /**
@@ -109,8 +109,8 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
    * @param channelHandler
    *          the new stampy channel handler
    */
-  public void setStampyChannelHandler(StampyNettyChannelHandler channelHandler) {
-    this.stampyChannelHandler = channelHandler;
+  public void setHandler(StampyNettyChannelHandler channelHandler) {
+    this.handler = channelHandler;
   }
 
   /**
@@ -152,7 +152,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
     pipeline.addLast("frameDecoder", delimiter);
     pipeline.addLast("stringDecoder", decoder);
     pipeline.addLast("stringEncoder", encoder);
-    pipeline.addLast("stampyChannelHandler", getStampyChannelHandler());
+    pipeline.addLast("stampyChannelHandler", getHandler());
   }
 
   /*

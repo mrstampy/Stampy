@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.client.message.disconnect.DisconnectMessage;
-import asia.stampy.client.mina.ClientMinaMessageGateway;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
@@ -39,7 +39,7 @@ import asia.stampy.server.message.error.ErrorMessage;
  * @see TestClientMessageEvent
  */
 public class TestClientMessageListener implements StampyMessageListener {
-  private ClientMinaMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
 
   private AtomicInteger receipts = new AtomicInteger();
 
@@ -160,7 +160,7 @@ public class TestClientMessageListener implements StampyMessageListener {
    * 
    * @return the gateway
    */
-  public ClientMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
@@ -170,7 +170,7 @@ public class TestClientMessageListener implements StampyMessageListener {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(ClientMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
   }
 

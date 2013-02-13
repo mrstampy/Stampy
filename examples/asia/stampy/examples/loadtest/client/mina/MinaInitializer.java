@@ -16,12 +16,12 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.examples.loadtest.client;
+package asia.stampy.examples.loadtest.client.mina;
 
-import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.mina.RawClientMinaHandler;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.examples.client.AutoTerminatingClientGateway;
+import asia.stampy.examples.client.mina.MinaAutoTerminatingClientGateway;
 import asia.stampy.examples.common.IDontNeedSecurity;
 
 /**
@@ -31,17 +31,17 @@ import asia.stampy.examples.common.IDontNeedSecurity;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
-public class Initializer {
+public class MinaInitializer {
 
   /**
    * Initialize.
    * 
    * @return the client mina message gateway
    */
-  public static ClientMinaMessageGateway initialize() {
+  public static AbstractStampyMessageGateway initialize() {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-    AutoTerminatingClientGateway gateway = new AutoTerminatingClientGateway();
+    MinaAutoTerminatingClientGateway gateway = new MinaAutoTerminatingClientGateway();
     gateway.setAutoShutdown(true);
     gateway.setPort(1234);
     gateway.setHost("localhost");
@@ -49,7 +49,7 @@ public class Initializer {
     RawClientMinaHandler handler = new RawClientMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
-    
+
     gateway.addMessageListener(new IDontNeedSecurity());
 
     gateway.setHandler(handler);

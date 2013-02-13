@@ -19,7 +19,8 @@
 package asia.stampy.examples.loadtest.client;
 
 import asia.stampy.client.message.connect.ConnectMessage;
-import asia.stampy.client.mina.ClientMinaMessageGateway;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
+import asia.stampy.examples.loadtest.client.netty.NettyInitializer;
 import asia.stampy.examples.loadtest.server.TestServer;
 
 /**
@@ -27,7 +28,7 @@ import asia.stampy.examples.loadtest.server.TestServer;
  * and terminates. Run the {@link TestServer} prior to running this client.
  */
 public class TestClient {
-  private ClientMinaMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
   private TestClientMessageListener listener;
 
   /**
@@ -37,7 +38,7 @@ public class TestClient {
    *           the exception
    */
   public void init() throws Exception {
-    setGateway(Initializer.initialize());
+    setGateway(NettyInitializer.initialize());
     listener = new TestClientMessageListener();
     listener.setGateway(gateway);
     gateway.addMessageListener(listener);
@@ -51,7 +52,7 @@ public class TestClient {
    * 
    * @return the gateway
    */
-  public ClientMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
@@ -61,7 +62,7 @@ public class TestClient {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(ClientMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
   }
 

@@ -23,9 +23,10 @@ import org.apache.log4j.Level;
 import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.message.disconnect.DisconnectMessage;
 import asia.stampy.client.message.send.SendMessage;
-import asia.stampy.client.mina.ClientMinaMessageGateway;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.message.AbstractBodyMessage;
 import asia.stampy.common.message.interceptor.InterceptException;
+import asia.stampy.examples.remote.exe.log4j.client.netty.NettyInitializer;
 import asia.stampy.examples.remote.exe.log4j.common.Log4jLevelChanger;
 
 /**
@@ -37,7 +38,7 @@ import asia.stampy.examples.remote.exe.log4j.common.Log4jLevelChanger;
  * server. DON'T DO THIS.
  */
 public class Log4jLevelChangerTestClient {
-  private ClientMinaMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
 
   /**
    * Inits the.
@@ -46,7 +47,7 @@ public class Log4jLevelChangerTestClient {
    *           the exception
    */
   public void init() throws Exception {
-    setGateway(Initializer.initialize());
+    setGateway(NettyInitializer.initialize());
     gateway.addMessageListener(new TestClientMessageListener());
     gateway.connect();
     gateway.broadcastMessage(new ConnectMessage("localhost"));
@@ -78,7 +79,7 @@ public class Log4jLevelChangerTestClient {
    * 
    * @return the gateway
    */
-  public ClientMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
@@ -88,7 +89,7 @@ public class Log4jLevelChangerTestClient {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(ClientMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
   }
 

@@ -65,7 +65,7 @@ public class ClientNettyMessageGateway extends AbstractStampyNettyMessageGateway
    */
   @Override
   public void closeConnection(HostPort hostPort) {
-    getStampyChannelHandler().close(hostPort);
+    getHandler().close(hostPort);
   }
 
   /*

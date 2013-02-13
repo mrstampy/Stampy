@@ -16,27 +16,22 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.examples.system.client.netty;
+package asia.stampy.examples.remote.exe.log4j.client.netty;
 
-import asia.stampy.client.netty.ClientNettyChannelHandler;
-import asia.stampy.client.netty.connected.NettyConnectedMessageListener;
-import asia.stampy.client.netty.disconnect.NettyDisconnectListenerAndInterceptor;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
-import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.client.netty.NettyAutoTerminatingClientGateway;
 import asia.stampy.examples.common.IDontNeedSecurity;
+import asia.stampy.server.netty.ServerNettyChannelHandler;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
- * example, which tests the functionality of the various
- * {@link StampyMessageListener} implementations for a STOMP 1.2 compliant
- * client communicating with a compliant server. It is expected that a DI
- * framework such as <a href="http://www.springsource.org/">Spring</a> or <a
+ * example. It is expected that a DI framework such as <a
+ * href="http://www.springsource.org/">Spring</a> or <a
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
-public class SystemNettyClientInitializer {
+public class NettyInitializer {
 
   /**
    * Initialize.
@@ -47,28 +42,17 @@ public class SystemNettyClientInitializer {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
     NettyAutoTerminatingClientGateway gateway = new NettyAutoTerminatingClientGateway();
+    gateway.setAutoShutdown(true);
     gateway.setPort(1234);
     gateway.setHost("localhost");
-    gateway.setHeartbeat(1000);
 
-    ClientNettyChannelHandler channelHandler = new ClientNettyChannelHandler();
-    channelHandler.setGateway(gateway);
-    channelHandler.setHeartbeatContainer(heartbeatContainer);
+    ServerNettyChannelHandler handler = new ServerNettyChannelHandler();
+    handler.setGateway(gateway);
+    handler.setHeartbeatContainer(heartbeatContainer);
 
     gateway.addMessageListener(new IDontNeedSecurity());
 
-    NettyConnectedMessageListener cml = new NettyConnectedMessageListener();
-    cml.setHeartbeatContainer(heartbeatContainer);
-    cml.setGateway(gateway);
-    gateway.addMessageListener(cml);
-
-    NettyDisconnectListenerAndInterceptor disconnect = new NettyDisconnectListenerAndInterceptor();
-    disconnect.setCloseOnDisconnectMessage(false);
-    gateway.addMessageListener(disconnect);
-    gateway.addOutgoingMessageInterceptor(disconnect);
-    disconnect.setGateway(gateway);
-
-    gateway.setHandler(channelHandler);
+    gateway.setHandler(handler);
 
     return gateway;
 

@@ -16,13 +16,14 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.examples.loadtest.server.netty;
+package asia.stampy.examples.remote.exe.log4j.server.netty;
 
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.common.IDontNeedSecurity;
+import asia.stampy.examples.remote.exe.common.RemoteExeMessageListener;
 import asia.stampy.server.netty.ServerNettyChannelHandler;
 import asia.stampy.server.netty.ServerNettyMessageGateway;
-import asia.stampy.server.netty.connect.NettyConnectResponseListener;
 import asia.stampy.server.netty.receipt.NettyReceiptListener;
 
 /**
@@ -32,14 +33,14 @@ import asia.stampy.server.netty.receipt.NettyReceiptListener;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
-public class Initializer {
+public class NettyInitializer {
 
   /**
    * Initialize.
    * 
    * @return the server mina message gateway
    */
-  public static ServerNettyMessageGateway initialize() {
+  public static AbstractStampyMessageGateway initialize() {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
     ServerNettyMessageGateway gateway = new ServerNettyMessageGateway();
@@ -49,17 +50,17 @@ public class Initializer {
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
 
-    gateway.setStampyChannelHandler(handler);
-
     gateway.addMessageListener(new IDontNeedSecurity());
-
-    NettyConnectResponseListener connectResponse = new NettyConnectResponseListener();
-    connectResponse.setGateway(gateway);
-    gateway.addMessageListener(connectResponse);
 
     NettyReceiptListener receipt = new NettyReceiptListener();
     receipt.setGateway(gateway);
     gateway.addMessageListener(receipt);
+
+    RemoteExeMessageListener remoteExe = new RemoteExeMessageListener();
+    remoteExe.setGateway(gateway);
+    gateway.addMessageListener(remoteExe);
+
+    gateway.setHandler(handler);
 
     return gateway;
   }

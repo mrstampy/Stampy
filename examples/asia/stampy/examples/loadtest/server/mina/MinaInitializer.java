@@ -16,8 +16,9 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.examples.loadtest.server;
+package asia.stampy.examples.loadtest.server.mina;
 
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.common.IDontNeedSecurity;
 import asia.stampy.server.mina.RawServerMinaHandler;
@@ -32,14 +33,14 @@ import asia.stampy.server.mina.receipt.MinaReceiptListener;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
-public class Initializer {
+public class MinaInitializer {
 
   /**
    * Initialize.
    * 
    * @return the server mina message gateway
    */
-  public static ServerMinaMessageGateway initialize() {
+  public static AbstractStampyMessageGateway initialize() {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
     ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();

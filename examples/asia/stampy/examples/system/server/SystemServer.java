@@ -19,20 +19,21 @@
 package asia.stampy.examples.system.server;
 
 import asia.stampy.client.message.subscribe.SubscribeMessage;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.InterceptException;
+import asia.stampy.examples.system.server.netty.SystemNettyServerInitializer;
 import asia.stampy.server.message.message.MessageMessage;
-import asia.stampy.server.mina.ServerMinaMessageGateway;
 
 /**
  * The Class SystemServer.
  */
 public class SystemServer {
 
-  private ServerMinaMessageGateway gateway;
+  private AbstractStampyMessageGateway gateway;
 
   private int ackCount;
 
@@ -43,12 +44,12 @@ public class SystemServer {
    *           the exception
    */
   public void init() throws Exception {
-    setGateway(SystemServerInitializer.initialize());
+    setGateway(SystemNettyServerInitializer.initialize());
 
     gateway.addMessageListener(new StampyMessageListener() {
 
       @Override
-      public void messageReceived(StampyMessage<?> message,  HostPort hostPort) throws Exception {
+      public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
         switch (message.getMessageType()) {
         case ABORT:
           break;
@@ -111,7 +112,7 @@ public class SystemServer {
    * 
    * @return the gateway
    */
-  public ServerMinaMessageGateway getGateway() {
+  public AbstractStampyMessageGateway getGateway() {
     return gateway;
   }
 
@@ -121,7 +122,7 @@ public class SystemServer {
    * @param gateway
    *          the new gateway
    */
-  public void setGateway(ServerMinaMessageGateway gateway) {
+  public void setGateway(AbstractStampyMessageGateway gateway) {
     this.gateway = gateway;
   }
 

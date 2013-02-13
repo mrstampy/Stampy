@@ -16,13 +16,15 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.examples.remote.exe.log4j.client;
+package asia.stampy.examples.remote.exe.log4j.server.mina;
 
-import asia.stampy.client.mina.ClientMinaMessageGateway;
-import asia.stampy.client.mina.RawClientMinaHandler;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.examples.client.AutoTerminatingClientGateway;
 import asia.stampy.examples.common.IDontNeedSecurity;
+import asia.stampy.examples.remote.exe.common.RemoteExeMessageListener;
+import asia.stampy.server.mina.RawServerMinaHandler;
+import asia.stampy.server.mina.ServerMinaMessageGateway;
+import asia.stampy.server.mina.receipt.MinaReceiptListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
@@ -31,30 +33,36 @@ import asia.stampy.examples.common.IDontNeedSecurity;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
-public class Initializer {
+public class MinaInitializer {
 
   /**
    * Initialize.
    * 
-   * @return the client mina message gateway
+   * @return the server mina message gateway
    */
-  public static ClientMinaMessageGateway initialize() {
+  public static AbstractStampyMessageGateway initialize() {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-    AutoTerminatingClientGateway gateway = new AutoTerminatingClientGateway();
-    gateway.setAutoShutdown(true);
+    ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();
     gateway.setPort(1234);
-    gateway.setHost("localhost");
 
-    RawClientMinaHandler handler = new RawClientMinaHandler();
+    RawServerMinaHandler handler = new RawServerMinaHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
     
     gateway.addMessageListener(new IDontNeedSecurity());
+    
+    MinaReceiptListener receipt = new MinaReceiptListener();
+    receipt.setGateway(gateway);
+    gateway.addMessageListener(receipt);
+
+    RemoteExeMessageListener remoteExe = new RemoteExeMessageListener();
+    remoteExe.setGateway(gateway);
+    gateway.addMessageListener(remoteExe);
 
     gateway.setHandler(handler);
 
     return gateway;
-
   }
+
 }

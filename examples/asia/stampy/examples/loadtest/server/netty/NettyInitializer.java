@@ -16,14 +16,15 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.examples.remote.exe.log4j.server;
+package asia.stampy.examples.loadtest.server.netty;
 
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.common.IDontNeedSecurity;
-import asia.stampy.examples.remote.exe.common.RemoteExeMessageListener;
-import asia.stampy.server.mina.RawServerMinaHandler;
-import asia.stampy.server.mina.ServerMinaMessageGateway;
-import asia.stampy.server.mina.receipt.MinaReceiptListener;
+import asia.stampy.server.netty.ServerNettyChannelHandler;
+import asia.stampy.server.netty.ServerNettyMessageGateway;
+import asia.stampy.server.netty.connect.NettyConnectResponseListener;
+import asia.stampy.server.netty.receipt.NettyReceiptListener;
 
 /**
  * This class programmatically initializes the Stampy classes required for this
@@ -32,34 +33,34 @@ import asia.stampy.server.mina.receipt.MinaReceiptListener;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
-public class Initializer {
+public class NettyInitializer {
 
   /**
    * Initialize.
    * 
    * @return the server mina message gateway
    */
-  public static ServerMinaMessageGateway initialize() {
+  public static AbstractStampyMessageGateway initialize() {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
-    ServerMinaMessageGateway gateway = new ServerMinaMessageGateway();
+    ServerNettyMessageGateway gateway = new ServerNettyMessageGateway();
     gateway.setPort(1234);
 
-    RawServerMinaHandler handler = new RawServerMinaHandler();
+    ServerNettyChannelHandler handler = new ServerNettyChannelHandler();
     handler.setHeartbeatContainer(heartbeatContainer);
     handler.setGateway(gateway);
-    
-    gateway.addMessageListener(new IDontNeedSecurity());
-    
-    MinaReceiptListener receipt = new MinaReceiptListener();
-    receipt.setGateway(gateway);
-    gateway.addMessageListener(receipt);
-
-    RemoteExeMessageListener remoteExe = new RemoteExeMessageListener();
-    remoteExe.setGateway(gateway);
-    gateway.addMessageListener(remoteExe);
 
     gateway.setHandler(handler);
+
+    gateway.addMessageListener(new IDontNeedSecurity());
+
+    NettyConnectResponseListener connectResponse = new NettyConnectResponseListener();
+    connectResponse.setGateway(gateway);
+    gateway.addMessageListener(connectResponse);
+
+    NettyReceiptListener receipt = new NettyReceiptListener();
+    receipt.setGateway(gateway);
+    gateway.addMessageListener(receipt);
 
     return gateway;
   }
