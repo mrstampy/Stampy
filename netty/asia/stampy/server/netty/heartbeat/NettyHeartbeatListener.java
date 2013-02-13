@@ -16,42 +16,14 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina;
+package asia.stampy.server.netty.heartbeat;
 
-import asia.stampy.common.message.StampyMessage;
+import asia.stampy.server.listener.heartbeat.AbstractHeartbeatListener;
+import asia.stampy.server.netty.ServerNettyMessageGateway;
 
 /**
- * The Class ServerHandlerAdapter.
+ * 
  */
-class ServerHandlerAdapter {
-
-  /**
-   * Checks if is valid message.
-   * 
-   * @param message
-   *          the message
-   * @return true, if is valid message
-   */
-  static boolean isValidMessage(StampyMessage<?> message) {
-    switch (message.getMessageType()) {
-
-    case ABORT:
-    case ACK:
-    case BEGIN:
-    case COMMIT:
-    case CONNECT:
-    case STOMP:
-    case DISCONNECT:
-    case NACK:
-    case SEND:
-    case SUBSCRIBE:
-    case UNSUBSCRIBE:
-      message.validate();
-      return true;
-    default:
-      return false;
-
-    }
-  }
+public class NettyHeartbeatListener extends AbstractHeartbeatListener<ServerNettyMessageGateway> {
 
 }

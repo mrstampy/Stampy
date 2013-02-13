@@ -16,30 +16,27 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina;
+package asia.stampy.client.netty;
 
-import javax.annotation.Resource;
-
+import asia.stampy.client.ClientHandlerAdapter;
 import asia.stampy.common.message.StampyMessage;
-import asia.stampy.common.mina.StampyMinaHandler;
-import asia.stampy.server.ServerHandlerAdapter;
+import asia.stampy.common.netty.StampyNettyChannelHandler;
 
 /**
- * The Class ServerMinaHandler.
+ * The Class ClientNettyChannelHandler.
  */
-@Resource
-public class ServerMinaHandler extends StampyMinaHandler {
+public class ClientNettyChannelHandler extends StampyNettyChannelHandler {
 
   /*
    * (non-Javadoc)
    * 
    * @see
-   * asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common
-   * .message.StampyMessage)
+   * asia.stampy.common.netty.StampyNettyChannelHandler#isValidMessage(asia.
+   * stampy.common.message.StampyMessage)
    */
   @Override
   protected boolean isValidMessage(StampyMessage<?> message) {
-    return ServerHandlerAdapter.isValidMessage(message);
+    return ClientHandlerAdapter.isValidMessage(message);
   }
 
 }

@@ -16,35 +16,27 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.client.mina;
+package asia.stampy.server.netty;
 
 import asia.stampy.common.message.StampyMessage;
+import asia.stampy.common.netty.StampyNettyChannelHandler;
+import asia.stampy.server.ServerHandlerAdapter;
 
 /**
- * The Class ClientHandlerAdapter.
+ * The Class ServerNettyChannelHandler.
  */
-public class ClientHandlerAdapter {
+public class ServerNettyChannelHandler extends StampyNettyChannelHandler {
 
-  /**
-   * Checks if is valid message.
+  /*
+   * (non-Javadoc)
    * 
-   * @param message
-   *          the message
-   * @return true, if is valid message
+   * @see
+   * asia.stampy.common.netty.StampyNettyChannelHandler#isValidMessage(asia.
+   * stampy.common.message.StampyMessage)
    */
-  static boolean isValidMessage(StampyMessage<?> message) {
-    switch (message.getMessageType()) {
-
-    case CONNECTED:
-    case ERROR:
-    case MESSAGE:
-    case RECEIPT:
-      message.validate();
-      return true;
-    default:
-      return false;
-
-    }
+  @Override
+  protected boolean isValidMessage(StampyMessage<?> message) {
+    return ServerHandlerAdapter.isValidMessage(message);
   }
 
 }

@@ -16,30 +16,42 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina;
-
-import javax.annotation.Resource;
+package asia.stampy.server;
 
 import asia.stampy.common.message.StampyMessage;
-import asia.stampy.common.mina.StampyMinaHandler;
-import asia.stampy.server.ServerHandlerAdapter;
 
 /**
- * The Class ServerMinaHandler.
+ * The Class ServerHandlerAdapter.
  */
-@Resource
-public class ServerMinaHandler extends StampyMinaHandler {
+public class ServerHandlerAdapter {
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Checks if is valid message.
    * 
-   * @see
-   * asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common
-   * .message.StampyMessage)
+   * @param message
+   *          the message
+   * @return true, if is valid message
    */
-  @Override
-  protected boolean isValidMessage(StampyMessage<?> message) {
-    return ServerHandlerAdapter.isValidMessage(message);
+  public static boolean isValidMessage(StampyMessage<?> message) {
+    switch (message.getMessageType()) {
+
+    case ABORT:
+    case ACK:
+    case BEGIN:
+    case COMMIT:
+    case CONNECT:
+    case STOMP:
+    case DISCONNECT:
+    case NACK:
+    case SEND:
+    case SUBSCRIBE:
+    case UNSUBSCRIBE:
+      message.validate();
+      return true;
+    default:
+      return false;
+
+    }
   }
 
 }

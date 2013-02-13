@@ -138,8 +138,6 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * off the thread MINA uses and ensures the messages are processed in the
    * order they are received.
    * 
-   * @param session
-   *          the session
    * @param hostPort
    *          the host port
    * @param msg
@@ -226,8 +224,6 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    *          the message
    * @param e
    *          the e
-   * @param session
-   *          the session
    * @param hostPort
    *          the host port
    * @throws Exception
@@ -246,8 +242,6 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * 
    * @param e
    *          the e
-   * @param session
-   *          the session
    * @param hostPort
    *          the host port
    * @throws Exception

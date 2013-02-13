@@ -1,0 +1,168 @@
+/*
+ * Copyright (C) 2013 Burton Alexander
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 
+ */
+package asia.stampy.client.netty;
+
+import java.lang.invoke.MethodHandles;
+import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
+
+import org.jboss.netty.bootstrap.ClientBootstrap;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.channel.DefaultChannelPipeline;
+import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.netty.AbstractStampyNettyMessageGateway;
+
+/**
+ * The Class ClientNettyMessageGateway.
+ */
+public class ClientNettyMessageGateway extends AbstractStampyNettyMessageGateway {
+  private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  private NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
+      Executors.newCachedThreadPool());
+  private int maxMessageSize = Integer.MAX_VALUE;
+  private String host;
+  private int port;
+
+  private Channel client;
+
+  private ClientBootstrap init() {
+    ClientBootstrap bootstrap = new ClientBootstrap(factory);
+    ChannelPipeline pipeline = new DefaultChannelPipeline();
+    addHandlers(pipeline);
+    getStampyChannelHandler().setupChannelPipeline(pipeline, getMaxMessageSize());
+    bootstrap.setPipeline(pipeline);
+
+    return bootstrap;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * asia.stampy.common.gateway.AbstractStampyMessageGateway#closeConnection
+   * (asia.stampy.common.gateway.HostPort)
+   */
+  @Override
+  public void closeConnection(HostPort hostPort) {
+    getStampyChannelHandler().close(hostPort);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.gateway.AbstractStampyMessageGateway#connect()
+   */
+  @Override
+  public void connect() throws Exception {
+    if (client == null) {
+      ClientBootstrap bootstrap = init();
+      ChannelFuture cf = bootstrap.connect(new InetSocketAddress(getHost(), getPort()));
+      cf.await();
+      if (cf.isSuccess()) {
+        client = cf.getChannel();
+        log.info("Connected to {}:{}", getHost(), getPort());
+      } else {
+        log.error("Could not connect to {}:{}", getHost(), getPort());
+      }
+    } else if (client.isConnected()) {
+      log.warn("Already connected");
+    } else {
+      log.error("Acceptor in unrecognized state: isBound {}, isConnected {}, ", client.isBound(), client.isConnected());
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see asia.stampy.common.gateway.AbstractStampyMessageGateway#shutdown()
+   */
+  @Override
+  public void shutdown() throws Exception {
+    if (client == null || !client.isConnected()) return;
+
+    ChannelFuture cf = client.close();
+    cf.awaitUninterruptibly();
+    client = null;
+    log.info("Client has been shut down");
+  }
+
+  /**
+   * Gets the max message size.
+   * 
+   * @return the max message size
+   */
+  public int getMaxMessageSize() {
+    return maxMessageSize;
+  }
+
+  /**
+   * Sets the max message size.
+   * 
+   * @param maxMessageSize
+   *          the new max message size
+   */
+  public void setMaxMessageSize(int maxMessageSize) {
+    this.maxMessageSize = maxMessageSize;
+  }
+
+  /**
+   * Gets the host.
+   * 
+   * @return the host
+   */
+  public String getHost() {
+    return host;
+  }
+
+  /**
+   * Sets the host.
+   * 
+   * @param host
+   *          the new host
+   */
+  public void setHost(String host) {
+    this.host = host;
+  }
+
+  /**
+   * Gets the port.
+   * 
+   * @return the port
+   */
+  public int getPort() {
+    return port;
+  }
+
+  /**
+   * Sets the port.
+   * 
+   * @param port
+   *          the new port
+   */
+  public void setPort(int port) {
+    this.port = port;
+  }
+
+}

@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
+import asia.stampy.server.ServerHandlerAdapter;
 
 /**
  * The Class RawServerMinaHandler.
