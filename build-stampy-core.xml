@@ -20,9 +20,30 @@
 			<classpath refid="stampy.classpath" />
 		</javac>
 	</target>
+	
+	<target name="create.overview">
+		<copyfile 
+			forceoverwrite="true" 
+			dest="${basedir}/build/tmp/Overview-stampy-core.html" 
+			src="${basedir}/html/Overview-stampy-core.html"/>
+		
+		<loadfile property="stampy-core-fragment" srcfile="${basedir}/html/fragments/stampy-core.txt" />
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-core.html" 
+			token="$stampy-core-fragment" 
+			value="${stampy-core-fragment}" />
+		
+		<replace file="${basedir}/build/tmp/Overview-stampy-core.html" token="$version" value="${version}" />
+		<replace file="${basedir}/build/tmp/Overview-stampy-core.html" token="$date" value="${date}" />
+	</target>
 
-	<target name="javadoc.stampy.core" depends="compile.stampy.core">
-		<javadoc overview="${basedir}/html/Overview-stampy-core.html" classpathref="stampy.classpath" sourcepath="${basedir}/src" packagenames="asia.stampy.*" destdir="${basedir}/build/javadoc">
+	<target name="javadoc.stampy.core" depends="compile.stampy.core, create.overview">
+		<javadoc 
+			overview="${basedir}/build/tmp/Overview-stampy-core.html" 
+			classpathref="stampy.classpath" 
+			sourcepath="${basedir}/src" 
+			packagenames="asia.stampy.*" 
+			destdir="${basedir}/build/javadoc">
 		</javadoc>
 	</target>
 

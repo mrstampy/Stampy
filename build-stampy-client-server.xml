@@ -24,8 +24,29 @@
 		</javac>		
 	</target>
 	
-	<target name="javadoc.stampy.client.server" depends="compile.stampy.client.server">
-		<javadoc overview="${basedir}/html/Overview-stampy-client-server.html" 
+	<target name="create.overview">
+		<copyfile 
+			forceoverwrite="true" 
+			dest="${basedir}/build/tmp/Overview-stampy-client-server.html" 
+			src="${basedir}/html/Overview-stampy-client-server.html"/>
+		
+		<loadfile property="stampy-core-fragment" srcfile="${basedir}/html/fragments/stampy-core.txt" />
+		<loadfile property="stampy-client-server-fragment" srcfile="${basedir}/html/fragments/stampy-client-server.txt" />
+		
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-client-server.html" 
+			token="$stampy-core-fragment" value="${stampy-core-fragment}" />
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-client-server.html" 
+			token="$stampy-client-server-fragment" 
+			value="${stampy-client-server-fragment}" />
+		
+		<replace file="${basedir}/build/tmp/Overview-stampy-client-server.html" token="$version" value="${version}" />
+		<replace file="${basedir}/build/tmp/Overview-stampy-client-server.html" token="$date" value="${date}" />
+	</target>
+
+	<target name="javadoc.stampy.client.server" depends="compile.stampy.client.server, create.overview">
+		<javadoc overview="${basedir}/build/tmp/Overview-stampy-client-server.html" 
 			classpathref="stampy.classpath" 
 			sourcepath="${basedir}/src;${basedir}/client-server" 
 			packagenames="asia.stampy.*" 

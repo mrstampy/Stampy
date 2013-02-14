@@ -13,6 +13,7 @@
 	<target name="mkdirs">
 		<mkdir dir="${basedir}/build"/>
 		<mkdir dir="${basedir}/build/bin"/>
+		<mkdir dir="${basedir}/build/tmp"/>
 		<mkdir dir="${basedir}/build/javadoc"/>
 		<mkdir dir="${basedir}/build/javadoc/images"/>
 		<mkdir dir="${basedir}/build/stampy-all"/>
@@ -34,6 +35,9 @@
 	</target>
 
 	<target name="build.stampy" depends="copy.logo">
+		<tstamp>
+		    <format property="date" pattern="dd-MM-yyyy" locale="en,AU"/>
+		</tstamp>
 		<ant antfile="${basedir}/build-stampy-core.xml" inheritall="true" />
 		<ant antfile="${basedir}/build-stampy-client-server.xml" inheritall="true" />
 		<ant antfile="${basedir}/build-stampy-MINA.xml" inheritall="true" />

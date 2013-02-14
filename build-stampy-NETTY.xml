@@ -27,9 +27,35 @@
 		</javac>		
 	</target>
 	
-	<target name="javadoc.stampy.NETTY.client.server.RI" depends="compile.stampy.NETTY.client.server.RI">
+	<target name="create.overview">
+		<copyfile 
+			forceoverwrite="true" 
+			dest="${basedir}/build/tmp/Overview-stampy-NETTY.html" 
+			src="${basedir}/html/Overview-stampy-NETTY.html"/>
+		
+		<loadfile property="stampy-core-fragment" srcfile="${basedir}/html/fragments/stampy-core.txt" />
+		<loadfile property="stampy-client-server-fragment" srcfile="${basedir}/html/fragments/stampy-client-server.txt" />
+		<loadfile property="stampy-NETTY-fragment" srcfile="${basedir}/html/fragments/stampy-NETTY.txt" />
+		
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-NETTY.html" 
+			token="$stampy-core-fragment" value="${stampy-core-fragment}" />
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-NETTY.html" 
+			token="$stampy-client-server-fragment" 
+			value="${stampy-client-server-fragment}" />
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-NETTY.html" 
+			token="$stampy-NETTY-fragment" 
+			value="${stampy-NETTY-fragment}" />
+		
+		<replace file="${basedir}/build/tmp/Overview-stampy-NETTY.html" token="$version" value="${version}" />
+		<replace file="${basedir}/build/tmp/Overview-stampy-NETTY.html" token="$date" value="${date}" />
+	</target>
+
+	<target name="javadoc.stampy.NETTY.client.server.RI" depends="compile.stampy.NETTY.client.server.RI, create.overview">
 		<javadoc 
-			overview="${basedir}/html/Overview-stampy-NETTY.html" 
+			overview="${basedir}/build/tmp/Overview-stampy-NETTY.html" 
 			classpathref="stampy.classpath" 
 			sourcepath="${basedir}/src;${basedir}/netty;${basedir}/client-server" 
 			packagenames="asia.stampy.*" 

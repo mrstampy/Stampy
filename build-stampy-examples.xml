@@ -41,9 +41,45 @@
 		</javac>		
 	</target>
 	
-	<target name="javadoc.stampy.examples" depends="compile.stampy.examples">
+	<target name="create.overview">
+		<copyfile 
+			forceoverwrite="true" 
+			dest="${basedir}/build/tmp/Overview-stampy-examples.html" 
+			src="${basedir}/html/Overview-stampy-examples.html"/>
+		
+		<loadfile property="stampy-core-fragment" srcfile="${basedir}/html/fragments/stampy-core.txt" />
+		<loadfile property="stampy-client-server-fragment" srcfile="${basedir}/html/fragments/stampy-client-server.txt" />
+		<loadfile property="stampy-NETTY-fragment" srcfile="${basedir}/html/fragments/stampy-NETTY.txt" />
+		<loadfile property="stampy-MINA-fragment" srcfile="${basedir}/html/fragments/stampy-MINA.txt" />
+		<loadfile property="stampy-examples-fragment" srcfile="${basedir}/html/fragments/stampy-examples.txt" />
+		
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-examples.html" 
+			token="$stampy-core-fragment" value="${stampy-core-fragment}" />
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-examples.html" 
+			token="$stampy-client-server-fragment" 
+			value="${stampy-client-server-fragment}" />
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-examples.html" 
+			token="$stampy-NETTY-fragment" 
+			value="${stampy-NETTY-fragment}" />
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-examples.html" 
+			token="$stampy-MINA-fragment" 
+			value="${stampy-MINA-fragment}" />
+		<replace 
+			file="${basedir}/build/tmp/Overview-stampy-examples.html" 
+			token="$stampy-examples-fragment" 
+			value="${stampy-examples-fragment}" />
+		
+		<replace file="${basedir}/build/tmp/Overview-stampy-examples.html" token="$version" value="${version}" />
+		<replace file="${basedir}/build/tmp/Overview-stampy-examples.html" token="$date" value="${date}" />
+	</target>
+	
+	<target name="javadoc.stampy.examples" depends="compile.stampy.examples, create.overview">
 		<javadoc 
-			overview="${basedir}/html/Overview-stampy-examples.html" 
+			overview="${basedir}/build/tmp/Overview-stampy-examples.html" 
 			classpathref="stampy.classpath" 
 			sourcepath="${basedir}/examples;${basedir}/src;${basedir}/mina;${basedir}/netty;${basedir}/client-server" 
 			packagenames="asia.stampy.*" 
