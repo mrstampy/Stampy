@@ -22,6 +22,8 @@ import asia.stampy.common.message.StompMessageType;
 
 /**
  * The Interface StampyAcknowledgementHandler.
+ * 
+ * @see AbstractAcknowledgementListenerAndInterceptor#setHandler(StampyAcknowledgementHandler)
  */
 public interface StampyAcknowledgementHandler {
 
