@@ -17,12 +17,6 @@
 	
 	<target name="release.stampy.all" depends="jar.stampy.all.src, jar.stampy.all.javadoc, jar.stampy.all" />
 	
-	<target name="clean">
-		<delete dir="${basedir}/build/bin">
-			<include name="**/*"/>
-		</delete>
-	</target>
-	
 	<target name="compile.stampy.all">
 		<javac target="1.5" source="1.5" debug="true" destdir="${basedir}/build/bin">
 			<src path="${basedir}/src" />

@@ -12,12 +12,6 @@
 	
 	<target name="release.stampy.client.server" depends="jar.stampy.client.server.src, jar.stampy.client.server.javadoc, jar.stampy.client.server" />
 	
-	<target name="clean">
-		<delete dir="${basedir}/build/bin">
-			<include name="**/*"/>
-		</delete>
-	</target>
-	
 	<target name="compile.stampy.client.server">
 		<javac target="1.5" source="1.5" srcdir="${basedir}/client-server" debug="true" destdir="${basedir}/build/bin">
 			<classpath refid="stampy.classpath" />

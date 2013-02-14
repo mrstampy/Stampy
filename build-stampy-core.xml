@@ -9,12 +9,6 @@
 
 	<target name="release.stampy.core" depends="jar.stampy.core.src, jar.stampy.core.javadoc, jar.stampy.core" />
 
-	<target name="clean">
-		<delete dir="${basedir}/build/bin">
-			<include name="**/*" />
-		</delete>
-	</target>
-
 	<target name="compile.stampy.core">
 		<javac target="1.5" source="1.5" srcdir="${basedir}/src" debug="true" destdir="${basedir}/build/bin">
 			<classpath refid="stampy.classpath" />

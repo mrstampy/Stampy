@@ -24,13 +24,14 @@
 		<mkdir dir="${basedir}/build/stampy-NETTY-client-server-RI"/>
 	</target>
 
-	<target name="clean.javadoc">
-		<delete dir="${basedir}/build/javadoc">
-			<include name="**/*"/>
-		</delete>
+	<target name="clean">
+		<delete dir="${basedir}/build/bin" />
+		<mkdir dir="${basedir}/build/bin"/>
+		<delete dir="${basedir}/build/javadoc" />
+		<mkdir dir="${basedir}/build/javadoc"/>
 	</target>
-	
-	<target name="copy.logo" depends="mkdirs, clean.javadoc">
+
+	<target name="copy.logo" depends="mkdirs">
 		<copyfile dest="${basedir}/build/javadoc/images/Stampy.png" src="${basedir}/html/images/Stampy.png"/>
 	</target>
 
@@ -38,11 +39,17 @@
 		<tstamp>
 		    <format property="date" pattern="dd-MM-yyyy" locale="en,AU"/>
 		</tstamp>
+		<antcall target="clean" />
 		<ant antfile="${basedir}/build-stampy-core.xml" inheritall="true" />
+		<antcall target="clean" />
 		<ant antfile="${basedir}/build-stampy-client-server.xml" inheritall="true" />
+		<antcall target="clean" />
 		<ant antfile="${basedir}/build-stampy-MINA.xml" inheritall="true" />
+		<antcall target="clean" />
 		<ant antfile="${basedir}/build-stampy-NETTY.xml" inheritall="true" />
+		<antcall target="clean" />
 		<ant antfile="${basedir}/build-stampy-examples.xml" inheritall="true" />
+		<antcall target="clean" />
 		<ant antfile="${basedir}/build-stampy-all.xml" inheritall="true" />
 	</target>
 

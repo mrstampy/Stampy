@@ -15,12 +15,6 @@
 	
 	<target name="release.stampy.NETTY.client.server.RI" depends="jar.stampy.NETTY.client.server.RI.src, jar.stampy.NETTY.client.server.RI.javadoc, jar.stampy.NETTY.client.server.RI" />
 	
-	<target name="clean">
-		<delete dir="${basedir}/build/bin">
-			<include name="**/*"/>
-		</delete>
-	</target>
-	
 	<target name="compile.stampy.NETTY.client.server.RI">
 		<javac target="1.5" source="1.5" srcdir="${basedir}/netty" debug="true" destdir="${basedir}/build/bin">
 			<classpath refid="stampy.classpath" />
