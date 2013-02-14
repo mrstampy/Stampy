@@ -18,7 +18,6 @@
  */
 package asia.stampy.examples.client.netty;
 
-import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.client.netty.ClientNettyMessageGateway;
 
 /**
