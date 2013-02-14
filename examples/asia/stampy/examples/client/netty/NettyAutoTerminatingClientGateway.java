@@ -29,7 +29,7 @@ public class NettyAutoTerminatingClientGateway extends ClientNettyMessageGateway
   /*
    * (non-Javadoc)
    * 
-   * @see asia.stampy.client.mina.ClientMinaMessageGateway#shutdown()
+   * @see asia.stampy.client.netty.ClientNettyMessageGateway#shutdown()
    */
   @Override
   public void shutdown() throws Exception {
