@@ -19,7 +19,11 @@
 package asia.stampy.server.listener.login;
 
 /**
- * The Class NotLoggedInException.
+ * The Class NotLoggedInException indicates that the {@link StampyLoginHandler} implementation
+ * failed the login credentials for the specified reason.
+ * 
+ * @see StampyLoginHandler
+ * @see AbstractLoginMessageListener
  */
 public class NotLoggedInException extends Exception {
 

@@ -18,8 +18,16 @@
  */
 package asia.stampy.server.listener.transaction;
 
+import asia.stampy.client.message.abort.AbortMessage;
+import asia.stampy.client.message.begin.BeginMessage;
+import asia.stampy.client.message.commit.CommitMessage;
+
 /**
- * The Class TransactionNotStartedException.
+ * The Class TransactionNotStartedException is thrown when a
+ * {@link CommitMessage} or {@link AbortMessage} is received and no
+ * {@link BeginMessage} has started the transaction.
+ * 
+ * @see AbstractTransactionListener
  */
 public class TransactionNotStartedException extends Exception {
 

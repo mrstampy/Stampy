@@ -20,6 +20,8 @@ package asia.stampy.server.listener.connect;
 
 /**
  * The Class NotConnectedException.
+ * 
+ * @see AbstractConnectStateListener
  */
 public class NotConnectedException extends Exception {
 

@@ -18,8 +18,15 @@
  */
 package asia.stampy.server.listener.transaction;
 
+import asia.stampy.client.message.begin.BeginMessage;
+
 /**
- * The Class TransactionAlreadyStartedException.
+ * The Class TransactionAlreadyStartedException is thrown by
+ * {@link AbstractTransactionListener} when a named transaction has already been
+ * started and an additional {@link BeginMessage} has been received for that
+ * transaction.
+ * 
+ * @see AbstractTransactionListener
  */
 public class TransactionAlreadyStartedException extends Exception {
 

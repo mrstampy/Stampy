@@ -19,7 +19,12 @@
 package asia.stampy.server.listener.login;
 
 /**
- * The Class TerminateSessionException.
+ * The Class TerminateSessionException indicates that the
+ * {@link StampyLoginHandler} wishes to close the session to the client for the
+ * specified reason.
+ * 
+ * @see AbstractLoginMessageListener
+ * @see StampyLoginHandler
  */
 public class TerminateSessionException extends Exception {
 

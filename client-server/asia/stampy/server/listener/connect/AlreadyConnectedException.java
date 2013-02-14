@@ -19,7 +19,9 @@
 package asia.stampy.server.listener.connect;
 
 /**
- * The Class TransactionAlreadyStartedException.
+ * The Class AlreadyConnectedException.
+ * 
+ * @see AbstractConnectStateListener
  */
 public class AlreadyConnectedException extends Exception {
 

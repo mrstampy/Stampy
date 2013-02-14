@@ -18,8 +18,15 @@
  */
 package asia.stampy.server.listener.subscription;
 
+import asia.stampy.client.message.ack.AckMessage;
+import asia.stampy.client.message.nack.NackMessage;
+
 /**
- * The Class UnexpectedAcknowledgementException.
+ * The Class UnexpectedAcknowledgementException indicates that an unexpected
+ * {@link AckMessage} or {@link NackMessage} has been received by the
+ * {@link AbstractAcknowledgementListenerAndInterceptor}
+ * 
+ * @see AbstractAcknowledgementListenerAndInterceptor
  */
 public class UnexpectedAcknowledgementException extends Exception {
 
