@@ -31,149 +31,377 @@
         <hr>
 
         <section id="main_content">
-          <p>This library provides <a href="https://github.com/mrstampy/Stampy/blob/master/src/asia/stampy/common/message/StampyMessage.java">Java class</a> representations of <a href="http://stomp.github.com/">STOMP 1.2</a> messages and a <a href="https://github.com/mrstampy/Stampy/blob/master/src/asia/stampy/common/AbstractStampyMessageGateway.java">structure</a> for implementing clients and servers. Reference implementations using <a href="https://netty.io">Netty</a> and <a href="https://mina.apache.org">Apache MINA</a> are provided. The following artifacts will soon be available:</p>
+          <h1>Stampy, a Java implementation of the STOMP 1.2 specification</h1>
+
+<p>This project was built using Java 7 in Eclipse, with Apache Ant &amp; Apache Ivy.  The artifacts produced are Java 5 compatible. The text below is taken from the generated overview html in the Javadocs.  The build produces 6 artifacts:</p>
 
 <ul>
-<li>stampy-core - the core Stampy classes</li>
-<li>stampy-client-server - convenience superclasses to create custom STOMP clients and servers</li>
-<li>stampy-NETTY-client-server-RI - the NETTY reference implementation, includes stampy-client-server</li>
-<li>stampy-MINA-client-server-RI - the MINA reference implementation, includes stampy-client-server</li>
-<li>stampy-examples - example code, includes stampy-MINA-client-server-RI and stampy-NETTY-client-server-RI</li>
-<li>stampy-all - the whole Stampy project</li>
-</ul><h2>Design considerations</h2>
+<li>
+<strong>stampy-core</strong> - the core message classes</li>
+<li>
+<strong>stampy-client-server</strong> - the structure for building STOMP 1.2 clients and servers using stampy-core</li>
+<li>
+<strong>stampy-NETTY-client-server-RI</strong> - the NETTY reference implementation of stampy-client-server</li>
+<li>
+<strong>stampy-MINA-client-server-RI</strong> - the MINA reference implementation of stampy-client-server</li>
+<li>
+<strong>stampy-examples</strong> - Examples using both the NETTY &amp; MINA RIs</li>
+<li>
+<strong>stampy-all</strong> - all of the above.</li>
+</ul><p>Release $version, $date</p>
+
+<h2>stampy-examples-$version</h2>
+
+<p>The Stampy example code demonstrates how to configure Stampy clients and servers to perform customized tasks.</p>
+
+<h3>Load Test</h3>
+
+<p>The load test attempts to send a configurable one million ACK messages from the client to the server and requests one million receipts from the server.</p>
+
+<h3>Log4j Level Changer</h3>
+
+<p>This example shows how to send a serializable Java object for execution on a server.</p>
+
+<h3>System</h3>
+
+<p>This example shows how to configure a STOMP 1.2 compliant client and server and tests for compliancy.</p>
+
+<h2>stampy-NETTY-client-server-RI-$version</h2>
+
+<p>This library provides a Netty implementation of the stampy-client-server-$version STOMP 1.2 architecture.</p>
+
+<h3>Design considerations</h3>
 
 <ul>
+<li>Compiled for Java 5 compatibility</li>
 <li>Ease of configuration and use</li>
 <li>DI framework-friendly</li>
 <li>Minimal dependencies</li>
 <li>Massively multithreaded, many clients can communicate with a server simultaneously</li>
-<li>Fast (11 microseconds per message during testing with the MINA RI, 6 microseconds per with NETTY)</li>
+<li>Fast (6 microseconds per message during testing)</li>
 <li>Reliable</li>
 <li>Extensible</li>
 <li>Security focused</li>
-</ul><h2>stampy-core</h2>
+</ul><h3>Dependencies</h3>
 
-<h3>Dependencies</h3>
+<p></p>
+
+<h3>Client Configuration (from examples)</h3>
+
+<p>While easy to programmatically configure a Netty client gateway, it is expected that a DI framework such as Spring or Guice will be used to perform this task.</p>
+
+<p>The following code demonstrates all that is necessary to configure a STOMP 1.2 compliant client:</p>
+
+<div class="highlight"><pre>  <span class="kd">public</span> <span class="kd">static</span> <span class="n">AbstractStampyMessageGateway</span> <span class="nf">initialize</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">HeartbeatContainer</span> <span class="n">heartbeatContainer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HeartbeatContainer</span><span class="o">();</span>
+
+    <span class="n">ClientNettyMessageGateway</span> <span class="n">gateway</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClientNettyMessageGateway</span><span class="o">();</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setPort</span><span class="o">(</span><span class="mi">1234</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setHost</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setHeartbeat</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+
+    <span class="n">ClientNettyChannelHandler</span> <span class="n">channelHandler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClientNettyChannelHandler</span><span class="o">();</span>
+    <span class="n">channelHandler</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">channelHandler</span><span class="o">.</span><span class="na">setHeartbeatContainer</span><span class="o">(</span><span class="n">heartbeatContainer</span><span class="o">);</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">IDontNeedSecurity</span><span class="o">());</span> <span class="c1">// DON'T DO THIS!!!</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">ClientMessageValidationListener</span><span class="o">());</span>
+
+    <span class="n">NettyConnectedMessageListener</span> <span class="n">cml</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NettyConnectedMessageListener</span><span class="o">();</span>
+    <span class="n">cml</span><span class="o">.</span><span class="na">setHeartbeatContainer</span><span class="o">(</span><span class="n">heartbeatContainer</span><span class="o">);</span>
+    <span class="n">cml</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">cml</span><span class="o">);</span>
+
+    <span class="n">NettyDisconnectListenerAndInterceptor</span> <span class="n">disconnect</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NettyDisconnectListenerAndInterceptor</span><span class="o">();</span>
+    <span class="n">disconnect</span><span class="o">.</span><span class="na">setCloseOnDisconnectMessage</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">disconnect</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addOutgoingMessageInterceptor</span><span class="o">(</span><span class="n">disconnect</span><span class="o">);</span>
+    <span class="n">disconnect</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">channelHandler</span><span class="o">);</span>
+
+    <span class="k">return</span> <span class="n">gateway</span><span class="o">;</span>
+  <span class="o">}</span>
+</pre></div>
+
+<h3>Server Configuration (from examples)</h3>
+
+<p>While easy to programmatically configure a Netty server gateway, it is expected that a DI framework such as Spring or Guice will be used to perform this task.</p>
+
+<p>The following code demonstrates all that is necessary to configure a STOMP 1.2 compliant server:</p>
+
+<div class="highlight"><pre>  <span class="kd">public</span> <span class="kd">static</span> <span class="n">AbstractStampyMessageGateway</span> <span class="nf">initialize</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">HeartbeatContainer</span> <span class="n">heartbeatContainer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HeartbeatContainer</span><span class="o">();</span>
+
+    <span class="n">ServerNettyMessageGateway</span> <span class="n">gateway</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerNettyMessageGateway</span><span class="o">();</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setPort</span><span class="o">(</span><span class="mi">1234</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setHeartbeat</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setAutoShutdown</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+
+    <span class="n">ServerNettyChannelHandler</span> <span class="n">channelHandler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerNettyChannelHandler</span><span class="o">();</span>
+    <span class="n">channelHandler</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">channelHandler</span><span class="o">.</span><span class="na">setHeartbeatContainer</span><span class="o">(</span><span class="n">heartbeatContainer</span><span class="o">);</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">IDontNeedSecurity</span><span class="o">());</span> <span class="c1">// DON'T DO THIS!!!</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">ServerMessageValidationListener</span><span class="o">());</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">VersionListener</span><span class="o">());</span>
+
+    <span class="n">NettyLoginMessageListener</span> <span class="n">login</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NettyLoginMessageListener</span><span class="o">();</span>
+    <span class="n">login</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">login</span><span class="o">.</span><span class="na">setLoginHandler</span><span class="o">(</span><span class="k">new</span> <span class="n">SystemLoginHandler</span><span class="o">());</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">login</span><span class="o">);</span>
+
+    <span class="n">NettyConnectStateListener</span> <span class="n">connect</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NettyConnectStateListener</span><span class="o">();</span>
+    <span class="n">connect</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">connect</span><span class="o">);</span>
+
+    <span class="n">NettyHeartbeatListener</span> <span class="n">heartbeat</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NettyHeartbeatListener</span><span class="o">();</span>
+    <span class="n">heartbeat</span><span class="o">.</span><span class="na">setHeartbeatContainer</span><span class="o">(</span><span class="n">heartbeatContainer</span><span class="o">);</span>
+    <span class="n">heartbeat</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">heartbeat</span><span class="o">);</span>
+
+    <span class="n">NettyTransactionListener</span> <span class="n">transaction</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NettyTransactionListener</span><span class="o">();</span>
+    <span class="n">transaction</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">transaction</span><span class="o">);</span>
+
+    <span class="n">SystemAcknowledgementHandler</span> <span class="n">sys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SystemAcknowledgementHandler</span><span class="o">();</span>
+
+    <span class="n">NettyAcknowledgementListenerAndInterceptor</span> <span class="n">acknowledgement</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NettyAcknowledgementListenerAndInterceptor</span><span class="o">();</span>
+    <span class="n">acknowledgement</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">sys</span><span class="o">);</span>
+    <span class="n">acknowledgement</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">acknowledgement</span><span class="o">.</span><span class="na">setAckTimeoutMillis</span><span class="o">(</span><span class="mi">200</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">acknowledgement</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addOutgoingMessageInterceptor</span><span class="o">(</span><span class="n">acknowledgement</span><span class="o">);</span>
+
+    <span class="n">NettyReceiptListener</span> <span class="n">receipt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NettyReceiptListener</span><span class="o">();</span>
+    <span class="n">receipt</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">receipt</span><span class="o">);</span>
+
+    <span class="n">NettyConnectResponseListener</span> <span class="n">connectResponse</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NettyConnectResponseListener</span><span class="o">();</span>
+    <span class="n">connectResponse</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">connectResponse</span><span class="o">);</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">channelHandler</span><span class="o">);</span>
+
+    <span class="k">return</span> <span class="n">gateway</span><span class="o">;</span>
+  <span class="o">}</span>
+</pre></div>
+
+<h2>stampy-MINA-client-server-RI-$version</h2>
+
+<p>This library provides a Mina implementation of the stampy-client-server-$version STOMP 1.2 architecture.</p>
+
+<h3>Design considerations</h3>
 
 <ul>
-<li><code>dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"</code></li>
-<li><code>dependency org="commons-lang" name="commons-lang" rev="2.6"</code></li>
-<li><code>dependency org="commons-codec" name="commons-codec" rev="1.7"</code></li>
-</ul><h3>Description</h3>
+<li>Compiled for Java 5 compatibility</li>
+<li>Ease of configuration and use</li>
+<li>DI framework-friendly</li>
+<li>Minimal dependencies</li>
+<li>Massively multithreaded, many clients can communicate with a server simultaneously</li>
+<li>Fast (11 microseconds per message during testing)</li>
+<li>Reliable</li>
+<li>Extensible</li>
+<li>Security focused</li>
+<li>Dependencies</li>
+</ul><p></p>
 
-<p>The core classes provide implementations of the various STOMP messages.</p>
+<h3>Client Configuration (from examples)</h3>
 
-<h2>stampy-client-server</h2>
+<p>While easy to programmatically configure a Mina client gateway, it is expected that a DI framework such as Spring or Guice will be used to perform this task.</p>
 
-<h3>Dependencies</h3>
+<p>The following code demonstrates all that is necessary to configure a STOMP 1.2 compliant client:</p>
+
+<div class="highlight"><pre>  <span class="kd">public</span> <span class="kd">static</span> <span class="n">AbstractStampyMessageGateway</span> <span class="nf">initialize</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">HeartbeatContainer</span> <span class="n">heartbeatContainer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HeartbeatContainer</span><span class="o">();</span>
+
+    <span class="n">ClientMinaMessageGateway</span> <span class="n">gateway</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClientMinaMessageGateway</span><span class="o">();</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setPort</span><span class="o">(</span><span class="mi">1234</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setHost</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setHeartbeat</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+
+    <span class="n">RawClientMinaHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RawClientMinaHandler</span><span class="o">();</span>
+    <span class="n">handler</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">handler</span><span class="o">.</span><span class="na">setHeartbeatContainer</span><span class="o">(</span><span class="n">heartbeatContainer</span><span class="o">);</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">IDontNeedSecurity</span><span class="o">());</span> <span class="c1">// DON'T DO THIS!!!</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">ClientMessageValidationListener</span><span class="o">());</span>
+
+    <span class="n">MinaConnectedMessageListener</span> <span class="n">cml</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinaConnectedMessageListener</span><span class="o">();</span>
+    <span class="n">cml</span><span class="o">.</span><span class="na">setHeartbeatContainer</span><span class="o">(</span><span class="n">heartbeatContainer</span><span class="o">);</span>
+    <span class="n">cml</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">cml</span><span class="o">);</span>
+
+    <span class="n">MinaDisconnectListenerAndInterceptor</span> <span class="n">disconnect</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinaDisconnectListenerAndInterceptor</span><span class="o">();</span>
+    <span class="n">disconnect</span><span class="o">.</span><span class="na">setCloseOnDisconnectMessage</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">disconnect</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addOutgoingMessageInterceptor</span><span class="o">(</span><span class="n">disconnect</span><span class="o">);</span>
+    <span class="n">disconnect</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">handler</span><span class="o">);</span>
+
+    <span class="k">return</span> <span class="n">gateway</span><span class="o">;</span>
+  <span class="o">}</span>
+</pre></div>
+
+<h3>Server Configuration (from examples)</h3>
+
+<p>While easy to programmatically configure a Mina server gateway, it is expected that a DI framework such as Spring or Guice will be used to perform this task.</p>
+
+<p>The following code demonstrates all that is necessary to configure a STOMP 1.2 compliant server:</p>
+
+<div class="highlight"><pre>  <span class="kd">public</span> <span class="kd">static</span> <span class="n">AbstractStampyMessageGateway</span> <span class="nf">initialize</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">HeartbeatContainer</span> <span class="n">heartbeatContainer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HeartbeatContainer</span><span class="o">();</span>
+
+    <span class="n">ServerMinaMessageGateway</span> <span class="n">gateway</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerMinaMessageGateway</span><span class="o">();</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setPort</span><span class="o">(</span><span class="mi">1234</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setHeartbeat</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setAutoShutdown</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+
+    <span class="n">RawServerMinaHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RawServerMinaHandler</span><span class="o">();</span>
+    <span class="n">handler</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">handler</span><span class="o">.</span><span class="na">setHeartbeatContainer</span><span class="o">(</span><span class="n">heartbeatContainer</span><span class="o">);</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">IDontNeedSecurity</span><span class="o">());</span> <span class="c1">// DON'T DO THIS!!!</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">ServerMessageValidationListener</span><span class="o">());</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">VersionListener</span><span class="o">());</span>
+
+    <span class="n">MinaLoginMessageListener</span> <span class="n">login</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinaLoginMessageListener</span><span class="o">();</span>
+    <span class="n">login</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">login</span><span class="o">.</span><span class="na">setLoginHandler</span><span class="o">(</span><span class="k">new</span> <span class="n">SystemLoginHandler</span><span class="o">());</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">login</span><span class="o">);</span>
+
+    <span class="n">MinaConnectStateListener</span> <span class="n">connect</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinaConnectStateListener</span><span class="o">();</span>
+    <span class="n">connect</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">connect</span><span class="o">);</span>
+
+    <span class="n">MinaHeartbeatListener</span> <span class="n">heartbeat</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinaHeartbeatListener</span><span class="o">();</span>
+    <span class="n">heartbeat</span><span class="o">.</span><span class="na">setHeartbeatContainer</span><span class="o">(</span><span class="n">heartbeatContainer</span><span class="o">);</span>
+    <span class="n">heartbeat</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">heartbeat</span><span class="o">);</span>
+
+    <span class="n">MinaTransactionListener</span> <span class="n">transaction</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinaTransactionListener</span><span class="o">();</span>
+    <span class="n">transaction</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">transaction</span><span class="o">);</span>
+
+    <span class="n">SystemAcknowledgementHandler</span> <span class="n">sys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SystemAcknowledgementHandler</span><span class="o">();</span>
+
+    <span class="n">MinaAcknowledgementListenerAndInterceptor</span> <span class="n">acknowledgement</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinaAcknowledgementListenerAndInterceptor</span><span class="o">();</span>
+    <span class="n">acknowledgement</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">sys</span><span class="o">);</span>
+    <span class="n">acknowledgement</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">acknowledgement</span><span class="o">.</span><span class="na">setAckTimeoutMillis</span><span class="o">(</span><span class="mi">200</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">acknowledgement</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addOutgoingMessageInterceptor</span><span class="o">(</span><span class="n">acknowledgement</span><span class="o">);</span>
+
+    <span class="n">MinaReceiptListener</span> <span class="n">receipt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinaReceiptListener</span><span class="o">();</span>
+    <span class="n">receipt</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">receipt</span><span class="o">);</span>
+
+    <span class="n">MinaConnectResponseListener</span> <span class="n">connectResponse</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinaConnectResponseListener</span><span class="o">();</span>
+    <span class="n">connectResponse</span><span class="o">.</span><span class="na">setGateway</span><span class="o">(</span><span class="n">gateway</span><span class="o">);</span>
+    <span class="n">gateway</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="n">connectResponse</span><span class="o">);</span>
+
+    <span class="n">gateway</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">handler</span><span class="o">);</span>
+
+    <span class="k">return</span> <span class="n">gateway</span><span class="o">;</span>
+  <span class="o">}</span>
+</pre></div>
+
+<h2>stampy-client-server-$version</h2>
+
+<p>This library provides the structure to implement STOMP 1.2 clients and servers using the stampy-core library.</p>
+
+<h3>Design considerations</h3>
 
 <ul>
-<li><code>dependency org="asia.stampy" name="stampy-core" rev="$version"</code></li>
-</ul><h3>Description</h3>
+<li>Compiled for Java 5 compatibility</li>
+<li>Ease of configuration and use</li>
+<li>DI framework-friendly</li>
+<li>Minimal dependencies</li>
+<li>Reliable</li>
+<li>Extensible</li>
+<li>Security focused</li>
+<li>Dependencies</li>
+</ul><p></p>
 
-<p>Provides convenience superclasses to quickly create STOMP clients and servers.  The Netty RI took ~ 4 hours to write.</p>
+<h3>Gateways</h3>
 
-<h2>stampy-NETTY-client-server-RI</h2>
+<p>A Stampy gateway is the interface between an application and the technology used to create/accept connections from STOMP 1.2 compliant clients and servers. All gateways extend from AbstractStampyMessageGateway. This class contains common methods for all Stampy gateways and defines abstract methods which must be implemented in an implementation.</p>
 
-<h3>Dependencies</h3>
+<h3>StampyMessageListener</h3>
 
-<ul>
-<li><code>dependency org="asia.stampy" name="stampy-client-server" rev="$version"</code></li>
-<li><code>dependency org="io.netty" name="netty" rev="3.6.1.Final"</code></li>
-</ul><h3>Description</h3>
+<p>All gateways allow the addition of any number of StampyMessageListeners which are invoked when a STOMP 1.2 message has been received. By themselves the gateway implementations are not STOMP 1.2 compliant. Compliancy is obtained by adding implementations of this listener. The stampy-client-server library contains implementations which enforce compliance. Any additional custom functionality is obtained by creating a new implementation &amp; adding it to the gateway ie: intercepting a specific message type and notifying the application to perform some bit of functionality. Note: the order of addition of these listeners is important.</p>
 
-<p>The NETTY RI provides a STOMP 1.2 <a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/client/netty/ClientNettyMessageGateway.java">client</a> and <a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/ServerNettyMessageGateway.java">server</a> implementation. By themselves they are not fully STOMP 1.2 compliant. Compliancy and configuration are obtained by adding <a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/common/gateway/StampyMessageListener.java">StampyMessageListener</a> implementations to the client and server instances. <strong>Note that the order of adding the listeners to the gateways is important</strong>. The following reference implementations will be included in the distribution:</p>
+<h4>SecurityMessageListener</h4>
 
-<h4><a href="https://github.com/mrstampy/Stampy/blob/master/client-server/asia/stampy/common/gateway/SecurityMessageListener.java">SecurityMessageListener</a></h4>
+<p>At least one implementation of this interface must be included in the list of message listeners, and one must be first in the list else a security exception is thrown. This is to ensure that any custom implementations implement any necessary security for their platform.</p>
 
-<p>At least one user implemented version of this sub interface of StampyMessageListener must be added and one must be first in the list, else a security exception is thrown. Implementations are to provide adequate security checks for their system.</p>
+<p>Additional security pre-Stampy can be added to the gateway implementations.</p>
 
-<h4>Client StampyMessageListeners</h4>
+<h3>Interceptors</h3>
 
-<ul>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/client/netty/connected/NettyConnectedMessageListener.java">NettyConnectedMessageListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/client/netty/disconnect/NettyDisconnectListenerAndInterceptor.java">NettyDisconnectListenerAndInterceptor</a></li>
-</ul><h4>Server StampyMessageListeners</h4>
+<p>All gateways allow the addition of interceptors which are invoked for outgoing messages. There are two types; a message interceptor and a text interceptor. Message interceptors can be tailored to intercept specific types &amp; messages while text interceptors inspect all strings prior to sending them down the pipe. They can be used for outgoing security but are more useful for capturing the state of messages prior to the send. This state can be used to then evaluate any subsequent messages received.</p>
 
-<ul>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/connect/NettyConnectStateListener.java">NettyConnectStateListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/connect/NettyConnectResponseListener.java">NettyConnectResponseListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/heartbeat/NettyHeartbeatListener.java">NettyHeartbeatListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/login/NettyLoginMessageListener.java">NettyLoginMessageListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/subscription/NettyAcknowledgementListenerAndInterceptor.java">NettyAcknowledgementListenerAndInterceptor</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/receipt/NettyReceiptListener.java">NettyReceiptListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/netty/asia/stampy/server/netty/transaction/NettyTransactionListener.java">NettyTransactionListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/client-server/asia/stampy/server/listener/version/VersionListener.java">VersionListener</a></li>
-</ul><h2>stampy-MINA-client-server-RI</h2>
+<p>The AbstractDisconnectListenerAndInterceptor and AbstractAcknowledgementListenerAndInterceptor are two classes which make effective use of this functionality.</p>
 
-<h3>Dependencies</h3>
+<h3>Heartbeats</h3>
 
-<ul>
-<li><code>dependency org="asia.stampy" name="stampy-client-server" rev="$version"</code></li>
-<li><code>dependency org="org.apache.mina" name="mina-core" rev="2.0.7"</code></li>
-</ul><h3>Description</h3>
+<p>A heartbeat container instance is used by the gateway to automatically send heartbeats at the agreed upon rate. Heartbeats are started by the client and server using the AbstractConnectedMessageListener and AbstractHeartbeatListener StampyMessageListeners.</p>
 
-<p>The MINA RI provides a STOMP 1.2 <a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/client/mina/ClientMinaMessageGateway.java">client</a> and <a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/ServerMinaMessageGateway.java">server</a> implementation. By themselves they are not fully STOMP 1.2 compliant. Compliancy and configuration are obtained by adding <a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/common/gateway/StampyMessageListener.java">StampyMessageListener</a> implementations to the client and server instances. <strong>Note that the order of adding the listeners to the gateways is important</strong>. The following reference implementations will be included in the distribution:</p>
+<h2>stampy-core-$version</h2>
 
-<h4><a href="https://github.com/mrstampy/Stampy/blob/master/client-server/asia/stampy/common/gateway/SecurityMessageListener.java">SecurityMessageListener</a></h4>
+<p>This library provides class representations of STOMP 1.2 messages and the ability to convert to and from the classes. It can be used with the additional Stampy libraries or it can be used with existing STOMP client or server implementations.</p>
 
-<p>At least one user implemented version of this sub interface of StampyMessageListener must be added and one must be first in the list, else a security exception is thrown. Implementations are to provide adequate security checks for their system.</p>
-
-<h4>Client StampyMessageListeners</h4>
+<h3>Design considerations</h3>
 
 <ul>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/client/mina/connected/MinaConnectedMessageListener.java">MinaConnectedMessageListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/client/mina/disconnect/MinaDisconnectListenerAndInterceptor.java">MinaDisconnectListenerAndInterceptor</a></li>
-</ul><h4>Server StampyMessageListeners</h4>
+<li>Compiled for Java 5 compatibility</li>
+<li>Ease of configuration and use</li>
+<li>DI framework-friendly</li>
+<li>Minimal dependencies</li>
+<li>Reliable</li>
+<li>Extensible</li>
+<li>Dependencies</li>
+</ul><p></p>
 
-<ul>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/connect/MinaConnectStateListener.java">MinaConnectStateListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/connect/MinaConnectResponseListener.java">MinaConnectResponseListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/heartbeat/MinaHeartbeatListener.java">MinaHeartbeatListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/login/MinaLoginMessageListener.java">MinaLoginMessageListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/subscription/MinaAcknowledgementListenerAndInterceptor.java">MinaAcknowledgementListenerAndInterceptor</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/receipt/MinaReceiptListener.java">MinaReceiptListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/mina/asia/stampy/server/mina/transaction/MinaTransactionListener.java">MinaTransactionListener</a></li>
-<li><a href="https://github.com/mrstampy/Stampy/blob/master/client-server/asia/stampy/server/listener/version/VersionListener.java">VersionListener</a></li>
-</ul><h2>stampy-examples</h2>
+<h3>Messages</h3>
 
-<h3>Dependencies</h3>
+<p>All STOMP message classes implement the StampyMessage interface. Message classes typically have at least two constructors, one blank &amp; the other with parameters - the parameterized constructors are all the mandatory header values that must be set for a valid STOMP message. Should any mandatory header information be missing an exception will be thrown when the message's</p>
 
-<ul>
-<li><code>dependency org="asia.stampy" name="stampy-NETTY-client-server-RI" rev="$version"</code></li>
-<li><code>dependency org="asia.stampy" name="stampy-MINA-client-server-RI" rev="$version"</code></li>
-<li><code>dependency org="log4j" name="log4j" rev="1.2.17"</code></li>
-<li><code>dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.6"</code></li>
-</ul><h3>Load Test</h3>
+<p>validate()</p>
 
-<p>The load test <a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/loadtest/client/TestClient.java">client</a> and <a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/loadtest/server/TestServer.java">server</a> serve to demonstrate the efficiency of the MINA RI. By default one million ACK messages are generated by the client and each ACK causes
-the server to generate a RECEIPT message. Configuration of the <a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/loadtest/client/Initializer.java">client</a> and <a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/loadtest/server/Initializer.java">server</a> is done programmatically. Listeners for the <a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/loadtest/client/TestClientMessageListener.java">client</a> and
-<a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/loadtest/server/Initializer.java">server</a> determine behaviour.</p>
+<p>method is called. </p>
 
-<h3>Log4j Level Changer</h3>
+<p>Each StampyMessage class has an associated header class which can be obtained by calling the</p>
 
-<p>This example demonstrates the ability to send a Java binary from a <a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/remote/exe/log4j/client/Log4jLevelChangerTestClient.java">client</a>
-for execution on the <a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/remote/exe/log4j/server/Log4jLevelChangerTestServer.java">server</a>. For demonstration purposes only.</p>
+<p>getHeader()</p>
 
-<h3>System</h3>
+<p>method. The header classes are wrappers around a map which manages the key value pairs. Known key names have their own getter and setter methods; any key value pair can be added to a Stampy message header.
+Note: should a header key already exist in the map any subsequent adds for that key will be ignored. This is to enforce the specification: If a client or a server receives repeated frame header entries, only the first header entry SHOULD be used as the value of header entry. Subsequent values are only used to maintain a history of state changes of the header and MAY be ignored. To replace an existing key the header's</p>
 
-<p>The system example demonstrates how to configure a STOMP 1.2 compliant <a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/system/client/SystemClientInitializer.java">client</a> and
-<a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/system/server/SystemServerInitializer.java">server</a> using the StampyMinaMessageListener RIs listed above. The
-<a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/system/client/SystemClient.java">client</a> and <a href="https://github.com/mrstampy/Stampy/blob/master/examples/asia/stampy/examples/system/server/SystemServer.java">server</a> exercise these implementations to determine compliancy.</p>
+<p>removeHeader(existingKey)</p>
 
-<h2>stampy-all</h2>
+<p>method must be called first.</p>
 
-<h3>Dependencies</h3>
+<h3>Parsing</h3>
 
-<ul>
-<li><code>dependency org="asia.stampy" name="stampy-examples" rev="$version"</code></li>
-<li><code>dependency org="org.mockito" name="mockito-all" rev="1.9.5"</code></li>
-<li><code>dependency org="junit" name="junit" rev="4.10"</code></li>
-</ul><h3>Description</h3>
+<p>A message parser is included for converting the raw string messages to their associated StampyMessage objects.</p>
 
-<p>Includes the entire Stampy project.</p>
+<h3>Message Bodies</h3>
 
-<p>This work is released under the GPL 2.0 license. No warranty of any kind is offered. <a href="http://mrstampy.github.com/Stampy/">Stampy</a> Copyright (C) 2013 Burton Alexander.</p>
+<p>Any STOMP message that has a body can accept a string as the body as well as any Java serializable object. The mime type used by Stampy to represent such serialized objects is</p>
+
+<p>java/base64</p>
+
+<p>Encoding to and from Base64 is handled by the message superclasses &amp; the parser, respectively.</p>
+
+<p>Additional functionality is described in these JavaDocs. This work is released under the GPL 2.0 license. No warranty of any kind is offered. Stampy Copyright (C) 2013 Burton Alexander.</p>
         </section>
 
         <footer>
