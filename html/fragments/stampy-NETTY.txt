@@ -18,9 +18,9 @@
 	
 	<h3>Dependencies</h3>
 	<ul>
-		<li><b>&lt;dependency org="asia.stampy" name="stampy-core" rev="$version"&gt;</li>
-		<li>&lt;dependency org="asia.stampy" name="stampy-client-server" rev="$version"&gt;</li>
-		<li>&lt;dependency org="io.netty" name="netty" rev="3.6.2.Final"&gt;</li>
+		<li><b>&lt;dependency org="asia.stampy" name="stampy-core" rev="$version"/&gt;</li>
+		<li>&lt;dependency org="asia.stampy" name="stampy-client-server" rev="$version"/&gt;</li>
+		<li>&lt;dependency org="io.netty" name="netty" rev="3.6.2.Final"/&gt;</li>
 		<li>&lt;dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"/&gt;</li>
 		<li>&lt;dependency org="commons-lang" name="commons-lang" rev="2.6"/&gt;</li>
 		<li>&lt;dependency org="commons-codec" name="commons-codec" rev="1.7"/&gt;</b></li>

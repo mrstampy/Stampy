@@ -43,11 +43,12 @@ Fast (6 microseconds per message during testing)
 Reliable
 Extensible
 Security focused
+
 Dependencies
 
-<dependency org="asia.stampy" name="stampy-core" rev="$version">
-<dependency org="asia.stampy" name="stampy-client-server" rev="$version">
-<dependency org="io.netty" name="netty" rev="3.6.2.Final">
+<dependency org="asia.stampy" name="stampy-core" rev="$version"/>
+<dependency org="asia.stampy" name="stampy-client-server" rev="$version"/>
+<dependency org="io.netty" name="netty" rev="3.6.2.Final"/>
 <dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"/>
 <dependency org="commons-lang" name="commons-lang" rev="2.6"/>
 <dependency org="commons-codec" name="commons-codec" rev="1.7"/>
@@ -169,11 +170,12 @@ Fast (11 microseconds per message during testing)
 Reliable
 Extensible
 Security focused
+
 Dependencies
 
-<dependency org="asia.stampy" name="stampy-core" rev="$version">
-<dependency org="asia.stampy" name="stampy-client-server" rev="$version">
-<dependency org="org.apache.mina" name="mina-core" rev="2.0.7">
+<dependency org="asia.stampy" name="stampy-core" rev="$version"/>
+<dependency org="asia.stampy" name="stampy-client-server" rev="$version"/>
+<dependency org="org.apache.mina" name="mina-core" rev="2.0.7"/>
 <dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"/>
 <dependency org="commons-lang" name="commons-lang" rev="2.6"/>
 <dependency org="commons-codec" name="commons-codec" rev="1.7"/>
@@ -293,9 +295,10 @@ Minimal dependencies
 Reliable
 Extensible
 Security focused
+
 Dependencies
 
-<dependency org="asia.stampy" name="stampy-core" rev="$version">
+<dependency org="asia.stampy" name="stampy-core" rev="$version"/>
 <dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"/>
 <dependency org="commons-lang" name="commons-lang" rev="2.6"/>
 <dependency org="commons-codec" name="commons-codec" rev="1.7"/>

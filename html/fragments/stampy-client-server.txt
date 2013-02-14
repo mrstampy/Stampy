@@ -16,7 +16,7 @@
 	
 	<h3>Dependencies</h3>
 	<ul>
-		<li><b>&lt;dependency org="asia.stampy" name="stampy-core" rev="$version"&gt;</li>
+		<li><b>&lt;dependency org="asia.stampy" name="stampy-core" rev="$version"/&gt;</li>
 		<li>&lt;dependency org="org.slf4j" name="slf4j-api"
 				rev="1.6.6"/&gt;</li>
 		<li>&lt;dependency org="commons-lang" name="commons-lang"
