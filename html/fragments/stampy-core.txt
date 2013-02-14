@@ -6,6 +6,7 @@
 	
 	<h3>Design considerations</h3>
 	<ul>
+		<li>Compiled for Java 5 compatibility</li>
 		<li>Ease of configuration and use</li>
 		<li>DI framework-friendly</li>
 		<li>Minimal dependencies</li>
