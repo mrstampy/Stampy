@@ -1,0 +1,66 @@
+	<h2>stampy-client-server-$version</h2>
+	
+	<p>This library provides the structure to implement STOMP 1.2 clients and servers
+	using the <b>stampy-core</b> library.</p>
+			
+	<h3>Design considerations</h3>
+	<ul>
+		<li>Ease of configuration and use</li>
+		<li>DI framework-friendly</li>
+		<li>Minimal dependencies</li>
+		<li>Reliable</li>
+		<li>Extensible</li>
+		<li>Security focused</li>
+	</ul>
+	
+	<h3>Dependencies</h3>
+	<ul>
+		<li><b>&lt;dependency org="asia.stampy" name="stampy-core" rev="$version"&gt;</li>
+		<li>&lt;dependency org="org.slf4j" name="slf4j-api"
+				rev="1.6.6"/&gt;</li>
+		<li>&lt;dependency org="commons-lang" name="commons-lang"
+			rev="2.6"/&gt;</li>
+		<li>&lt;dependency org="commons-codec" name="commons-codec"
+			rev="1.7"/&gt;</b>
+		</li>
+	</ul>
+	
+	<h3>Gateways</h3>
+	<p>A Stampy gateway is the interface between an application and the technology used to create/accept connections
+	from STOMP 1.2 compliant clients and servers.  All gateways extend from 
+	<a href="asia/stampy/common/gateway/AbstractStampyMessageGateway.html">AbstractStampyMessageGateway</a>.  This 
+	class contains common methods for all Stampy gateways and defines abstract methods which must be implemented 
+	in an implementation.</p>
+	
+	<h3><a href="asia/stampy/common/gateway/StampyMessageListener.html">StampyMessageListener</a></h3>
+	<p>All gateways allow the addition of any number of StampyMessageListeners which are invoked when a STOMP 1.2
+	message has been received.  By themselves the gateway implementations are not STOMP 1.2 compliant.  Compliancy
+	is obtained by adding implementations of this listener.  The <b>stampy-client-server</b> library contains
+	implementations which enforce compliance.  Any additional custom functionality is obtained by creating a
+	new implementation & adding it to the gateway ie: intercepting a specific message type and notifying the
+	application to perform some bit of functionality. <b>Note: the order of addition of these listeners is important.</b></p>
+	
+	<h4><a href="asia/stampy/common/gateway/SecurityMessageListener.html">SecurityMessageListener</a></h4>
+	<p>At least one implementation of this interface must be included in the list of message listeners, and
+	one must be first in the list else a security exception is thrown.  This is to ensure that any custom implementations
+	implement any necessary security for their platform.</p>
+	
+	<p>Additional security pre-Stampy can be added to the gateway implementations.</p>
+	
+	<h3>Interceptors</h3>
+	<p>All gateways allow the addition of interceptors which are invoked for outgoing messages.  There are two
+	types; a <a href="asia/stampy/common/message/interceptor/StampyOutgoingMessageInterceptor.html">message interceptor</a>
+	and a <a href="asia/stampy/common/message/interceptor/StampyOutgoingTextInterceptor.html">text interceptor</a>. Message
+	interceptors can be tailored to intercept specific types & messages while text interceptors inspect all strings prior
+	to sending them down the pipe.  They can be used for outgoing security but are more useful for capturing the state
+	of messages prior to the send.  This state can be used to then evaluate any subsequent messages received.</p>
+	
+	<p>The <a href="asia/stampy/client/listener/disconnect/AbstractDisconnectListenerAndInterceptor.html">AbstractDisconnectListenerAndInterceptor</a> and 
+	<a href="asia/stampy/server/listener/subscription/AbstractAcknowledgementListenerAndInterceptor.html">AbstractAcknowledgementListenerAndInterceptor</a>
+	are two classes which make effective use of this functionality.</p>
+	
+	<h3>Heartbeats</h3>
+	<p>A <a href="asia/stampy/common/heartbeat/HeartbeatContainer.html">heartbeat container</a> instance is used by the 
+	gateway to automatically send heartbeats at the agreed upon rate.  Heartbeats are started by the client and server
+	using the <a href="asia/stampy/client/listener/connected/AbstractConnectedMessageListener.html">AbstractConnectedMessageListener</a>
+	and <a href="asia/stampy/server/listener/heartbeat/AbstractHeartbeatListener.html">AbstractHeartbeatListener</a> StampyMessageListeners.</p>

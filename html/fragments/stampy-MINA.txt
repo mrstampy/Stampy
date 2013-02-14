@@ -1,0 +1,137 @@
+	<h2>stampy-MINA-client-server-RI-$version</h2>
+	<p>This library provides a <a href="https://mina.io">Mina</a> implementation of the
+	<b>stampy-client-server-$version</b> STOMP 1.2 architecture.</p>
+	
+	<h3>Design considerations</h3>
+	<ul>
+		<li>Ease of configuration and use</li>
+		<li>DI framework-friendly</li>
+		<li>Minimal dependencies</li>
+		<li>Massively multithreaded, many clients can communicate with a
+			server simultaneously</li>
+		<li>Fast (11 microseconds per message during testing)</li>
+		<li>Reliable</li>
+		<li>Extensible</li>
+		<li>Security focused</li>
+	</ul>
+	
+	<h3>Dependencies</h3>
+	<ul>
+		<li><b>&lt;dependency org="asia.stampy" name="stampy-core" rev="$version"&gt;</li>
+		<li>&lt;dependency org="asia.stampy" name="stampy-client-server" rev="$version"&gt;</li>
+		<li>$lt;dependency org="org.apache.mina" name="mina-core" rev="2.0.7"&gt;</li>
+		<li>&lt;dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"/&gt;</li>
+		<li>&lt;dependency org="commons-lang" name="commons-lang" rev="2.6"/&gt;</li>
+		<li>&lt;dependency org="commons-codec" name="commons-codec" rev="1.7"/&gt;</b></li>
+	</ul>
+	
+	<h3>Client Configuration (from examples)</h3>
+	
+	<p>While easy to programmatically configure a Mina client gateway, it is expected that a DI
+	framework such as <a href="http://www.springsource.org/">Spring</a> or 
+	<a href="http://code.google.com/p/google-guice/">Guice</a> will be used to perform this task.</p>
+	
+	<p>The following code demonstrates all that is necessary to configure a STOMP 1.2 compliant client:</p>
+	
+	<pre>
+  public static AbstractStampyMessageGateway initialize() {
+    HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
+
+    <a href="asia/stampy/client/mina/ClientMinaMessageGateway.html">ClientMinaMessageGateway</a> gateway = new ClientMinaMessageGateway();
+    gateway.setPort(1234);
+    gateway.setHost("localhost");
+    gateway.setHeartbeat(1000);
+
+    <a href="asia/stampy/client/mina/RawClientMinaHandler.html">RawClientMinaHandler</a> handler = new RawClientMinaHandler();
+    handler.setGateway(gateway);
+    handler.setHeartbeatContainer(heartbeatContainer);
+
+    gateway.addMessageListener(new <a href="asia/stampy/common/gateway/SecurityMessageListener.html">IDontNeedSecurity</a>()); // DON'T DO THIS!!!
+    
+    gateway.addMessageListener(new <a href="asia/stampy/client/listener/validate/ClientMessageValidationListener.html">ClientMessageValidationListener</a>());
+
+    <a href="asia/stampy/client/mina/connected/MinaConnectedMessageListener.html">MinaConnectedMessageListener</a> cml = new MinaConnectedMessageListener();
+    cml.setHeartbeatContainer(heartbeatContainer);
+    cml.setGateway(gateway);
+    gateway.addMessageListener(cml);
+
+    <a href="asia/stampy/client/mina/disconnect/MinaDisconnectListenerAndInterceptor.html">MinaDisconnectListenerAndInterceptor</a> disconnect = new MinaDisconnectListenerAndInterceptor();
+    disconnect.setCloseOnDisconnectMessage(false);
+    gateway.addMessageListener(disconnect);
+    gateway.addOutgoingMessageInterceptor(disconnect);
+    disconnect.setGateway(gateway);
+
+    gateway.setHandler(handler);
+
+    return gateway;
+  }
+	</pre>
+
+	<h3>Server Configuration (from examples)</h3>
+		
+	<p>While easy to programmatically configure a Mina server gateway, it is expected that a DI
+	framework such as <a href="http://www.springsource.org/">Spring</a> or 
+	<a href="http://code.google.com/p/google-guice/">Guice</a> will be used to perform this task.</p>
+	
+	<p>The following code demonstrates all that is necessary to configure a STOMP 1.2 compliant server:</p>
+	
+	<pre>
+  public static AbstractStampyMessageGateway initialize() {
+    HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
+
+    <a href="asia/stampy/server/mina/ServerMinaMessageGateway.html">ServerMinaMessageGateway</a> gateway = new ServerMinaMessageGateway();
+    gateway.setPort(1234);
+    gateway.setHeartbeat(1000);
+    gateway.setAutoShutdown(true);
+
+    <a href="asia/stampy/server/mina/RawServerMinaHandler.html">RawServerMinaHandler</a> handler = new RawServerMinaHandler();
+    handler.setGateway(gateway);
+    handler.setHeartbeatContainer(heartbeatContainer);
+
+    gateway.addMessageListener(new <a href="asia/stampy/common/gateway/SecurityMessageListener.html">IDontNeedSecurity</a>()); // DON'T DO THIS!!!
+    
+    gateway.addMessageListener(new <a href="asia/stampy/server/listener/validate/ServerMessageValidationListener.html">ServerMessageValidationListener</a>());
+
+    gateway.addMessageListener(new <a href="asia/stampy/server/listener/version/VersionListener.html">VersionListener</a>());
+
+    <a href="asia/stampy/server/mina/login/MinaLoginMessageListener.html">MinaLoginMessageListener</a> login = new MinaLoginMessageListener();
+    login.setGateway(gateway);
+    login.setLoginHandler(new <a href="asia/stampy/server/listener/login/StampyLoginHandler.html">SystemLoginHandler</a>());
+    gateway.addMessageListener(login);
+
+    <a href="asia/stampy/server/mina/connect/MinaConnectStateListener.html">MinaConnectStateListener</a> connect = new MinaConnectStateListener();
+    connect.setGateway(gateway);
+    gateway.addMessageListener(connect);
+
+    <a href="asia/stampy/server/mina/heartbeat/MinaHeartbeatListener.html">MinaHeartbeatListener</a> heartbeat = new MinaHeartbeatListener();
+    heartbeat.setHeartbeatContainer(heartbeatContainer);
+    heartbeat.setGateway(gateway);
+    gateway.addMessageListener(heartbeat);
+
+    <a href="asia/stampy/server/mina/transaction/MinaTransactionListener.html">MinaTransactionListener</a> transaction = new MinaTransactionListener();
+    transaction.setGateway(gateway);
+    gateway.addMessageListener(transaction);
+
+    <a href="asia/stampy/server/listener/subscription/StampyAcknowledgementHandler.html">SystemAcknowledgementHandler</a> sys = new SystemAcknowledgementHandler();
+
+    <a href="asia/stampy/server/mina/subscription/MinaAcknowledgementListenerAndInterceptor.html">MinaAcknowledgementListenerAndInterceptor</a> acknowledgement = new MinaAcknowledgementListenerAndInterceptor();
+    acknowledgement.setHandler(sys);
+    acknowledgement.setGateway(gateway);
+    acknowledgement.setAckTimeoutMillis(200);
+    gateway.addMessageListener(acknowledgement);
+    gateway.addOutgoingMessageInterceptor(acknowledgement);
+
+    <a href="asia/stampy/server/mina/receipt/MinaReceiptListener.html">MinaReceiptListener</a> receipt = new MinaReceiptListener();
+    receipt.setGateway(gateway);
+    gateway.addMessageListener(receipt);
+
+    <a href="asia/stampy/server/mina/connect/MinaConnectResponseListener.html">MinaConnectResponseListener</a> connectResponse = new MinaConnectResponseListener();
+    connectResponse.setGateway(gateway);
+    gateway.addMessageListener(connectResponse);
+
+    gateway.setHandler(handler);
+
+    return gateway;
+  }
+	</pre>
+	

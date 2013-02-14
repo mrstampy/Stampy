@@ -74,6 +74,5 @@ public class SystemNettyClientInitializer {
     gateway.setHandler(channelHandler);
 
     return gateway;
-
   }
 }

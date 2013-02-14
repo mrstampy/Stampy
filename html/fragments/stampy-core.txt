@@ -1,0 +1,55 @@
+	<h2>stampy-core-$version</h2>
+	
+	<p>This library provides class representations of STOMP 1.2 messages and the ability
+	to convert to and from the classes.  It can be used with the additional Stampy libraries
+	or it can be used with existing STOMP client or server implementations.</p>
+	
+	<h3>Design considerations</h3>
+	<ul>
+		<li>Ease of configuration and use</li>
+		<li>DI framework-friendly</li>
+		<li>Minimal dependencies</li>
+		<li>Reliable</li>
+		<li>Extensible</li>
+	</ul>
+	
+	<h3>Dependencies</h3>
+	<ul>
+		<li><b>&lt;dependency org="org.slf4j" name="slf4j-api"
+				rev="1.6.6"/&gt;</li>
+		<li>&lt;dependency org="commons-lang" name="commons-lang"
+			rev="2.6"/&gt;</li>
+		<li>&lt;dependency org="commons-codec" name="commons-codec"
+			rev="1.7"/&gt;</b>
+		</li>
+	</ul>
+	
+	<h3>Messages</h3>
+	
+	<p>All STOMP message classes implement the 
+	<a href="asia/stampy/common/message/StampyMessage.html">StampyMessage</a> interface. Message classes
+	typically have at least two constructors, one blank & the other with parameters - the parameterized
+	constructors are all the mandatory header values that must be set for a valid STOMP message.  Should
+	any mandatory header information be missing an exception will be thrown when the message's 
+	<pre><b>validate()</b></pre> method is called.</p>
+	
+	<p>Each StampyMessage class has an associated header class which can be obtained by calling the 
+	<pre><b>getHeader()</b></pre> method.  The header classes are wrappers
+	around a map which manages the key value pairs.  Known key names have their own getter and
+	setter methods; any key value pair can be added to a Stampy message header.</p>
+	
+	<p><b>Note:</b> should a header key already exist in the map any subsequent adds for that key
+	will be ignored.  This is to enforce the specification: <i>If a client or a server receives repeated 
+	frame header entries, only the first header entry SHOULD be used as the value of header entry. 
+	Subsequent values are only used to maintain a history of state changes of the header and MAY be ignored.
+	</i> To replace an existing key the header's <pre><b>removeHeader(existingKey)</b></pre> method must be called first.</p>
+	
+	<h3>Parsing</h3>
+	<p>A <a href="asia/stampy/common/parsing/StompMessageParser.html">message parser</a> 
+	is included for converting the raw string messages to their associated
+	StampyMessage objects.</p>
+	
+	<h3>Message Bodies</h3>
+	<p>Any STOMP message that has a body can accept a string as the body as well as any Java serializable object. The
+	mime type used by Stampy to represent such serialized objects is <pre><b>java/base64</b></pre>  Encoding to and
+	from Base64 is handled by the message superclasses & the parser, respectively.</p>

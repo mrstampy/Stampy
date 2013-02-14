@@ -1,0 +1,137 @@
+	<h2>stampy-NETTY-client-server-RI-$version</h2>
+	<p>This library provides a <a href="https://netty.io">Netty</a> implementation of the
+	<b>stampy-client-server-$version</b> STOMP 1.2 architecture.</p>
+	
+	<h3>Design considerations</h3>
+	<ul>
+		<li>Ease of configuration and use</li>
+		<li>DI framework-friendly</li>
+		<li>Minimal dependencies</li>
+		<li>Massively multithreaded, many clients can communicate with a
+			server simultaneously</li>
+		<li>Fast (6 microseconds per message during testing)</li>
+		<li>Reliable</li>
+		<li>Extensible</li>
+		<li>Security focused</li>
+	</ul>
+	
+	<h3>Dependencies</h3>
+	<ul>
+		<li><b>&lt;dependency org="asia.stampy" name="stampy-core" rev="$version"&gt;</li>
+		<li>&lt;dependency org="asia.stampy" name="stampy-client-server" rev="$version"&gt;</li>
+		<li>&lt;dependency org="io.netty" name="netty" rev="3.6.2.Final"&gt;</li>
+		<li>&lt;dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"/&gt;</li>
+		<li>&lt;dependency org="commons-lang" name="commons-lang" rev="2.6"/&gt;</li>
+		<li>&lt;dependency org="commons-codec" name="commons-codec" rev="1.7"/&gt;</b></li>
+	</ul>
+	
+	<h3>Client Configuration (from examples)</h3>
+	
+	<p>While easy to programmatically configure a Netty client gateway, it is expected that a DI
+	framework such as <a href="http://www.springsource.org/">Spring</a> or 
+	<a href="http://code.google.com/p/google-guice/">Guice</a> will be used to perform this task.</p>
+	
+	<p>The following code demonstrates all that is necessary to configure a STOMP 1.2 compliant client:</p>
+	
+	<pre>
+  public static AbstractStampyMessageGateway initialize() {
+    HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
+
+    <a href="asia/stampy/client/netty/ClientNettyMessageGateway.html">ClientNettyMessageGateway</a> gateway = new ClientNettyMessageGateway();
+    gateway.setPort(1234);
+    gateway.setHost("localhost");
+    gateway.setHeartbeat(1000);
+
+    <a href="asia/stampy/client/netty/ClientNettyChannelHandler.html">ClientNettyChannelHandler</a> channelHandler = new ClientNettyChannelHandler();
+    channelHandler.setGateway(gateway);
+    channelHandler.setHeartbeatContainer(heartbeatContainer);
+
+    gateway.addMessageListener(new <a href="asia/stampy/common/gateway/SecurityMessageListener.html">IDontNeedSecurity</a>()); // DON'T DO THIS!!!
+    
+    gateway.addMessageListener(new <a href="asia/stampy/client/listener/validate/ClientMessageValidationListener.html">ClientMessageValidationListener</a>());
+
+    <a href="asia/stampy/client/netty/connected/NettyConnectedMessageListener.html">NettyConnectedMessageListener</a> cml = new NettyConnectedMessageListener();
+    cml.setHeartbeatContainer(heartbeatContainer);
+    cml.setGateway(gateway);
+    gateway.addMessageListener(cml);
+
+    <a href="asia/stampy/client/netty/disconnect/NettyDisconnectListenerAndInterceptor.html">NettyDisconnectListenerAndInterceptor</a> disconnect = new NettyDisconnectListenerAndInterceptor();
+    disconnect.setCloseOnDisconnectMessage(false);
+    gateway.addMessageListener(disconnect);
+    gateway.addOutgoingMessageInterceptor(disconnect);
+    disconnect.setGateway(gateway);
+
+    gateway.setHandler(channelHandler);
+
+    return gateway;
+  }
+	</pre>
+
+	<h3>Server Configuration (from examples)</h3>
+		
+	<p>While easy to programmatically configure a Netty server gateway, it is expected that a DI
+	framework such as <a href="http://www.springsource.org/">Spring</a> or 
+	<a href="http://code.google.com/p/google-guice/">Guice</a> will be used to perform this task.</p>
+	
+	<p>The following code demonstrates all that is necessary to configure a STOMP 1.2 compliant server:</p>
+	
+	<pre>
+  public static AbstractStampyMessageGateway initialize() {
+    HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
+
+    <a href="asia/stampy/server/netty/ServerNettyMessageGateway.html">ServerNettyMessageGateway</a> gateway = new ServerNettyMessageGateway();
+    gateway.setPort(1234);
+    gateway.setHeartbeat(1000);
+    gateway.setAutoShutdown(true);
+
+    <a href="asia/stampy/server/netty/ServerNettyChannelHandler.html">ServerNettyChannelHandler</a> channelHandler = new ServerNettyChannelHandler();
+    channelHandler.setGateway(gateway);
+    channelHandler.setHeartbeatContainer(heartbeatContainer);
+
+    gateway.addMessageListener(new <a href="asia/stampy/common/gateway/SecurityMessageListener.html">IDontNeedSecurity</a>()); // DON'T DO THIS!!!
+    
+    gateway.addMessageListener(new <a href="asia/stampy/server/listener/validate/ServerMessageValidationListener.html">ServerMessageValidationListener</a>());
+
+    gateway.addMessageListener(new <a href="asia/stampy/server/listener/version/VersionListener.html">VersionListener</a>());
+
+    <a href="asia/stampy/server/netty/login/NettyLoginMessageListener.html">NettyLoginMessageListener</a> login = new NettyLoginMessageListener();
+    login.setGateway(gateway);
+    login.setLoginHandler(new <a href="asia/stampy/server/listener/login/StampyLoginHandler.html">SystemLoginHandler</a>());
+    gateway.addMessageListener(login);
+
+    <a href="asia/stampy/server/netty/connect/NettyConnectStateListener.html">NettyConnectStateListener</a> connect = new NettyConnectStateListener();
+    connect.setGateway(gateway);
+    gateway.addMessageListener(connect);
+
+    <a href="asia/stampy/server/netty/heartbeat/NettyHeartbeatListener.html">NettyHeartbeatListener</a> heartbeat = new NettyHeartbeatListener();
+    heartbeat.setHeartbeatContainer(heartbeatContainer);
+    heartbeat.setGateway(gateway);
+    gateway.addMessageListener(heartbeat);
+
+    <a href="asia/stampy/server/netty/transaction/NettyTransactionListener.html">NettyTransactionListener</a> transaction = new NettyTransactionListener();
+    transaction.setGateway(gateway);
+    gateway.addMessageListener(transaction);
+
+    <a href="asia/stampy/server/listener/subscription/StampyAcknowledgementHandler.html">SystemAcknowledgementHandler</a> sys = new SystemAcknowledgementHandler();
+
+    <a href="asia/stampy/server/netty/subscription/NettyAcknowledgementListenerAndInterceptor.html">NettyAcknowledgementListenerAndInterceptor</a> acknowledgement = new NettyAcknowledgementListenerAndInterceptor();
+    acknowledgement.setHandler(sys);
+    acknowledgement.setGateway(gateway);
+    acknowledgement.setAckTimeoutMillis(200);
+    gateway.addMessageListener(acknowledgement);
+    gateway.addOutgoingMessageInterceptor(acknowledgement);
+
+    <a href="asia/stampy/server/netty/receipt/NettyReceiptListener.html">NettyReceiptListener</a> receipt = new NettyReceiptListener();
+    receipt.setGateway(gateway);
+    gateway.addMessageListener(receipt);
+
+    <a href="asia/stampy/server/netty/connect/NettyConnectResponseListener.html">NettyConnectResponseListener</a> connectResponse = new NettyConnectResponseListener();
+    connectResponse.setGateway(gateway);
+    gateway.addMessageListener(connectResponse);
+
+    gateway.setHandler(channelHandler);
+
+    return gateway;
+  }
+	</pre>
+	

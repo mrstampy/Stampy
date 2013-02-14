@@ -1,0 +1,17 @@
+	<h2>stampy-examples-$version</h2>
+	<p>The Stampy example code demonstrates how to configure Stampy clients and servers to perform customized tasks.</p>
+	
+	<h3>Load Test</h3>
+	<p>The load test attempts to send a configurable one million ACK messages from the 
+	<a href="asia/stampy/examples/loadtest/client/TestClient.html">client</a>
+	to the <a href="asia/stampy/examples/loadtest/server/TestServer.html">server</a> 
+	and requests one million receipts from the server.</p>
+	
+	<h3>Log4j Level Changer</h3>
+	<p>This example shows how to <a href="asia/stampy/examples/remote/exe/log4j/client/Log4jLevelChangerTestClient.html">send a serializable Java object</a> 
+	for execution on a <a href="asia/stampy/examples/remote/exe/log4j/server/Log4jLevelChangerTestServer.html"></a>server.</p>
+	
+	<h3>System</h3>
+	<p>This example shows how to configure a STOMP 1.2 compliant 
+	<a href="asia/stampy/examples/system/client/SystemClient.html">client</a> and 
+	<a href="asia/stampy/examples/system/server/SystemServer.html">server</a> and tests for compliancy.</p>
