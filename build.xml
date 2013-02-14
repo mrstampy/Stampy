@@ -49,7 +49,6 @@
 		<ant antfile="${basedir}/build-stampy-NETTY.xml" inheritall="true" />
 		<antcall target="clean" />
 		<ant antfile="${basedir}/build-stampy-examples.xml" inheritall="true" />
-		<antcall target="clean" />
 		<ant antfile="${basedir}/build-stampy-all.xml" inheritall="true" />
 	</target>
 
