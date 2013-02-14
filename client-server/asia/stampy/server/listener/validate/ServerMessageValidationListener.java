@@ -60,6 +60,7 @@ public class ServerMessageValidationListener implements StampyMessageListener {
     case SUBSCRIBE:
     case UNSUBSCRIBE:
       message.validate();
+      break;
     default:
       throw new IllegalArgumentException(message.getMessageType() + " is not a valid STOMP 1.2 client message");
 
