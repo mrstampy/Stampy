@@ -159,7 +159,7 @@ public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMe
    * @param maxLength
    *          the max length
    */
-  public void setupChannelPipeline(ChannelPipeline pipeline, int maxLength) {
+  protected void setupChannelPipeline(ChannelPipeline pipeline, int maxLength) {
     addHandlers(pipeline);
 
     StringEncoder encoder = new StringEncoder(CHARSET);
