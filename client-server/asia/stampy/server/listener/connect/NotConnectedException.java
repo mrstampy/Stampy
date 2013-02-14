@@ -19,7 +19,7 @@
 package asia.stampy.server.listener.connect;
 
 /**
- * The Class TransactionAlreadyStartedException.
+ * The Class NotConnectedException.
  */
 public class NotConnectedException extends Exception {
 
