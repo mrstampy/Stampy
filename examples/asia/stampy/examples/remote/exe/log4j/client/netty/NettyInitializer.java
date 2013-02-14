@@ -36,7 +36,7 @@ public class NettyInitializer {
   /**
    * Initialize.
    * 
-   * @return the client mina message gateway
+   * @return the client netty message gateway
    */
   public static AbstractStampyMessageGateway initialize() {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
