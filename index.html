@@ -84,9 +84,14 @@
 <li>Security focused</li>
 </ul><h3>Dependencies</h3>
 
-<p></p>
-
-<h3>Client Configuration (from examples)</h3>
+<ul>
+<li><code>dependency org="asia.stampy" name="stampy-core" rev="$version"</code></li>
+<li><code>dependency org="asia.stampy" name="stampy-client-server" rev="$version"</code></li>
+<li><code>dependency org="io.netty" name="netty" rev="3.6.2.Final"</code></li>
+<li><code>dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"</code></li>
+<li><code>dependency org="commons-lang" name="commons-lang" rev="2.6"</code></li>
+<li><code>dependency org="commons-codec" name="commons-codec" rev="1.7"</code></li>
+</ul><h3>Client Configuration (from examples)</h3>
 
 <p>While easy to programmatically configure a Netty client gateway, it is expected that a DI framework such as Spring or Guice will be used to perform this task.</p>
 
@@ -206,10 +211,16 @@
 <li>Reliable</li>
 <li>Extensible</li>
 <li>Security focused</li>
-<li>Dependencies</li>
-</ul><p></p>
+</ul><h3>Dependencies</h3>
 
-<h3>Client Configuration (from examples)</h3>
+<ul>
+<li><code>dependency org="asia.stampy" name="stampy-core" rev="$version"</code></li>
+<li><code>dependency org="asia.stampy" name="stampy-client-server" rev="$version"</code></li>
+<li><code>dependency org="org.apache.mina" name="mina-core" rev="2.0.7"</code></li>
+<li><code>dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"</code></li>
+<li><code>dependency org="commons-lang" name="commons-lang" rev="2.6"</code></li>
+<li><code>dependency org="commons-codec" name="commons-codec" rev="1.7"</code></li>
+</ul><h3>Client Configuration (from examples)</h3>
 
 <p>While easy to programmatically configure a Mina client gateway, it is expected that a DI framework such as Spring or Guice will be used to perform this task.</p>
 
@@ -327,10 +338,14 @@
 <li>Reliable</li>
 <li>Extensible</li>
 <li>Security focused</li>
-<li>Dependencies</li>
-</ul><p></p>
+</ul><h3>Dependencies</h3>
 
-<h3>Gateways</h3>
+<ul>
+<li><code>dependency org="asia.stampy" name="stampy-core" rev="$version"</code></li>
+<li><code>dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"</code></li>
+<li><code>dependency org="commons-lang" name="commons-lang" rev="2.6"</code></li>
+<li><code>dependency org="commons-codec" name="commons-codec" rev="1.7"</code></li>
+</ul><h3>Gateways</h3>
 
 <p>A Stampy gateway is the interface between an application and the technology used to create/accept connections from STOMP 1.2 compliant clients and servers. All gateways extend from AbstractStampyMessageGateway. This class contains common methods for all Stampy gateways and defines abstract methods which must be implemented in an implementation.</p>
 
@@ -367,10 +382,13 @@
 <li>Minimal dependencies</li>
 <li>Reliable</li>
 <li>Extensible</li>
-<li>Dependencies</li>
-</ul><p></p>
+</ul><h3>Dependencies</h3>
 
-<h3>Messages</h3>
+<ul>
+<li><code>dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"</code></li>
+<li><code>dependency org="commons-lang" name="commons-lang" rev="2.6"</code></li>
+<li><code>dependency org="commons-codec" name="commons-codec" rev="1.7"</code></li>
+</ul><h3>Messages</h3>
 
 <p>All STOMP message classes implement the StampyMessage interface. Message classes typically have at least two constructors, one blank &amp; the other with parameters - the parameterized constructors are all the mandatory header values that must be set for a valid STOMP message. Should any mandatory header information be missing an exception will be thrown when the message's</p>
 
