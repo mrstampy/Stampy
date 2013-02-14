@@ -165,9 +165,7 @@ public abstract class StampyRawStringHandler extends StampyMinaHandler {
     StampyMessage<?> sm = null;
     try {
       sm = getParser().parseMessage(msg);
-      if (isValidMessage(sm)) {
-        getGateway().notifyMessageListeners(sm, hostPort);
-      }
+      getGateway().notifyMessageListeners(sm, hostPort);
     } catch (MessageListenerHaltException e) {
       throw e;
     } catch (Exception e) {

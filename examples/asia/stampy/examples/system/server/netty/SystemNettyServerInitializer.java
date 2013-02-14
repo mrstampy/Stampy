@@ -28,6 +28,7 @@ import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.common.IDontNeedSecurity;
 import asia.stampy.examples.system.server.SystemAcknowledgementHandler;
 import asia.stampy.examples.system.server.SystemLoginHandler;
+import asia.stampy.server.listener.validate.ServerMessageValidationListener;
 import asia.stampy.server.listener.version.VersionListener;
 import asia.stampy.server.netty.ServerNettyChannelHandler;
 import asia.stampy.server.netty.ServerNettyMessageGateway;
@@ -74,6 +75,8 @@ public class SystemNettyServerInitializer {
     channelHandler.setHeartbeatContainer(heartbeatContainer);
 
     gateway.addMessageListener(new IDontNeedSecurity());
+    
+    gateway.addMessageListener(new ServerMessageValidationListener());
 
     gateway.addMessageListener(new VersionListener());
 

@@ -39,7 +39,6 @@ import asia.stampy.common.gateway.StampyHandlerHelper;
 import asia.stampy.common.gateway.UnparseableMessageHandler;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.message.StampyMessage;
-import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
 import asia.stampy.common.parsing.StompMessageParser;
 import asia.stampy.common.parsing.UnparseableException;
@@ -147,7 +146,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
     try {
       sm = getParser().parseMessage(msg);
 
-      if (isValidMessage(sm)) getGateway().notifyMessageListeners(sm, hostPort);
+      getGateway().notifyMessageListeners(sm, hostPort);
     } catch (UnparseableException e) {
       helper.handleUnparseableMessage(hostPort, msg, e);
     } catch (MessageListenerHaltException e) {
@@ -167,16 +166,6 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
     session.write(ILLEGAL_ACCESS_ATTEMPT);
     session.close(false);
   }
-
-  /**
-   * Checks if is valid message for a client or a server. Implementations should
-   * ensure that the {@link StompMessageType} is appropriate.
-   * 
-   * @param message
-   *          the message
-   * @return true, if is valid message
-   */
-  protected abstract boolean isValidMessage(StampyMessage<?> message);
 
   /**
    * Gets the parser.

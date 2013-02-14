@@ -16,23 +16,33 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server;
+package asia.stampy.server.listener.validate;
 
+import asia.stampy.common.gateway.HostPort;
+import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
+import asia.stampy.common.message.StompMessageType;
 
 /**
- * The Class ServerHandlerAdapter.
+ * Ensures that only client messages are accepted on the client. The validate()
+ * method on the message is invoked.
  */
-public class ServerHandlerAdapter {
+public class ServerMessageValidationListener implements StampyMessageListener {
 
-  /**
-   * Checks if is valid message.
-   * 
-   * @param message
-   *          the message
-   * @return true, if is valid message
-   */
-  public static boolean isValidMessage(StampyMessage<?> message) {
+  private static StompMessageType[] TYPES = StompMessageType.values();
+
+  @Override
+  public StompMessageType[] getMessageTypes() {
+    return TYPES;
+  }
+
+  @Override
+  public boolean isForMessage(StampyMessage<?> message) {
+    return true;
+  }
+
+  @Override
+  public void messageReceived(StampyMessage<?> message, HostPort hostPort) throws Exception {
     switch (message.getMessageType()) {
 
     case ABORT:
@@ -47,9 +57,8 @@ public class ServerHandlerAdapter {
     case SUBSCRIBE:
     case UNSUBSCRIBE:
       message.validate();
-      return true;
     default:
-      return false;
+      throw new IllegalArgumentException(message.getMessageType() + " is not a valid STOMP 1.2 client message");
 
     }
   }

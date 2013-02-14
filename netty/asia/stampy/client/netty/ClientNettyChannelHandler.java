@@ -18,25 +18,11 @@
  */
 package asia.stampy.client.netty;
 
-import asia.stampy.client.ClientHandlerAdapter;
-import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.netty.StampyNettyChannelHandler;
 
 /**
  * The Class ClientNettyChannelHandler.
  */
 public class ClientNettyChannelHandler extends StampyNettyChannelHandler {
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.netty.StampyNettyChannelHandler#isValidMessage(asia.
-   * stampy.common.message.StampyMessage)
-   */
-  @Override
-  protected boolean isValidMessage(StampyMessage<?> message) {
-    return ClientHandlerAdapter.isValidMessage(message);
-  }
 
 }

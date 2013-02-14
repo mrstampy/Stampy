@@ -1,0 +1,45 @@
+
+<project name="Stampy" basedir="." default="release.stampy" xmlns:ivy="antlib:org.apache.ivy.ant">
+	
+	<property file="build.properties" />
+	
+	<target name="release.stampy" depends="resolve, build.stampy">
+	</target>
+
+	<target name="resolve">
+		<ivy:resolve file="${basedir}/ivy.xml"/>
+	</target>
+	
+	<target name="mkdirs">
+		<mkdir dir="${basedir}/build"/>
+		<mkdir dir="${basedir}/build/bin"/>
+		<mkdir dir="${basedir}/build/javadoc"/>
+		<mkdir dir="${basedir}/build/javadoc/images"/>
+		<mkdir dir="${basedir}/build/stampy-all"/>
+		<mkdir dir="${basedir}/build/stampy-client-server"/>
+		<mkdir dir="${basedir}/build/stampy-core"/>
+		<mkdir dir="${basedir}/build/stampy-examples"/>
+		<mkdir dir="${basedir}/build/stampy-MINA-client-server-RI"/>
+		<mkdir dir="${basedir}/build/stampy-NETTY-client-server-RI"/>
+	</target>
+
+	<target name="clean.javadoc">
+		<delete dir="${basedir}/build/javadoc">
+			<include name="**/*"/>
+		</delete>
+	</target>
+	
+	<target name="copy.logo" depends="mkdirs, clean.javadoc">
+		<copyfile dest="${basedir}/build/javadoc/images/Stampy.png" src="${basedir}/html/images/Stampy.png"/>
+	</target>
+
+	<target name="build.stampy" depends="copy.logo">
+		<ant antfile="${basedir}/build-stampy-core.xml" inheritall="true" />
+		<ant antfile="${basedir}/build-stampy-client-server.xml" inheritall="true" />
+		<ant antfile="${basedir}/build-stampy-MINA.xml" inheritall="true" />
+		<ant antfile="${basedir}/build-stampy-NETTY.xml" inheritall="true" />
+		<ant antfile="${basedir}/build-stampy-examples.xml" inheritall="true" />
+		<ant antfile="${basedir}/build-stampy-all.xml" inheritall="true" />
+	</target>
+
+</project>

@@ -20,8 +20,6 @@ package asia.stampy.client.mina;
 
 import javax.annotation.Resource;
 
-import asia.stampy.client.ClientHandlerAdapter;
-import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
 
 /**
@@ -29,17 +27,5 @@ import asia.stampy.common.mina.raw.StampyRawStringHandler;
  */
 @Resource
 public class RawClientMinaHandler extends StampyRawStringHandler {
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * asia.stampy.common.mina.StampyMinaHandler#isValidMessage(asia.stampy.common
-   * .message.StampyMessage)
-   */
-  @Override
-  protected boolean isValidMessage(StampyMessage<?> message) {
-    return ClientHandlerAdapter.isValidMessage(message);
-  }
 
 }

@@ -27,6 +27,7 @@ import asia.stampy.common.mina.MinaServiceAdapter;
 import asia.stampy.examples.common.IDontNeedSecurity;
 import asia.stampy.examples.system.server.SystemAcknowledgementHandler;
 import asia.stampy.examples.system.server.SystemLoginHandler;
+import asia.stampy.server.listener.validate.ServerMessageValidationListener;
 import asia.stampy.server.listener.version.VersionListener;
 import asia.stampy.server.mina.RawServerMinaHandler;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
@@ -76,6 +77,8 @@ public class SystemMinaServerInitializer {
     handler.setGateway(gateway);
 
     gateway.addMessageListener(new IDontNeedSecurity());
+    
+    gateway.addMessageListener(new ServerMessageValidationListener());
 
     gateway.addMessageListener(new VersionListener());
 

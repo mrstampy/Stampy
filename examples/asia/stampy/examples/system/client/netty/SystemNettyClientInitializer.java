@@ -18,6 +18,7 @@
  */
 package asia.stampy.examples.system.client.netty;
 
+import asia.stampy.client.listener.validate.ClientMessageValidationListener;
 import asia.stampy.client.netty.ClientNettyChannelHandler;
 import asia.stampy.client.netty.connected.NettyConnectedMessageListener;
 import asia.stampy.client.netty.disconnect.NettyDisconnectListenerAndInterceptor;
@@ -56,6 +57,8 @@ public class SystemNettyClientInitializer {
     channelHandler.setHeartbeatContainer(heartbeatContainer);
 
     gateway.addMessageListener(new IDontNeedSecurity());
+    
+    gateway.addMessageListener(new ClientMessageValidationListener());
 
     NettyConnectedMessageListener cml = new NettyConnectedMessageListener();
     cml.setHeartbeatContainer(heartbeatContainer);

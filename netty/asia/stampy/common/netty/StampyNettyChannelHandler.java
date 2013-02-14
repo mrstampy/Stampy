@@ -46,7 +46,6 @@ import asia.stampy.common.gateway.StampyHandlerHelper;
 import asia.stampy.common.gateway.UnparseableMessageHandler;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.message.StampyMessage;
-import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.parsing.StompMessageParser;
 import asia.stampy.common.parsing.UnparseableException;
 
@@ -249,7 +248,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
     try {
       sm = getParser().parseMessage(msg);
 
-      if (isValidMessage(sm)) getGateway().notifyMessageListeners(sm, hostPort);
+      getGateway().notifyMessageListeners(sm, hostPort);
     } catch (UnparseableException e) {
       helper.handleUnparseableMessage(hostPort, msg, e);
     } catch (MessageListenerHaltException e) {
@@ -258,16 +257,6 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
       helper.handleUnexpectedError(hostPort, msg, sm, e);
     }
   }
-
-  /**
-   * Checks if is valid message for a client or a server. Implementations should
-   * ensure that the {@link StompMessageType} is appropriate.
-   * 
-   * @param message
-   *          the message
-   * @return true, if is valid message
-   */
-  protected abstract boolean isValidMessage(StampyMessage<?> message);
 
   /**
    * Illegal access.

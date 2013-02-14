@@ -1,0 +1,76 @@
+
+<project name="stampy-MINA-client-server-RI" basedir="." default="release.stampy.MINA.client.server.RI" xmlns:ivy="antlib:org.apache.ivy.ant">
+	
+	<path id="stampy.classpath">
+		<fileset dir="${basedir}/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${basedir}/build/stampy-core">
+			<include name="stampy-core.jar"/>
+		</fileset>
+		<fileset dir="${basedir}/build/stampy-client-server">
+			<include name="stampy-client-server.jar"/>
+		</fileset>
+	</path>
+
+	<target name="release.stampy.MINA.client.server.RI" depends="jar.stampy.MINA.client.server.RI.src, jar.stampy.MINA.client.server.RI.javadoc, jar.stampy.MINA.client.server.RI" />
+	
+	<target name="clean">
+		<delete dir="${basedir}/build/bin">
+			<include name="**/*"/>
+		</delete>
+	</target>
+	
+	<target name="compile.stampy.MINA.client.server.RI">
+		<javac target="1.5" source="1.5" srcdir="${basedir}/mina" debug="true" destdir="${basedir}/build/bin">
+			<classpath refid="stampy.classpath" />
+		</javac>		
+	</target>
+	
+	<target name="javadoc.stampy.MINA.client.server.RI" depends="compile.stampy.MINA.client.server.RI">
+		<javadoc 
+			overview="${basedir}/html/Overview-stampy-MINA.html" 
+			classpathref="stampy.classpath" 
+			sourcepath="${basedir}/src;${basedir}/mina;${basedir}/client-server" 
+			packagenames="asia.stampy.*" 
+			destdir="${basedir}/build/javadoc">
+		</javadoc>
+	</target>
+	
+	<target name="jar.stampy.MINA.client.server.RI" depends="compile.stampy.MINA.client.server.RI">
+		<jar destfile="${basedir}/build/stampy-MINA-client-server-RI/stampy-MINA-client-server-RI.jar" basedir="${basedir}/build/bin">
+			<manifest id="stampy.MINA.client.server.RI.manifest">
+				<attribute name="Built-By" value="${jar.built.by}"/>
+				<attribute name="Email-Address" value="${jar.email.address}"/>
+				<attribute name="Project-Website" value="${jar.project.website}"/>
+				<attribute name="Release-Number" value="${version}"/>
+				<attribute name="Release-Description" value="${releaseDescription}"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="jar.stampy.MINA.client.server.RI.javadoc" depends="javadoc.stampy.MINA.client.server.RI">
+		<jar destfile="${basedir}/build/stampy-MINA-client-server-RI/stampy-MINA-client-server-RI-javadoc.jar" basedir="${basedir}/build/javadoc">
+			<manifest id="stampy.MINA.client.server.RI.manifest">
+				<attribute name="Built-By" value="${jar.built.by}"/>
+				<attribute name="Email-Address" value="${jar.email.address}"/>
+				<attribute name="Project-Website" value="${jar.project.website}"/>
+				<attribute name="Release-Number" value="${version}"/>
+				<attribute name="Release-Description" value="${releaseDescription}"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="jar.stampy.MINA.client.server.RI.src">
+		<jar destfile="${basedir}/build/stampy-MINA-client-server-RI/stampy-MINA-client-server-RI-src.jar" basedir="${basedir}/mina">
+			<manifest id="stampy.MINA.client.server.RI.manifest">
+				<attribute name="Built-By" value="${jar.built.by}"/>
+				<attribute name="Email-Address" value="${jar.email.address}"/>
+				<attribute name="Project-Website" value="${jar.project.website}"/>
+				<attribute name="Release-Number" value="${version}"/>
+				<attribute name="Release-Description" value="${releaseDescription}"/>
+			</manifest>
+		</jar>
+	</target>
+
+</project>

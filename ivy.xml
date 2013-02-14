@@ -20,16 +20,82 @@
 <ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
        
-    <info organisation="asia.stampy" module="Stampy" />
+    <info organisation="asia.stampy" module="stampy">
+        <license name="GPL 2.0"/>
+        <description homepage="http://mrstampy.github.com/Stampy/">
+            Stampy is an implementation of the STOMP 1.2 specification.
+            It includes classes representing STOMP messages (stampy-core) and
+            the ability to quickly create STOMP 1.2 clients and servers.  Reference
+            implementations using Netty and MINA are included.
+        </description>
+    </info>
+    
+    <configurations>
+        <conf name="core-conf" />
+        <conf name="mina-conf" extends="core-conf" />
+        <conf name="netty-conf" extends="core-conf" />
+        <conf name="examples-conf" extends="mina-conf, netty-conf" />
+        <conf name="all-conf" extends="examples-conf" />
+    </configurations>
+    
+    <publications>
+        <artifact name="build/stampy-core/stampy-core" type="jar" ext="jar" conf="core-conf"/>
+        <artifact name="build/stampy-core/stampy-core-src" type="source" ext="jar" />
+        <artifact name="build/stampy-core/stampy-core-javadoc" type="javadoc" ext="jar" />
+        
+        <artifact name="build/stampy-client-server/stampy-client-server" type="jar" ext="jar" conf="core-conf" />
+        <artifact name="build/stampy-client-server/stampy-client-server-src" type="source" ext="jar" />
+        <artifact name="build/stampy-client-server/stampy-client-server-javadoc" type="javadoc" ext="jar" />
+        
+        <artifact name="build/stampy-MINA-client-server-RI/stampy-MINA-client-server-RI" type="jar" ext="jar" conf="mina-conf" />
+        <artifact name="build/stampy-MINA-client-server-RI/stampy-MINA-client-server-RI-src" type="source" ext="jar" />
+        <artifact name="build/stampy-MINA-client-server-RI/stampy-MINA-client-server-RI-javadoc" type="javadoc" ext="jar" />
+                
+        <artifact name="build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI" type="jar" ext="jar" conf="netty-conf" />
+        <artifact name="build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-src" type="source" ext="jar" />
+        <artifact name="build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-javadoc" type="javadoc" ext="jar" />
+                
+        <artifact name="build/stampy-examples/stampy-examples" type="jar" ext="jar" conf="examples-conf" />
+        <artifact name="build/stampy-examples/stampy-examples-src" type="source" ext="jar" />
+        <artifact name="build/stampy-examples/stampy-examples-javadoc" type="javadoc" ext="jar" />
+                
+        <artifact name="build/stampy-all/stampy-all" type="jar" ext="jar" conf="examples-conf" />
+        <artifact name="build/stampy-all/stampy-all-src" type="source" ext="jar" />
+        <artifact name="build/stampy-all/stampy-all-javadoc" type="javadoc" ext="jar" />
+    </publications>
 	
 	<dependencies>
-		<dependency org="log4j" name="log4j" rev="1.2.17"/>
-		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.6"/>
-		<dependency org="org.apache.mina" name="mina-core" rev="2.0.7"/>
-		<dependency org="io.netty" name="netty" rev="3.6.2.Final"/>
-		<dependency org="commons-lang" name="commons-lang" rev="2.6"/>
-		<dependency org="commons-codec" name="commons-codec" rev="1.7"/>
-		<dependency org="org.mockito" name="mockito-all" rev="1.9.5"/>
+		<dependency org="log4j" name="log4j" rev="1.2.17" >
+		    <conf name="mina-conf, examples-conf, all-conf" />
+		</dependency>
+		
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.6.6" >
+		    <conf name="core-conf, all-conf" />
+		</dependency>
+		
+		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.6"  >
+		    <conf name="mina-conf, examples-conf, all-conf" />
+		</dependency>
+		
+		<dependency org="org.apache.mina" name="mina-core" rev="2.0.7"  >
+		    <conf name="mina-conf, all-conf" />
+		</dependency>
+		
+		<dependency org="io.netty" name="netty" rev="3.6.2.Final"  >
+		    <conf name="mina-conf, examples-conf, all-conf" />
+		</dependency>
+		
+		<dependency org="commons-lang" name="commons-lang" rev="2.6" >
+		    <conf name="core-conf, all-conf" />
+		</dependency>
+		
+		<dependency org="commons-codec" name="commons-codec" rev="1.7">
+		    <conf name="core-conf, all-conf" />
+		</dependency>
+		
+		<dependency org="org.mockito" name="mockito-all" rev="1.9.5" >
+		    <conf name="all-conf" />
+		</dependency>
 	</dependencies>
 	
 </ivy-module>

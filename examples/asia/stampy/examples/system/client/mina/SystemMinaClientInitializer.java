@@ -18,6 +18,7 @@
  */
 package asia.stampy.examples.system.client.mina;
 
+import asia.stampy.client.listener.validate.ClientMessageValidationListener;
 import asia.stampy.client.mina.RawClientMinaHandler;
 import asia.stampy.client.mina.connected.MinaConnectedMessageListener;
 import asia.stampy.client.mina.disconnect.MinaDisconnectListenerAndInterceptor;
@@ -56,6 +57,8 @@ public class SystemMinaClientInitializer {
     handler.setGateway(gateway);
 
     gateway.addMessageListener(new IDontNeedSecurity());
+    
+    gateway.addMessageListener(new ClientMessageValidationListener());
 
     MinaConnectedMessageListener cml = new MinaConnectedMessageListener();
     cml.setHeartbeatContainer(heartbeatContainer);
