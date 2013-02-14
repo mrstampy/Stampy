@@ -18,6 +18,8 @@
  */
 package asia.stampy.server.listener.validate;
 
+import javax.annotation.Resource;
+
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
@@ -27,6 +29,7 @@ import asia.stampy.common.message.StompMessageType;
  * Ensures that only client messages are accepted on the client. The validate()
  * method on the message is invoked.
  */
+@Resource
 public class ServerMessageValidationListener implements StampyMessageListener {
 
   private static StompMessageType[] TYPES = StompMessageType.values();
