@@ -32,8 +32,9 @@
     
     <configurations>
         <conf name="core-conf" />
-        <conf name="mina-conf" extends="core-conf" />
-        <conf name="netty-conf" extends="core-conf" />
+        <conf name="client-server-conf" extends="core-conf" />
+        <conf name="mina-conf" extends="client-server-conf" />
+        <conf name="netty-conf" extends="client-server-conf" />
         <conf name="examples-conf" extends="mina-conf, netty-conf" />
         <conf name="all-conf" extends="examples-conf" />
     </configurations>
@@ -92,7 +93,7 @@
 		<dependency org="commons-codec" name="commons-codec" rev="1.7">
 		    <conf name="core-conf, all-conf" />
 		</dependency>
-		
+				
 		<dependency org="org.mockito" name="mockito-all" rev="1.9.5" >
 		    <conf name="all-conf" />
 		</dependency>
