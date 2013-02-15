@@ -19,10 +19,12 @@
 package asia.stampy.client.message.ack;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class AckHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class AckHeader extends AbstractClientMessageHeader {
   private static final long serialVersionUID = 5190052881939069233L;
 

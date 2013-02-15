@@ -18,11 +18,13 @@
  */
 package asia.stampy.server.message.receipt;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.AbstractMessageHeader;
 
 /**
  * The Class ReceiptHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class ReceiptHeader extends AbstractMessageHeader {
   private static final long serialVersionUID = 2499933932635661316L;
 

@@ -23,6 +23,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.parsing.StompMessageParser;
 
 /**
@@ -31,6 +32,7 @@ import asia.stampy.common.parsing.StompMessageParser;
  * @param <HDR>
  *          the generic type
  */
+@StampyLibrary(libraryName="stampy-core")
 public abstract class AbstractMessage<HDR extends StampyMessageHeader> implements StampyMessage<HDR> {
 
   private static final long serialVersionUID = -577180637937320507L;

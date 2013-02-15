@@ -18,11 +18,14 @@
  */
 package asia.stampy.client.message;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * <i>any client frame other than CONNECT MAY specify a receipt header with an
  * arbitrary value. This will cause the server to acknowledge the processing of
  * the client frame with a RECEIPT frame</i>
  */
+@StampyLibrary(libraryName="stampy-core")
 public interface ClientMessageHeader {
 
   /** The Constant RECEIPT. */

@@ -19,10 +19,12 @@
 package asia.stampy.client.message.abort;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class AbortHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class AbortHeader extends AbstractClientMessageHeader {
   private static final long serialVersionUID = 5682449671872257059L;
 

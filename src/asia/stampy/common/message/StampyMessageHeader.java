@@ -21,9 +21,12 @@ package asia.stampy.common.message;
 import java.io.Serializable;
 import java.util.Map;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Interface StampyMessageHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public interface StampyMessageHeader extends Serializable {
 
   /**

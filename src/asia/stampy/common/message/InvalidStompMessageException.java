@@ -18,9 +18,12 @@
  */
 package asia.stampy.common.message;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Class InvalidStompMessageException.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class InvalidStompMessageException extends RuntimeException {
 
   private static final long serialVersionUID = 4139832823187771410L;

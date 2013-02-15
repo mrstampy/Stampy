@@ -18,9 +18,12 @@
  */
 package asia.stampy.common.parsing;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * Thrown when the object type has been determined to be invalid.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class IllegalObjectException extends Exception {
   private static final long serialVersionUID = -1179844490646396652L;
 

@@ -19,10 +19,12 @@
 package asia.stampy.client.message.unsubscribe;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class UnsubscribeHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class UnsubscribeHeader extends AbstractClientMessageHeader {
   private static final long serialVersionUID = -6205303835381181615L;
 

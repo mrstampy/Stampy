@@ -19,10 +19,12 @@
 package asia.stampy.client.message.subscribe;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class SubscribeHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class SubscribeHeader extends AbstractClientMessageHeader {
   private static final long serialVersionUID = 2321658220170938363L;
 

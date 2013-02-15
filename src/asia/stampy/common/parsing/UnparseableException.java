@@ -18,12 +18,14 @@
  */
 package asia.stampy.common.parsing;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.StampyMessage;
 
 /**
  * Thrown when a presumed STOMP message cannot be parsed to a
  * {@link StampyMessage}.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class UnparseableException extends Exception {
   private static final long serialVersionUID = -5077635019985663697L;
 

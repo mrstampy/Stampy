@@ -18,11 +18,13 @@
  */
 package asia.stampy.server.message.error;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.AbstractBodyMessageHeader;
 
 /**
  * The Class ErrorHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class ErrorHeader extends AbstractBodyMessageHeader {
 
   private static final long serialVersionUID = -4679565144569363907L;

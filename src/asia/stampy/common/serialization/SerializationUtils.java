@@ -28,9 +28,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.codec.binary.Base64;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * Convenience class to encapsulate the serialize/deserialize functionality.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class SerializationUtils {
 
   private static Lock SERIALIZE_LOCK = new ReentrantLock(true);

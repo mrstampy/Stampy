@@ -25,6 +25,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.serialization.SerializationUtils;
 
 /**
@@ -34,6 +35,7 @@ import asia.stampy.common.serialization.SerializationUtils;
  * @param <HDR>
  *          the generic type
  */
+@StampyLibrary(libraryName="stampy-core")
 public abstract class AbstractBodyMessage<HDR extends AbstractBodyMessageHeader> extends AbstractMessage<HDR> {
   private static final long serialVersionUID = 3988865546656906553L;
 

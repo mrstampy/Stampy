@@ -19,10 +19,12 @@
 package asia.stampy.client.message.nack;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class NackHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class NackHeader extends AbstractClientMessageHeader {
   private static final long serialVersionUID = -2432737523178348294L;
 

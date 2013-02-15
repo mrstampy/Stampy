@@ -18,9 +18,12 @@
  */
 package asia.stampy.common.message;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Class AbstractBodyMessageHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class AbstractBodyMessageHeader extends AbstractMessageHeader {
 
   private static final long serialVersionUID = -4546439038775868974L;

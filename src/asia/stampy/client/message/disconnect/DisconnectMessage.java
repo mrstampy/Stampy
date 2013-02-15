@@ -18,12 +18,14 @@
  */
 package asia.stampy.client.message.disconnect;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.StompMessageType;
 
 /**
  * The Class DisconnectMessage.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class DisconnectMessage extends AbstractMessage<DisconnectHeader> {
 
   private static final long serialVersionUID = -7353329342186049989L;

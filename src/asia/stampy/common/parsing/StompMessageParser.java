@@ -42,6 +42,7 @@ import asia.stampy.client.message.send.SendMessage;
 import asia.stampy.client.message.stomp.StompMessage;
 import asia.stampy.client.message.subscribe.SubscribeMessage;
 import asia.stampy.client.message.unsubscribe.UnsubscribeMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.AbstractBodyMessage;
 import asia.stampy.common.message.AbstractBodyMessageHeader;
 import asia.stampy.common.message.StampyMessage;
@@ -55,6 +56,7 @@ import asia.stampy.server.message.receipt.ReceiptMessage;
 /**
  * This class parses STOMP messages into {@link StampyMessage}s.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class StompMessageParser {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

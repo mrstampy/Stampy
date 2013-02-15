@@ -18,9 +18,12 @@
  */
 package asia.stampy.common.message;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Enum of all STOMP message types.
  */
+@StampyLibrary(libraryName="stampy-core")
 public enum StompMessageType {
 
   /** The connect. */

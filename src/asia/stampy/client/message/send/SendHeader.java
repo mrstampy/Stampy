@@ -19,10 +19,12 @@
 package asia.stampy.client.message.send;
 
 import asia.stampy.client.message.AbstractClientBodyMessageHeader;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class SendHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class SendHeader extends AbstractClientBodyMessageHeader {
 
   private static final long serialVersionUID = -4105777135779226205L;

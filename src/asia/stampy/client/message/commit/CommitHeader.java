@@ -19,10 +19,12 @@
 package asia.stampy.client.message.commit;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class CommitHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class CommitHeader extends AbstractClientMessageHeader {
   private static final long serialVersionUID = 503530501264860164L;
 

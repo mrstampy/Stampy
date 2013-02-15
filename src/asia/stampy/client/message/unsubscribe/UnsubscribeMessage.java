@@ -20,6 +20,7 @@ package asia.stampy.client.message.unsubscribe;
 
 import org.apache.commons.lang.StringUtils;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
@@ -27,6 +28,7 @@ import asia.stampy.common.message.StompMessageType;
 /**
  * The Class UnsubscribeMessage.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class UnsubscribeMessage extends AbstractMessage<UnsubscribeHeader> {
 
   private static final long serialVersionUID = -4889351559871669847L;

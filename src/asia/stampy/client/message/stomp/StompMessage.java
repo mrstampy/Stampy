@@ -21,6 +21,7 @@ package asia.stampy.client.message.stomp;
 import org.apache.commons.lang.StringUtils;
 
 import asia.stampy.client.message.connect.ConnectHeader;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
@@ -28,6 +29,7 @@ import asia.stampy.common.message.StompMessageType;
 /**
  * The Class StompMessage.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class StompMessage extends AbstractMessage<StompHeader> {
 
   private static final long serialVersionUID = 4889982516009469738L;

@@ -20,6 +20,7 @@ package asia.stampy.client.message.nack;
 
 import org.apache.commons.lang.StringUtils;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
@@ -27,6 +28,7 @@ import asia.stampy.common.message.StompMessageType;
 /**
  * The Class NackMessage.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class NackMessage extends AbstractMessage<NackHeader> {
 
   private static final long serialVersionUID = -1213685585376641464L;

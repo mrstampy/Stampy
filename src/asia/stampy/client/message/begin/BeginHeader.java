@@ -19,10 +19,12 @@
 package asia.stampy.client.message.begin;
 
 import asia.stampy.client.message.AbstractClientMessageHeader;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class BeginHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class BeginHeader extends AbstractClientMessageHeader {
   private static final long serialVersionUID = 1752296477013796007L;
 

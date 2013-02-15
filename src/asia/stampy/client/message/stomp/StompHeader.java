@@ -19,10 +19,12 @@
 package asia.stampy.client.message.stomp;
 
 import asia.stampy.client.message.connect.ConnectHeader;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class StompHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class StompHeader extends ConnectHeader {
 
   private static final long serialVersionUID = 6132294214673104951L;

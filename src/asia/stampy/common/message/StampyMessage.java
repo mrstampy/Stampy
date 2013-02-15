@@ -20,12 +20,15 @@ package asia.stampy.common.message;
 
 import java.io.Serializable;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * All Stampy implementations of STOMP messages must implement this interface.
  * 
  * @param <HDR>
  *          the generic type
  */
+@StampyLibrary(libraryName="stampy-core")
 public interface StampyMessage<HDR extends StampyMessageHeader> extends Serializable {
 
   /**

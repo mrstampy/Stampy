@@ -18,11 +18,13 @@
  */
 package asia.stampy.server.message.connected;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.AbstractMessageHeader;
 
 /**
  * The Class ConnectedHeader.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class ConnectedHeader extends AbstractMessageHeader {
 
   private static final long serialVersionUID = 1548982417648641349L;

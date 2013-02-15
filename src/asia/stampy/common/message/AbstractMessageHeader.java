@@ -25,9 +25,12 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * Abstract implementation of a {@link StampyMessageHeader}.
  */
+@StampyLibrary(libraryName="stampy-core")
 public abstract class AbstractMessageHeader implements StampyMessageHeader {
 
   private static final long serialVersionUID = 4570408820942642173L;

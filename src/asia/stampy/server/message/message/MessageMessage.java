@@ -20,6 +20,7 @@ package asia.stampy.server.message.message;
 
 import org.apache.commons.lang.StringUtils;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.AbstractBodyMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
@@ -27,6 +28,7 @@ import asia.stampy.common.message.StompMessageType;
 /**
  * The Class MessageMessage.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class MessageMessage extends AbstractBodyMessage<MessageHeader> {
 
   private static final long serialVersionUID = 5351072786156865214L;

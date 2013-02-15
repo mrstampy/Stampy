@@ -42,7 +42,7 @@ public class SystemNettyClientInitializer {
   /**
    * Initialize.
    * 
-   * @return the client netty message gateway
+   * @return the client mina message gateway
    */
   public static AbstractStampyMessageGateway initialize() {
     HeartbeatContainer heartbeatContainer = new HeartbeatContainer();

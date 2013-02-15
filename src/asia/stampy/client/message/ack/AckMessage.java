@@ -20,6 +20,7 @@ package asia.stampy.client.message.ack;
 
 import org.apache.commons.lang.StringUtils;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.AbstractMessage;
 import asia.stampy.common.message.InvalidStompMessageException;
 import asia.stampy.common.message.StompMessageType;
@@ -27,6 +28,7 @@ import asia.stampy.common.message.StompMessageType;
 /**
  * The Class AckMessage.
  */
+@StampyLibrary(libraryName="stampy-core")
 public class AckMessage extends AbstractMessage<AckHeader> {
 
   private static final long serialVersionUID = 1984356410866237324L;
