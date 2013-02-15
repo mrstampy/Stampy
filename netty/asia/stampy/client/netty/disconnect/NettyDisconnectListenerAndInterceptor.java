@@ -20,10 +20,12 @@ package asia.stampy.client.netty.disconnect;
 
 import asia.stampy.client.listener.disconnect.AbstractDisconnectListenerAndInterceptor;
 import asia.stampy.client.netty.ClientNettyMessageGateway;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class NettyDisconnectListenerAndInterceptor.
  */
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public class NettyDisconnectListenerAndInterceptor extends
     AbstractDisconnectListenerAndInterceptor<ClientNettyMessageGateway> {
 

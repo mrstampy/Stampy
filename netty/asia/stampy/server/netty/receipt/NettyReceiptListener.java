@@ -18,12 +18,14 @@
  */
 package asia.stampy.server.netty.receipt;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.server.listener.receipt.AbstractReceiptListener;
 import asia.stampy.server.netty.ServerNettyMessageGateway;
 
 /**
  * 
  */
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public class NettyReceiptListener extends AbstractReceiptListener<ServerNettyMessageGateway> {
 
 }

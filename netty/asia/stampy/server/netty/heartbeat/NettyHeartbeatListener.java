@@ -18,12 +18,14 @@
  */
 package asia.stampy.server.netty.heartbeat;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.server.listener.heartbeat.AbstractHeartbeatListener;
 import asia.stampy.server.netty.ServerNettyMessageGateway;
 
 /**
  * 
  */
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public class NettyHeartbeatListener extends AbstractHeartbeatListener<ServerNettyMessageGateway> {
 
 }

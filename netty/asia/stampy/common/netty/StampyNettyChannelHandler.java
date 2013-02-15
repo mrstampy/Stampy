@@ -38,6 +38,7 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.DefaultUnparseableMessageHandler;
 import asia.stampy.common.gateway.HostPort;
@@ -53,6 +54,7 @@ import asia.stampy.common.parsing.UnparseableException;
  * The Class StampyNettyChannelHandler.
  */
 @Sharable
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHandler {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

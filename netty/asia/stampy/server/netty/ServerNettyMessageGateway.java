@@ -31,6 +31,7 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.netty.AbstractStampyNettyMessageGateway;
 
@@ -38,6 +39,7 @@ import asia.stampy.common.netty.AbstractStampyNettyMessageGateway;
  * The Class ServerNettyMessageGateway.
  */
 @Resource
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public class ServerNettyMessageGateway extends AbstractStampyNettyMessageGateway {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private NioServerSocketChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),

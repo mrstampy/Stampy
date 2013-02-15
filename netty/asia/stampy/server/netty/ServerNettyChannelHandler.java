@@ -18,11 +18,13 @@
  */
 package asia.stampy.server.netty;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.netty.StampyNettyChannelHandler;
 
 /**
  * The Class ServerNettyChannelHandler.
  */
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public class ServerNettyChannelHandler extends StampyNettyChannelHandler {
 
 }

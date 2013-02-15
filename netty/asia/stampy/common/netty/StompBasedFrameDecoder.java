@@ -27,6 +27,8 @@ import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.jboss.netty.handler.codec.frame.LineBasedFrameDecoder;
 import org.jboss.netty.handler.codec.frame.TooLongFrameException;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * {@link LineBasedFrameDecoder} converted to be STOMP message aware.
  * 
@@ -34,6 +36,7 @@ import org.jboss.netty.handler.codec.frame.TooLongFrameException;
  * 
  */
 @Sharable
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public class StompBasedFrameDecoder extends FrameDecoder {
 
   /** Maximum length of a frame we're willing to decode. */

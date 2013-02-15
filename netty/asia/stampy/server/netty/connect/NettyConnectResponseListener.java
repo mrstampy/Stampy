@@ -18,12 +18,14 @@
  */
 package asia.stampy.server.netty.connect;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.server.listener.connect.AbstractConnectResponseListener;
 import asia.stampy.server.netty.ServerNettyMessageGateway;
 
 /**
  * 
  */
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public class NettyConnectResponseListener extends AbstractConnectResponseListener<ServerNettyMessageGateway> {
 
 }

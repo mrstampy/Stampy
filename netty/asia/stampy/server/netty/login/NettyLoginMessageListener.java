@@ -29,6 +29,7 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.MessageListenerHaltException;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -47,6 +48,7 @@ import asia.stampy.server.netty.ServerNettyMessageGateway;
  * {@link StampyMessageListener}s.
  */
 @Resource
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public class NettyLoginMessageListener extends AbstractLoginMessageListener<ServerNettyMessageGateway> {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

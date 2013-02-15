@@ -29,6 +29,7 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.server.listener.transaction.AbstractTransactionListener;
@@ -41,6 +42,7 @@ import asia.stampy.server.netty.ServerNettyMessageGateway;
  * {@link StompMessageType#COMMIT} and that a transaction is began only once.
  */
 @Resource
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public class NettyTransactionListener extends AbstractTransactionListener<ServerNettyMessageGateway> {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

@@ -20,10 +20,12 @@ package asia.stampy.client.netty.connected;
 
 import asia.stampy.client.listener.connected.AbstractConnectedMessageListener;
 import asia.stampy.client.netty.ClientNettyMessageGateway;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The class NettyConnectedMessageListener
  */
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public class NettyConnectedMessageListener extends AbstractConnectedMessageListener<ClientNettyMessageGateway> {
 
 }

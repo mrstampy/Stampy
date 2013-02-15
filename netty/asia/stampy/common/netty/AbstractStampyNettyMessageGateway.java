@@ -32,6 +32,7 @@ import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.interceptor.InterceptException;
@@ -39,6 +40,7 @@ import asia.stampy.common.message.interceptor.InterceptException;
 /**
  * The Class AbstractStampyNettyMessageGateway.
  */
+@StampyLibrary(libraryName = "stampy-NETTY-client-server-RI")
 public abstract class AbstractStampyNettyMessageGateway extends AbstractStampyMessageGateway {
 
   /** <i>The default encoding for STOMP is UTF-8</i>. */
