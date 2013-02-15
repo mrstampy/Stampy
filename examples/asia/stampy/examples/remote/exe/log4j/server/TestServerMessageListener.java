@@ -20,6 +20,7 @@ package asia.stampy.examples.remote.exe.log4j.server;
 
 import org.apache.log4j.Logger;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
@@ -36,6 +37,7 @@ import asia.stampy.common.message.StompMessageType;
  * 
  * @see TestServerMessageEvent
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class TestServerMessageListener implements StampyMessageListener {
   private static StompMessageType[] TYPES = { StompMessageType.SEND };
 

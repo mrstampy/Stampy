@@ -19,6 +19,7 @@
 package asia.stampy.examples.remote.exe.log4j.client.mina;
 
 import asia.stampy.client.mina.RawClientMinaHandler;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.client.mina.MinaAutoTerminatingClientGateway;
@@ -31,6 +32,7 @@ import asia.stampy.examples.common.IDontNeedSecurity;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class MinaInitializer {
 
   /**

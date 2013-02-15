@@ -24,12 +24,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.examples.remote.exe.common.MissingPropertyException;
 import asia.stampy.examples.remote.exe.common.Remoteable;
 
 /**
  * The Class Log4jLevelChanger.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class Log4jLevelChanger implements Remoteable {
   private static final long serialVersionUID = -8963468052541849253L;
 

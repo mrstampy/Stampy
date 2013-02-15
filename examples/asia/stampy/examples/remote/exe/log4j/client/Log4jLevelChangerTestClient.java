@@ -23,6 +23,7 @@ import org.apache.log4j.Level;
 import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.message.disconnect.DisconnectMessage;
 import asia.stampy.client.message.send.SendMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.message.AbstractBodyMessage;
 import asia.stampy.common.message.interceptor.InterceptException;
@@ -37,6 +38,7 @@ import asia.stampy.examples.remote.exe.log4j.common.Log4jLevelChanger;
  * level change can have the effect of filling up the logs & crashing the
  * server. DON'T DO THIS.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class Log4jLevelChangerTestClient {
   private AbstractStampyMessageGateway gateway;
 

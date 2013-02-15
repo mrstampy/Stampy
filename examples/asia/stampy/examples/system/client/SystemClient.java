@@ -39,6 +39,7 @@ import asia.stampy.client.message.stomp.StompMessage;
 import asia.stampy.client.message.subscribe.SubscribeHeader.Ack;
 import asia.stampy.client.message.subscribe.SubscribeMessage;
 import asia.stampy.client.message.unsubscribe.UnsubscribeMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -54,6 +55,7 @@ import asia.stampy.server.message.receipt.ReceiptMessage;
 /**
  * The Class SystemClient.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class SystemClient {
 
   private static final String CANNOT_BE_LOGGED_IN = "cannot be logged in";

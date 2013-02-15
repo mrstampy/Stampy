@@ -19,11 +19,13 @@
 package asia.stampy.examples.client.mina;
 
 import asia.stampy.client.mina.ClientMinaMessageGateway;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * Used by client examples to terminate the Java process when
  * {@link ClientMinaMessageGateway#shutdown()} is invoked.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class MinaAutoTerminatingClientGateway extends ClientMinaMessageGateway {
 
   /*

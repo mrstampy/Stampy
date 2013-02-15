@@ -19,6 +19,7 @@
 package asia.stampy.examples.remote.exe.common;
 
 import asia.stampy.client.message.send.SendMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -30,6 +31,7 @@ import asia.stampy.common.message.StompMessageType;
  * 
  * @see RemoteExeMessageEvent
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class RemoteExeMessageListener implements StampyMessageListener {
   private AbstractStampyMessageGateway gateway;
   private static StompMessageType[] TYPES = { StompMessageType.SEND };

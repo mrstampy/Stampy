@@ -18,11 +18,13 @@
  */
 package asia.stampy.examples.common;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.SecurityMessageListener;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 
+@StampyLibrary(libraryName = "stampy-examples")
 public class IDontNeedSecurity implements SecurityMessageListener {
 
   @Override

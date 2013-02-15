@@ -19,6 +19,7 @@
 package asia.stampy.examples.loadtest.client;
 
 import asia.stampy.client.message.connect.ConnectMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.examples.loadtest.client.netty.NettyInitializer;
 import asia.stampy.examples.loadtest.server.TestServer;
@@ -27,6 +28,7 @@ import asia.stampy.examples.loadtest.server.TestServer;
  * Sends many messages to a {@link TestServer}, prints stats on the operation
  * and terminates. Run the {@link TestServer} prior to running this client.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class TestClient {
   private AbstractStampyMessageGateway gateway;
   private TestClientMessageListener listener;

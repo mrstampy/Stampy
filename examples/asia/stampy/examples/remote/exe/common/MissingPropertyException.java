@@ -18,11 +18,13 @@
  */
 package asia.stampy.examples.remote.exe.common;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.StampyMessageHeader;
 
 /**
  * Thrown when a property is missing from the {@link StampyMessageHeader}.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class MissingPropertyException extends Exception {
   private static final long serialVersionUID = 4900660741154749582L;
 

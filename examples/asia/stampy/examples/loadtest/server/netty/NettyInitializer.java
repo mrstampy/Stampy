@@ -18,6 +18,7 @@
  */
 package asia.stampy.examples.loadtest.server.netty;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.common.IDontNeedSecurity;
@@ -33,6 +34,7 @@ import asia.stampy.server.netty.receipt.NettyReceiptListener;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class NettyInitializer {
 
   /**

@@ -19,6 +19,7 @@
 package asia.stampy.examples.system.server;
 
 import asia.stampy.client.message.subscribe.SubscribeMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -31,6 +32,7 @@ import asia.stampy.server.message.message.MessageMessage;
 /**
  * The Class SystemServer.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class SystemServer {
 
   private AbstractStampyMessageGateway gateway;

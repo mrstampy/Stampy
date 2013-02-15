@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
@@ -39,6 +40,7 @@ import asia.stampy.common.message.StompMessageType;
  * 
  * @see TestServerMessageEvent
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class TestServerMessageListener implements StampyMessageListener {
 
   private Map<HostPort, AtomicInteger> acks = new ConcurrentHashMap<HostPort, AtomicInteger>();

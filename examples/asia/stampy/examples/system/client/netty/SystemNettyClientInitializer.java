@@ -22,6 +22,7 @@ import asia.stampy.client.listener.validate.ClientMessageValidationListener;
 import asia.stampy.client.netty.ClientNettyChannelHandler;
 import asia.stampy.client.netty.connected.NettyConnectedMessageListener;
 import asia.stampy.client.netty.disconnect.NettyDisconnectListenerAndInterceptor;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
@@ -37,6 +38,7 @@ import asia.stampy.examples.common.IDontNeedSecurity;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class SystemNettyClientInitializer {
 
   /**

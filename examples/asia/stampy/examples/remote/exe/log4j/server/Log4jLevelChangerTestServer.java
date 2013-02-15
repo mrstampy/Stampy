@@ -18,6 +18,7 @@
  */
 package asia.stampy.examples.remote.exe.log4j.server;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.examples.remote.exe.log4j.server.netty.NettyInitializer;
 
@@ -29,6 +30,7 @@ import asia.stampy.examples.remote.exe.log4j.server.netty.NettyInitializer;
  * level change can have the effect of filling up the logs & crashing the
  * server. DON'T DO THIS.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class Log4jLevelChangerTestServer {
   private AbstractStampyMessageGateway gateway;
 

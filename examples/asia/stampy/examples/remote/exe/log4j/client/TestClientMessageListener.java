@@ -18,6 +18,7 @@
  */
 package asia.stampy.examples.remote.exe.log4j.client;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
@@ -28,6 +29,7 @@ import asia.stampy.common.message.StompMessageType;
  * 
  * @see TestClientMessageEvent
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class TestClientMessageListener implements StampyMessageListener {
 
   /*

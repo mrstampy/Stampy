@@ -21,9 +21,12 @@ package asia.stampy.examples.remote.exe.common;
 import java.io.Serializable;
 import java.util.Map;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Interface Remoteable.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public interface Remoteable extends Serializable {
 
   /**

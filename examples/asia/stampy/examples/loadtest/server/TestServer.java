@@ -18,12 +18,14 @@
  */
 package asia.stampy.examples.loadtest.server;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.examples.loadtest.server.netty.NettyInitializer;
 
 /**
  * Receives message from a test client and sends receipts if requested.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class TestServer {
   private AbstractStampyMessageGateway gateway;
 

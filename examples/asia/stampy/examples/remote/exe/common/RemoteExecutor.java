@@ -19,6 +19,7 @@
 package asia.stampy.examples.remote.exe.common;
 
 import asia.stampy.client.message.send.SendMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 
@@ -27,6 +28,7 @@ import asia.stampy.common.gateway.HostPort;
  * returns a RECEIPT message. An ERROR message is returned to the client should
  * anything unexpected occur.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class RemoteExecutor {
 
   private AbstractStampyMessageGateway gateway;

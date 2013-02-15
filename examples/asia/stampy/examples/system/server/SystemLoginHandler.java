@@ -18,6 +18,7 @@
  */
 package asia.stampy.examples.system.server;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.server.listener.login.NotLoggedInException;
 import asia.stampy.server.listener.login.StampyLoginHandler;
 import asia.stampy.server.listener.login.TerminateSessionException;
@@ -25,6 +26,7 @@ import asia.stampy.server.listener.login.TerminateSessionException;
 /**
  * The Class SystemLoginHandler.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class SystemLoginHandler implements StampyLoginHandler {
 
   /** The Constant SEE_THE_SYSTEM_ADMINISTRATOR. */

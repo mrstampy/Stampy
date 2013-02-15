@@ -19,11 +19,13 @@
 package asia.stampy.examples.client.netty;
 
 import asia.stampy.client.netty.ClientNettyMessageGateway;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * Used by client examples to terminate the Java process when
  * {@link ClientMinaMessageGateway#shutdown()} is invoked.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class NettyAutoTerminatingClientGateway extends ClientNettyMessageGateway {
 
   /*

@@ -18,11 +18,13 @@
  */
 package asia.stampy.examples.system.server;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.server.listener.subscription.StampyAcknowledgementHandler;
 
 /**
  * The Class SystemAcknowledgementHandler.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class SystemAcknowledgementHandler implements StampyAcknowledgementHandler {
 
   /*

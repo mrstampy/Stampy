@@ -18,6 +18,7 @@
  */
 package asia.stampy.examples.remote.exe.log4j.client.netty;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.examples.client.netty.NettyAutoTerminatingClientGateway;
@@ -31,6 +32,7 @@ import asia.stampy.server.netty.ServerNettyChannelHandler;
  * href="http://code.google.com/p/google-guice/">Guice</a> will be used to
  * perform this task.
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class NettyInitializer {
 
   /**

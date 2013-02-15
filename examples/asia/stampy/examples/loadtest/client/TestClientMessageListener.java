@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.client.message.disconnect.DisconnectMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -38,6 +39,7 @@ import asia.stampy.server.message.error.ErrorMessage;
  * 
  * @see TestClientMessageEvent
  */
+@StampyLibrary(libraryName = "stampy-examples")
 public class TestClientMessageListener implements StampyMessageListener {
   private AbstractStampyMessageGateway gateway;
 
