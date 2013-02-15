@@ -23,11 +23,13 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.mina.StampyMinaHandler;
 
 /**
  * The Class StringEncoder.
  */
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class StringEncoder extends ProtocolEncoderAdapter {
 
   private int maxDataLength = Integer.MAX_VALUE;

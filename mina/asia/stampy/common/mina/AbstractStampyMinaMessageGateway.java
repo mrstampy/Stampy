@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.apache.mina.core.service.IoServiceListener;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 
@@ -31,6 +32,7 @@ import asia.stampy.common.gateway.HostPort;
  * Defines the <a href="https://mina.apache.org">MINA</a>-specific methods for
  * the implementation of clients and servers.
  */
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public abstract class AbstractStampyMinaMessageGateway extends AbstractStampyMessageGateway {
 
   private List<IoServiceListener> serviceListeners = new ArrayList<IoServiceListener>();

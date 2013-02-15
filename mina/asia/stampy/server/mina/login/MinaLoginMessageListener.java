@@ -27,6 +27,7 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.MessageListenerHaltException;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -45,6 +46,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * {@link StampyMessageListener}s.
  */
 @Resource
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class MinaLoginMessageListener extends AbstractLoginMessageListener<ServerMinaMessageGateway> {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

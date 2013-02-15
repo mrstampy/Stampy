@@ -18,9 +18,11 @@
  */
 package asia.stampy.server.mina.heartbeat;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.server.listener.heartbeat.AbstractHeartbeatListener;
 import asia.stampy.server.mina.ServerMinaMessageGateway;
 
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class MinaHeartbeatListener extends AbstractHeartbeatListener<ServerMinaMessageGateway> {
 
 }

@@ -25,11 +25,13 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.mina.StampyMinaHandler;
 
 /**
  * The Class StringDecoder.
  */
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class StringDecoder extends CumulativeProtocolDecoder {
 
   private int maxDataLength = Integer.MAX_VALUE;

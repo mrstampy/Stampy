@@ -31,6 +31,7 @@ import org.apache.mina.filter.codec.prefixedstring.PrefixedStringCodecFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.DefaultUnparseableMessageHandler;
 import asia.stampy.common.gateway.HostPort;
@@ -57,6 +58,7 @@ import asia.stampy.common.parsing.UnparseableException;
  * 
  * @see StampyRawStringHandler
  */
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public abstract class StampyMinaHandler extends IoHandlerAdapter {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

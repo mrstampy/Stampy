@@ -23,9 +23,12 @@ import org.apache.mina.core.service.IoServiceListener;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * Convenience adapter to ignore unused interface methods.
  */
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class MinaServiceAdapter implements IoServiceListener {
 
   /*

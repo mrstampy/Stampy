@@ -20,7 +20,9 @@ package asia.stampy.client.mina.disconnect;
 
 import asia.stampy.client.listener.disconnect.AbstractDisconnectListenerAndInterceptor;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
+import asia.stampy.common.StampyLibrary;
 
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class MinaDisconnectListenerAndInterceptor extends
     AbstractDisconnectListenerAndInterceptor<ClientMinaMessageGateway> {
 

@@ -20,12 +20,14 @@ package asia.stampy.server.mina;
 
 import javax.annotation.Resource;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.mina.StampyMinaHandler;
 
 /**
  * The Class ServerMinaHandler.
  */
 @Resource
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class ServerMinaHandler extends StampyMinaHandler {
 
 }

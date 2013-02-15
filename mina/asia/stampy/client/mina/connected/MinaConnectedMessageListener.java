@@ -20,7 +20,9 @@ package asia.stampy.client.mina.connected;
 
 import asia.stampy.client.listener.connected.AbstractConnectedMessageListener;
 import asia.stampy.client.mina.ClientMinaMessageGateway;
+import asia.stampy.common.StampyLibrary;
 
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class MinaConnectedMessageListener extends AbstractConnectedMessageListener<ClientMinaMessageGateway> {
 
 }

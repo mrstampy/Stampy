@@ -23,9 +23,12 @@ import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * A codec factory to process raw (non-MINA terminated) strings.
  */
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class StringCodecFactory implements ProtocolCodecFactory {
   private ProtocolEncoder encoder;
   private ProtocolDecoder decoder;

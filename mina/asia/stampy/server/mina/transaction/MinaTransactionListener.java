@@ -27,6 +27,7 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.mina.MinaServiceAdapter;
@@ -39,6 +40,7 @@ import asia.stampy.server.mina.ServerMinaMessageGateway;
  * {@link StompMessageType#COMMIT} and that a transaction is began only once.
  */
 @Resource
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class MinaTransactionListener extends AbstractTransactionListener<ServerMinaMessageGateway> {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

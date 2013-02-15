@@ -33,6 +33,7 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.interceptor.InterceptException;
 import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
@@ -42,6 +43,7 @@ import asia.stampy.common.mina.AbstractStampyMinaMessageGateway;
  * href="https://mina.apache.org">MINA</a> server gateway.
  */
 @Resource
+@StampyLibrary(libraryName = "stampy-MINA-client-server-RI")
 public class ServerMinaMessageGateway extends AbstractStampyMinaMessageGateway {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
