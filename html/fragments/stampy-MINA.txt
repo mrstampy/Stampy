@@ -21,7 +21,7 @@
 		<li><b>&lt;dependency org="asia.stampy" name="stampy-core" rev="$version"/&gt;</li>
 		<li>&lt;dependency org="asia.stampy" name="stampy-client-server" rev="$version"/&gt;</li>
 		<li>&lt;dependency org="org.apache.mina" name="mina-core" rev="2.0.7"/&gt;</li>
-		<li>&lt;dependency org="org.slf4j" name="slf4j-api" rev="1.6.6"/&gt;</li>
+		<li>&lt;dependency org="org.slf4j" name="slf4j-api" rev="1.7.2"/&gt;</li>
 		<li>&lt;dependency org="commons-lang" name="commons-lang" rev="2.6"/&gt;</li>
 		<li>&lt;dependency org="commons-codec" name="commons-codec" rev="1.7"/&gt;</b></li>
 	</ul>

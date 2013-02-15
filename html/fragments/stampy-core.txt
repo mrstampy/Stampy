@@ -17,7 +17,7 @@
 	<h3>Dependencies</h3>
 	<ul>
 		<li><b>&lt;dependency org="org.slf4j" name="slf4j-api"
-				rev="1.6.6"/&gt;</li>
+				rev="1.7.2"/&gt;</li>
 		<li>&lt;dependency org="commons-lang" name="commons-lang"
 			rev="2.6"/&gt;</li>
 		<li>&lt;dependency org="commons-codec" name="commons-codec"
