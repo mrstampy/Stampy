@@ -25,6 +25,7 @@ import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 
@@ -32,6 +33,7 @@ import asia.stampy.common.gateway.HostPort;
  * Sends heartbeats to a remote connection as specified by the STOMP
  * specification.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class PaceMaker {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -49,7 +51,7 @@ public class PaceMaker {
   public static final String HB1 = "\n";
 
   /** The Constant HB2. */
-  public static final String HB2 = "\r";
+  public static final String HB2 = "\r\n";
 
   /**
    * Instantiates a new pace maker.

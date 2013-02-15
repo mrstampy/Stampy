@@ -18,9 +18,12 @@
  */
 package asia.stampy.server.listener.login;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Class AlreadyLoggedInException.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class AlreadyLoggedInException extends Exception {
 
   private static final long serialVersionUID = 4175613077223909784L;

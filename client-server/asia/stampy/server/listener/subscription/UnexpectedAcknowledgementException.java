@@ -20,6 +20,7 @@ package asia.stampy.server.listener.subscription;
 
 import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.client.message.nack.NackMessage;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class UnexpectedAcknowledgementException indicates that an unexpected
@@ -28,6 +29,7 @@ import asia.stampy.client.message.nack.NackMessage;
  * 
  * @see AbstractAcknowledgementListenerAndInterceptor
  */
+@StampyLibrary(libraryName = "stampy-client-server")
 public class UnexpectedAcknowledgementException extends Exception {
 
   private static final long serialVersionUID = 9160361992156988284L;

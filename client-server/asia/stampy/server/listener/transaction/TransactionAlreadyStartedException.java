@@ -19,6 +19,7 @@
 package asia.stampy.server.listener.transaction;
 
 import asia.stampy.client.message.begin.BeginMessage;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class TransactionAlreadyStartedException is thrown by
@@ -28,6 +29,7 @@ import asia.stampy.client.message.begin.BeginMessage;
  * 
  * @see AbstractTransactionListener
  */
+@StampyLibrary(libraryName = "stampy-client-server")
 public class TransactionAlreadyStartedException extends Exception {
 
   private static final long serialVersionUID = 4327171405667138826L;

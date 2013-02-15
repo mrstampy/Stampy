@@ -24,11 +24,14 @@ import java.net.InetSocketAddress;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * A HostPort is a simple bean encapsulating which host and port has made a
  * connection. Useful on the server side to keep track of who is connected,
  * where subscriptions go etc.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class HostPort implements Serializable {
   private static final long serialVersionUID = 7989783689512750362L;
 

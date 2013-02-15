@@ -18,11 +18,14 @@
  */
 package asia.stampy.common.gateway;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * Signals that no further {@link StampyMessageListener}s should be invoked.
  * Should be thrown by any implementation of a {@link StampyMessageListener}
  * that wants to halt downstream processing of the message.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class MessageListenerHaltException extends Exception {
 
   private static final long serialVersionUID = -2918764833295344951L;

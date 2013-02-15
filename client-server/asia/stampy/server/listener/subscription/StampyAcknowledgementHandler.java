@@ -18,6 +18,7 @@
  */
 package asia.stampy.server.listener.subscription;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.StompMessageType;
 
 /**
@@ -25,6 +26,7 @@ import asia.stampy.common.message.StompMessageType;
  * 
  * @see AbstractAcknowledgementListenerAndInterceptor#setHandler(StampyAcknowledgementHandler)
  */
+@StampyLibrary(libraryName = "stampy-client-server")
 public interface StampyAcknowledgementHandler {
 
   /**

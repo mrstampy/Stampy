@@ -18,6 +18,7 @@
  */
 package asia.stampy.common.message.interceptor;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.StampyMessage;
@@ -31,6 +32,7 @@ import asia.stampy.common.message.StompMessageType;
  * 
  * @see AbstractStampyMessageGateway
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public interface StampyOutgoingMessageInterceptor {
 
   /**

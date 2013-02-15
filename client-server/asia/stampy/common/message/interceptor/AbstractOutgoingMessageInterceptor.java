@@ -18,6 +18,7 @@
  */
 package asia.stampy.common.message.interceptor;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.message.StampyMessage;
@@ -25,6 +26,7 @@ import asia.stampy.common.message.StampyMessage;
 /**
  * The Class AbstractOutgoingMessageInterceptor.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public abstract class AbstractOutgoingMessageInterceptor<SVR extends AbstractStampyMessageGateway> implements
     StampyOutgoingMessageInterceptor {
 

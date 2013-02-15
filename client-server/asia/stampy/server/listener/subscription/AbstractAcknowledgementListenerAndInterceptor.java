@@ -25,14 +25,13 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.lang.StringUtils;
 
 import asia.stampy.client.message.ack.AckHeader;
 import asia.stampy.client.message.ack.AckMessage;
 import asia.stampy.client.message.nack.NackHeader;
 import asia.stampy.client.message.nack.NackMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -49,7 +48,7 @@ import asia.stampy.server.message.message.MessageMessage;
  * methods of the {@link StampyAcknowledgementHandler} implementation are
  * invoked.
  */
-@Resource
+@StampyLibrary(libraryName = "stampy-client-server")
 public abstract class AbstractAcknowledgementListenerAndInterceptor<SVR extends AbstractStampyMessageGateway> extends
     AbstractOutgoingMessageInterceptor<SVR> implements StampyMessageListener {
   private static final StompMessageType[] TYPES = { StompMessageType.ACK, StompMessageType.NACK,

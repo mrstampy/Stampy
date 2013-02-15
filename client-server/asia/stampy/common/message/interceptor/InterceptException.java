@@ -18,10 +18,13 @@
  */
 package asia.stampy.common.message.interceptor;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Class InterceptException, thrown by the implementation of an interceptor
  * when the sending of a message is to be aborted.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class InterceptException extends Exception {
 
   private static final long serialVersionUID = 3708895403125259300L;

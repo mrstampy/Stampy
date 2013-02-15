@@ -30,13 +30,12 @@ import static asia.stampy.common.message.StompMessageType.UNSUBSCRIBE;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asia.stampy.client.message.ClientMessageHeader;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -48,8 +47,9 @@ import asia.stampy.server.message.receipt.ReceiptMessage;
  * This class generates a RECEIPT message for client messages with the receipt
  * header populated.
  */
-@Resource
-public abstract class AbstractReceiptListener<SVR extends AbstractStampyMessageGateway> implements StampyMessageListener {
+@StampyLibrary(libraryName = "stampy-client-server")
+public abstract class AbstractReceiptListener<SVR extends AbstractStampyMessageGateway> implements
+    StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static StompMessageType[] TYPES = { ABORT, ACK, BEGIN, COMMIT, DISCONNECT, NACK, SEND, SUBSCRIBE, UNSUBSCRIBE };
 

@@ -18,6 +18,8 @@
  */
 package asia.stampy.server.listener.login;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Class NotLoggedInException indicates that the {@link StampyLoginHandler} implementation
  * failed the login credentials for the specified reason.
@@ -25,6 +27,7 @@ package asia.stampy.server.listener.login;
  * @see StampyLoginHandler
  * @see AbstractLoginMessageListener
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class NotLoggedInException extends Exception {
 
   private static final long serialVersionUID = 6115947456180110688L;

@@ -18,6 +18,8 @@
  */
 package asia.stampy.common.gateway;
 
+import asia.stampy.common.StampyLibrary;
+
 
 /**
  * This is a tagging interface to ensure that any implementations implement at
@@ -30,6 +32,7 @@ package asia.stampy.common.gateway;
  * @author burton
  * 
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public interface SecurityMessageListener extends StampyMessageListener {
 
 }

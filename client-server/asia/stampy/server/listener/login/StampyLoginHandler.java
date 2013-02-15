@@ -18,9 +18,12 @@
  */
 package asia.stampy.server.listener.login;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Interface StampyLoginHandler.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public interface StampyLoginHandler {
 
   /**

@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.message.stomp.StompMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
@@ -37,6 +38,7 @@ import asia.stampy.common.message.StompMessageType;
  * Enforces STOMP 1.2 compliant connections.
  */
 @Resource
+@StampyLibrary(libraryName = "stampy-client-server")
 public class VersionListener implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

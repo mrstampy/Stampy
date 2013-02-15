@@ -20,14 +20,13 @@ package asia.stampy.server.listener.connect;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.message.stomp.StompMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -39,8 +38,9 @@ import asia.stampy.server.message.connected.ConnectedMessage;
 /**
  * This class sends a CONNECTED response to a CONNECT or STOMP message.
  */
-@Resource
-public abstract class AbstractConnectResponseListener<SVR extends AbstractStampyMessageGateway> implements StampyMessageListener {
+@StampyLibrary(libraryName = "stampy-client-server")
+public abstract class AbstractConnectResponseListener<SVR extends AbstractStampyMessageGateway> implements
+    StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP };
 

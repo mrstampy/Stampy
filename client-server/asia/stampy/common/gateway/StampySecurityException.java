@@ -18,6 +18,8 @@
  */
 package asia.stampy.common.gateway;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * Thrown when an instance of {@link SecurityMessageListener} has not been
  * configured first in the list.
@@ -27,6 +29,7 @@ package asia.stampy.common.gateway;
  *      HostPort)
  * 
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class StampySecurityException extends RuntimeException {
 
   private static final long serialVersionUID = -9157111717358793044L;

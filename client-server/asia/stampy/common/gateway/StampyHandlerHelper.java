@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asia.stampy.client.message.ClientMessageHeader;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
 import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
@@ -22,6 +23,7 @@ import asia.stampy.server.message.error.ErrorMessage;
  *
  */
 @Resource
+@StampyLibrary(libraryName="stampy-client-server")
 public class StampyHandlerHelper {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

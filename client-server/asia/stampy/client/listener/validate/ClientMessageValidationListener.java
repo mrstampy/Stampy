@@ -20,6 +20,7 @@ package asia.stampy.client.listener.validate;
 
 import javax.annotation.Resource;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StampyMessage;
@@ -30,6 +31,7 @@ import asia.stampy.common.message.StompMessageType;
  * method on the message is invoked.
  */
 @Resource
+@StampyLibrary(libraryName="stampy-client-server")
 public class ClientMessageValidationListener implements StampyMessageListener {
 
   private static StompMessageType[] TYPES = StompMessageType.values();

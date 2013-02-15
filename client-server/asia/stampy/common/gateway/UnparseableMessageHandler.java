@@ -18,9 +18,12 @@
  */
 package asia.stampy.common.gateway;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * Implementations deal with messages that cannot be parsed into STOMP messages.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public interface UnparseableMessageHandler {
 
   /**

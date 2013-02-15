@@ -18,11 +18,14 @@
  */
 package asia.stampy.server.listener.connect;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Class AlreadyConnectedException.
  * 
  * @see AbstractConnectStateListener
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class AlreadyConnectedException extends Exception {
 
   private static final long serialVersionUID = 6714733758151973447L;

@@ -23,10 +23,13 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * This default implementation of an {@link UnparseableMessageHandler} logs a
  * non-STOMP message at warning level.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class DefaultUnparseableMessageHandler implements UnparseableMessageHandler {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

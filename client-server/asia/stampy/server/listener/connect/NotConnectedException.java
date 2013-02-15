@@ -18,11 +18,14 @@
  */
 package asia.stampy.server.listener.connect;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Class NotConnectedException.
  * 
  * @see AbstractConnectStateListener
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class NotConnectedException extends Exception {
 
   private static final long serialVersionUID = -255334241693552005L;

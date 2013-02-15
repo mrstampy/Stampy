@@ -20,11 +20,10 @@ package asia.stampy.client.listener.connected;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -50,7 +49,7 @@ import asia.stampy.server.message.connected.ConnectedMessage;
  * @see HeartbeatContainer
  * @see PaceMaker
  */
-@Resource
+@StampyLibrary(libraryName = "stampy-client-server")
 public abstract class AbstractConnectedMessageListener<CLNT extends AbstractStampyMessageGateway> implements
     StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

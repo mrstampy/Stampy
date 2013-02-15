@@ -21,6 +21,7 @@ package asia.stampy.server.listener.transaction;
 import asia.stampy.client.message.abort.AbortMessage;
 import asia.stampy.client.message.begin.BeginMessage;
 import asia.stampy.client.message.commit.CommitMessage;
+import asia.stampy.common.StampyLibrary;
 
 /**
  * The Class TransactionNotStartedException is thrown when a
@@ -29,6 +30,7 @@ import asia.stampy.client.message.commit.CommitMessage;
  * 
  * @see AbstractTransactionListener
  */
+@StampyLibrary(libraryName = "stampy-client-server")
 public class TransactionNotStartedException extends Exception {
 
   private static final long serialVersionUID = -651656641322030058L;

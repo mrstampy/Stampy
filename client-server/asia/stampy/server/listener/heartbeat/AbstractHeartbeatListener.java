@@ -20,8 +20,6 @@ package asia.stampy.server.listener.heartbeat;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import asia.stampy.client.message.connect.ConnectHeader;
 import asia.stampy.client.message.connect.ConnectMessage;
 import asia.stampy.client.message.stomp.StompMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -39,7 +38,7 @@ import asia.stampy.common.message.StompMessageType;
 
 /**
  * This class intercepts incoming {@link StompMessageType#CONNECT} from a STOMP
- * 1.2 client and starts a heartbeat, if requested.
+ * 1.2 client and starts a heartbeat, if requested.<br><br>
  * 
  * <i>CONNECT heart-beat:[cx],[cy] <br>
  * CONNECTED: heart-beat:[sx],[sy]<br>
@@ -53,7 +52,7 @@ import asia.stampy.common.message.StompMessageType;
  * @see HeartbeatContainer
  * @see PaceMaker
  */
-@Resource
+@StampyLibrary(libraryName="stampy-client-server")
 public abstract class AbstractHeartbeatListener<SVR extends AbstractStampyMessageGateway> implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP,

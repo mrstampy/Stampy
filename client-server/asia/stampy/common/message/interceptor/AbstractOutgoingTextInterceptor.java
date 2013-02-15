@@ -18,12 +18,14 @@
  */
 package asia.stampy.common.message.interceptor;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 
 /**
  * The Class AbstractOutgoingTextInterceptor.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public abstract class AbstractOutgoingTextInterceptor<SVR extends AbstractStampyMessageGateway> implements
     StampyOutgoingTextInterceptor {
 

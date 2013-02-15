@@ -18,9 +18,12 @@
  */
 package asia.stampy.server.listener.version;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Class StompVersionException.
  */
+@StampyLibrary(libraryName = "stampy-client-server")
 public class StompVersionException extends Exception {
 
   private static final long serialVersionUID = -1584172715727930804L;

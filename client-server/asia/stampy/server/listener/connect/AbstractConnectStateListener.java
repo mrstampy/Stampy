@@ -21,8 +21,7 @@ package asia.stampy.server.listener.connect;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.annotation.Resource;
-
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
@@ -37,7 +36,7 @@ import asia.stampy.common.message.StompMessageType;
  * {@link StompMessageType#DISCONNECT} frame initializes the state.<br>
  * <br>
  */
-@Resource
+@StampyLibrary(libraryName="stampy-client-server")
 public abstract class AbstractConnectStateListener<SVR extends AbstractStampyMessageGateway> implements
     StampyMessageListener {
 

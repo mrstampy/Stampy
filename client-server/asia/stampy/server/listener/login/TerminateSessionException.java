@@ -18,6 +18,8 @@
  */
 package asia.stampy.server.listener.login;
 
+import asia.stampy.common.StampyLibrary;
+
 /**
  * The Class TerminateSessionException indicates that the
  * {@link StampyLoginHandler} wishes to close the session to the client for the
@@ -26,6 +28,7 @@ package asia.stampy.server.listener.login;
  * @see AbstractLoginMessageListener
  * @see StampyLoginHandler
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public class TerminateSessionException extends Exception {
 
   private static final long serialVersionUID = 8889716568822665712L;

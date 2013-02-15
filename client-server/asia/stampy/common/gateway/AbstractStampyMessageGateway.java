@@ -32,6 +32,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.InterceptException;
@@ -45,6 +46,7 @@ import asia.stampy.common.message.interceptor.StampyOutgoingTextInterceptor;
  * <br>
  * Subclasses are singletons; wire into the system appropriately.
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public abstract class AbstractStampyMessageGateway {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

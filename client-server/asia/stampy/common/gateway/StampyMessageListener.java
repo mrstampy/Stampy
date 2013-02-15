@@ -18,6 +18,7 @@
  */
 package asia.stampy.common.gateway;
 
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 
@@ -26,6 +27,7 @@ import asia.stampy.common.message.StompMessageType;
  * 
  * @see AbstractStampyMessageGateway
  */
+@StampyLibrary(libraryName="stampy-client-server")
 public interface StampyMessageListener {
 
   /**

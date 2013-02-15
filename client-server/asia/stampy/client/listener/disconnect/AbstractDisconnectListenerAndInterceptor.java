@@ -20,13 +20,12 @@ package asia.stampy.client.listener.disconnect;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asia.stampy.client.message.disconnect.DisconnectMessage;
+import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.MessageListenerHaltException;
@@ -40,8 +39,8 @@ import asia.stampy.server.message.receipt.ReceiptMessage;
 /**
  * This class intercepts an outgoing {@link StompMessageType#DISCONNECT} message
  * if a receipt has been requested. When the receipt from the server arrives the
- * {@link AbstractDisconnectListenerAndInterceptor#isCloseOnDisconnectMessage()} is
- * evaluated and if true the <b>session</b> is closed.<br>
+ * {@link AbstractDisconnectListenerAndInterceptor#isCloseOnDisconnectMessage()}
+ * is evaluated and if true the <b>session</b> is closed.<br>
  * <br>
  * <i>To do a graceful shutdown, where the client is assured that all previous
  * frames have been received by the server, the client SHOULD: send a DISCONNECT
@@ -49,7 +48,7 @@ import asia.stampy.server.message.receipt.ReceiptMessage;
  * the RECEIPT frame response to the DISCONNECT. Example: RECEIPT receipt-id:77
  * ^@ close the <strike>socket</strike> session.</i>
  */
-@Resource
+@StampyLibrary(libraryName = "stampy-client-server")
 public abstract class AbstractDisconnectListenerAndInterceptor<CLNT extends AbstractStampyMessageGateway> extends
     AbstractOutgoingMessageInterceptor<CLNT> implements StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
