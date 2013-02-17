@@ -16,7 +16,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.server.mina.connect;
+package asia.stampy.server.listener.connect;
 
 import static asia.stampy.common.message.StompMessageType.ABORT;
 import static asia.stampy.common.message.StompMessageType.ACK;
@@ -30,29 +30,33 @@ import static asia.stampy.common.message.StompMessageType.STOMP;
 import static asia.stampy.common.message.StompMessageType.SUBSCRIBE;
 import static asia.stampy.common.message.StompMessageType.UNSUBSCRIBE;
 import static junit.framework.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 
-import org.apache.mina.core.service.IoServiceListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import asia.stampy.common.AbstractListenerTest;
+import asia.stampy.common.TestServerMessageGateway;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.AbstractMinaListenerTest;
+import asia.stampy.server.listener.connect.AbstractConnectStateListener;
 import asia.stampy.server.listener.connect.AlreadyConnectedException;
 import asia.stampy.server.listener.connect.NotConnectedException;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MinaConnectStateListenerTest extends AbstractMinaListenerTest {
-  private MinaConnectStateListener connect = new MinaConnectStateListener();
+public class ConnectStateListenerTest extends AbstractListenerTest {
+  private AbstractConnectStateListener<TestServerMessageGateway> connect = new AbstractConnectStateListener<TestServerMessageGateway>() {
+
+    @Override
+    protected void ensureCleanup() {
+      // TODO Auto-generated method stub
+
+    }
+  };
 
   @Before
   public void before() throws Exception {
     connect.setGateway(serverGateway);
-
-    verify(serverGateway).addServiceListener(any(IoServiceListener.class));
 
     connect.messageReceived(getMessage(DISCONNECT), hostPort);
   }

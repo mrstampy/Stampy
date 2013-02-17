@@ -16,7 +16,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.client.mina.disconnect;
+package asia.stampy.client.listener.disconnect;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -26,17 +26,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import asia.stampy.client.listener.disconnect.AbstractDisconnectListenerAndInterceptor;
 import asia.stampy.client.message.disconnect.DisconnectMessage;
+import asia.stampy.common.AbstractListenerTest;
+import asia.stampy.common.TestClientMessageGateway;
 import asia.stampy.common.gateway.MessageListenerHaltException;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.message.StompMessageType;
-import asia.stampy.common.mina.AbstractMinaListenerTest;
 import asia.stampy.server.message.receipt.ReceiptMessage;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MinaDisconnectListenerAndInterceptorTest extends AbstractMinaListenerTest {
+public class DisconnectListenerAndInterceptorTest extends AbstractListenerTest {
 
-  private MinaDisconnectListenerAndInterceptor disconnect = new MinaDisconnectListenerAndInterceptor();
+  private AbstractDisconnectListenerAndInterceptor<TestClientMessageGateway> disconnect = new AbstractDisconnectListenerAndInterceptor<TestClientMessageGateway>() {
+  };
 
   @After
   public void after() throws Exception {

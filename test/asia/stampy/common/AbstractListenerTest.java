@@ -16,7 +16,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package asia.stampy.common.mina;
+package asia.stampy.common;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -34,9 +34,9 @@ import asia.stampy.client.message.send.SendMessage;
 import asia.stampy.client.message.stomp.StompMessage;
 import asia.stampy.client.message.subscribe.SubscribeMessage;
 import asia.stampy.client.message.unsubscribe.UnsubscribeMessage;
-import asia.stampy.client.mina.ClientMinaMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
+import asia.stampy.common.heartbeat.StampyHeartbeatContainer;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.common.message.interceptor.StampyOutgoingMessageInterceptor;
@@ -44,16 +44,18 @@ import asia.stampy.server.message.connected.ConnectedMessage;
 import asia.stampy.server.message.error.ErrorMessage;
 import asia.stampy.server.message.message.MessageMessage;
 import asia.stampy.server.message.receipt.ReceiptMessage;
-import asia.stampy.server.mina.ServerMinaMessageGateway;
 
-public abstract class AbstractMinaListenerTest {
+public abstract class AbstractListenerTest {
   protected HostPort hostPort = new HostPort("burt.alexander", 9999);
 
   @Mock
-  protected ClientMinaMessageGateway clientGateway;
+  protected TestClientMessageGateway clientGateway;
 
   @Mock
-  protected ServerMinaMessageGateway serverGateway;
+  protected TestServerMessageGateway serverGateway;
+  
+  @Mock
+  protected StampyHeartbeatContainer heartbeatContainer;
 
   protected void testTypes(StampyMessageListener listener, StompMessageType[] expecteds) {
     StompMessageType[] actuals = listener.getMessageTypes();
