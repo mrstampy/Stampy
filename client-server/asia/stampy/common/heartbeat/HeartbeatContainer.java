@@ -42,6 +42,12 @@ public class HeartbeatContainer {
 
   private Map<HostPort, PaceMaker> paceMakers = new ConcurrentHashMap<HostPort, PaceMaker>();
 
+  /** The Constant HB1. */
+  public static final String HB1 = "\n";
+
+  /** The Constant HB2. */
+  public static final String HB2 = "\r\n";
+
   /**
    * Starts a heartbeat for the specified host & port.
    * @param hostPort

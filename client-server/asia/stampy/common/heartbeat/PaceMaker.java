@@ -34,7 +34,7 @@ import asia.stampy.common.gateway.HostPort;
  * specification.
  */
 @StampyLibrary(libraryName="stampy-client-server")
-public class PaceMaker {
+class PaceMaker {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private long timeInMillis;
@@ -46,12 +46,6 @@ public class PaceMaker {
   private HostPort hostPort;
 
   private int heartbeatCount;
-
-  /** The Constant HB1. */
-  public static final String HB1 = "\n";
-
-  /** The Constant HB2. */
-  public static final String HB2 = "\r\n";
 
   /**
    * Instantiates a new pace maker.
@@ -107,7 +101,7 @@ public class PaceMaker {
     } else {
       try {
         if (gateway.isConnected(getHostPort())) {
-          gateway.sendMessage(HB1, getHostPort());
+          gateway.sendMessage(HeartbeatContainer.HB1, getHostPort());
           log.debug("Sent heartbeat");
           start();
           heartbeatCount++;

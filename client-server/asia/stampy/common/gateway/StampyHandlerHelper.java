@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import asia.stampy.client.message.ClientMessageHeader;
 import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.parsing.StompMessageParser;
 import asia.stampy.common.parsing.UnparseableException;
@@ -128,7 +127,7 @@ public class StampyHandlerHelper {
    * @return true, if is heartbeat
    */
   public boolean isHeartbeat(String msg) {
-    return msg.equals(PaceMaker.HB1) || msg.equals(PaceMaker.HB2);
+    return msg.equals(HeartbeatContainer.HB1) || msg.equals(HeartbeatContainer.HB2);
   }
 
   /**
