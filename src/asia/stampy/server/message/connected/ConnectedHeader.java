@@ -63,13 +63,13 @@ public class ConnectedHeader extends AbstractMessageHeader {
   /**
    * Sets the heartbeat.
    * 
-   * @param clientHBMillis
+   * @param outgoingHeartbeat
    *          the client hb millis
-   * @param serverHBMillis
+   * @param incomingHeartbeat
    *          the server hb millis
    */
-  public void setHeartbeat(int clientHBMillis, int serverHBMillis) {
-    addHeader(HEART_BEAT, Integer.toString(clientHBMillis) + "," + Integer.toString(serverHBMillis));
+  public void setHeartbeat(int outgoingHeartbeat, int incomingHeartbeat) {
+    addHeader(HEART_BEAT, Integer.toString(outgoingHeartbeat) + "," + Integer.toString(incomingHeartbeat));
   }
 
   /**
