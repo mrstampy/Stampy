@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import asia.stampy.client.message.ClientMessageHeader;
 import asia.stampy.common.StampyLibrary;
-import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.common.heartbeat.StampyHeartbeatContainer;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.parsing.StompMessageParser;
 import asia.stampy.common.parsing.UnparseableException;
@@ -28,7 +28,7 @@ public class StampyHandlerHelper {
 
   private StompMessageParser parser = new StompMessageParser();
 
-  private HeartbeatContainer heartbeatContainer;
+  private StampyHeartbeatContainer heartbeatContainer;
 
   private AbstractStampyMessageGateway gateway;
 
@@ -127,7 +127,7 @@ public class StampyHandlerHelper {
    * @return true, if is heartbeat
    */
   public boolean isHeartbeat(String msg) {
-    return msg.equals(HeartbeatContainer.HB1) || msg.equals(HeartbeatContainer.HB2);
+    return msg.equals(StampyHeartbeatContainer.HB1) || msg.equals(StampyHeartbeatContainer.HB2);
   }
 
   /**
@@ -159,11 +159,11 @@ public class StampyHandlerHelper {
     this.parser = parser;
   }
 
-  public HeartbeatContainer getHeartbeatContainer() {
+  public StampyHeartbeatContainer getHeartbeatContainer() {
     return heartbeatContainer;
   }
 
-  public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
+  public void setHeartbeatContainer(StampyHeartbeatContainer heartbeatContainer) {
     this.heartbeatContainer = heartbeatContainer;
   }
 

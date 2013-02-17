@@ -143,9 +143,19 @@ public class TestClientMessageListener implements StampyMessageListener {
   }
 
   private void sendAcks() throws Exception {
-    for (int i = 1; i <= times; i++) {
-      sendAck(i);
-    }
+    Thread thread = new Thread("Ack Thread") {
+      public void run() {
+        for (int i = 1; i <= times; i++) {
+          try {
+            sendAck(i);
+          } catch (InterceptException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    };
+    
+    thread.start();
   }
 
   private void sendAck(int i) throws InterceptException {

@@ -32,6 +32,7 @@ import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.common.heartbeat.StampyHeartbeatContainer;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 
@@ -59,7 +60,7 @@ public abstract class AbstractHeartbeatListener<SVR extends AbstractStampyMessag
   private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP,
       StompMessageType.DISCONNECT };
 
-  private HeartbeatContainer heartbeatContainer;
+  private StampyHeartbeatContainer heartbeatContainer;
 
   private SVR gateway;
 
@@ -138,7 +139,7 @@ public abstract class AbstractHeartbeatListener<SVR extends AbstractStampyMessag
    * 
    * @return the heartbeat container
    */
-  public HeartbeatContainer getHeartbeatContainer() {
+  public StampyHeartbeatContainer getHeartbeatContainer() {
     return heartbeatContainer;
   }
 
@@ -148,7 +149,7 @@ public abstract class AbstractHeartbeatListener<SVR extends AbstractStampyMessag
    * @param heartbeatContainer
    *          the new heartbeat container
    */
-  public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
+  public void setHeartbeatContainer(StampyHeartbeatContainer heartbeatContainer) {
     this.heartbeatContainer = heartbeatContainer;
   }
 

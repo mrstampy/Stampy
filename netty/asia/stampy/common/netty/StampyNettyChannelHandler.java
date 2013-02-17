@@ -45,7 +45,7 @@ import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.MessageListenerHaltException;
 import asia.stampy.common.gateway.StampyHandlerHelper;
 import asia.stampy.common.gateway.UnparseableMessageHandler;
-import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.common.heartbeat.StampyHeartbeatContainer;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.parsing.StompMessageParser;
 import asia.stampy.common.parsing.UnparseableException;
@@ -60,7 +60,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
 
   private StompMessageParser parser = new StompMessageParser();
 
-  private HeartbeatContainer heartbeatContainer;
+  private StampyHeartbeatContainer heartbeatContainer;
 
   private AbstractStampyMessageGateway gateway;
 
@@ -298,7 +298,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    * 
    * @return the heartbeat container
    */
-  public HeartbeatContainer getHeartbeatContainer() {
+  public StampyHeartbeatContainer getHeartbeatContainer() {
     return heartbeatContainer;
   }
 
@@ -308,7 +308,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    * @param heartbeatContainer
    *          the new heartbeat container
    */
-  public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
+  public void setHeartbeatContainer(StampyHeartbeatContainer heartbeatContainer) {
     this.heartbeatContainer = heartbeatContainer;
     helper.setHeartbeatContainer(heartbeatContainer);
   }

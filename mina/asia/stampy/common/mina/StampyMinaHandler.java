@@ -38,7 +38,7 @@ import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.MessageListenerHaltException;
 import asia.stampy.common.gateway.StampyHandlerHelper;
 import asia.stampy.common.gateway.UnparseableMessageHandler;
-import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.common.heartbeat.StampyHeartbeatContainer;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.mina.raw.StampyRawStringHandler;
 import asia.stampy.common.parsing.StompMessageParser;
@@ -64,7 +64,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
 
   private StompMessageParser parser = new StompMessageParser();
 
-  private HeartbeatContainer heartbeatContainer;
+  private StampyHeartbeatContainer heartbeatContainer;
 
   private AbstractStampyMessageGateway gateway;
 
@@ -194,7 +194,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * 
    * @return the heartbeat container
    */
-  public HeartbeatContainer getHeartbeatContainer() {
+  public StampyHeartbeatContainer getHeartbeatContainer() {
     return heartbeatContainer;
   }
 
@@ -204,7 +204,7 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
    * @param heartbeatContainer
    *          the new heartbeat container
    */
-  public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
+  public void setHeartbeatContainer(StampyHeartbeatContainer heartbeatContainer) {
     this.heartbeatContainer = heartbeatContainer;
     helper.setHeartbeatContainer(heartbeatContainer);
   }

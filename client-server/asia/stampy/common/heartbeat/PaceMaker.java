@@ -101,7 +101,7 @@ class PaceMaker {
     } else {
       try {
         if (gateway.isConnected(getHostPort())) {
-          gateway.sendMessage(HeartbeatContainer.HB1, getHostPort());
+          gateway.sendMessage(StampyHeartbeatContainer.HB1, getHostPort());
           log.debug("Sent heartbeat");
           start();
           heartbeatCount++;

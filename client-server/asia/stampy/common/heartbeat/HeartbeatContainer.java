@@ -37,23 +37,15 @@ import asia.stampy.common.gateway.HostPort;
  */
 @Resource
 @StampyLibrary(libraryName = "stampy-client-server")
-public class HeartbeatContainer {
+public class HeartbeatContainer implements StampyHeartbeatContainer {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private Map<HostPort, PaceMaker> paceMakers = new ConcurrentHashMap<HostPort, PaceMaker>();
 
-  /** The Constant HB1. */
-  public static final String HB1 = "\n";
-
-  /** The Constant HB2. */
-  public static final String HB2 = "\r\n";
-
-  /**
-   * Starts a heartbeat for the specified host & port.
-   * @param hostPort
-   * @param gateway
-   * @param timeMillis
+  /* (non-Javadoc)
+   * @see asia.stampy.common.heartbeat.StampyHeartbeatContainer#start(asia.stampy.common.gateway.HostPort, asia.stampy.common.gateway.AbstractStampyMessageGateway, int)
    */
+  @Override
   public void start(HostPort hostPort, AbstractStampyMessageGateway gateway, int timeMillis) {
     PaceMaker paceMaker = new PaceMaker(timeMillis);
     paceMaker.setHostPort(hostPort);
@@ -63,12 +55,10 @@ public class HeartbeatContainer {
     add(hostPort, paceMaker);
   }
 
-  /**
-   * Stops heartbeats to the specified {@link HostPort}.
-   * 
-   * @param hostPort
-   *          the host port
+  /* (non-Javadoc)
+   * @see asia.stampy.common.heartbeat.StampyHeartbeatContainer#stop(asia.stampy.common.gateway.HostPort)
    */
+  @Override
   public void stop(HostPort hostPort) {
     PaceMaker paceMaker = paceMakers.get(hostPort);
     if (paceMaker != null) {
@@ -91,25 +81,20 @@ public class HeartbeatContainer {
     paceMakers.put(hostPort, paceMaker);
   }
 
-  /**
-   * Removes the {@link PaceMaker} specified by {@link HostPort}.
-   * 
-   * @param hostPort
-   *          the host port
+  /* (non-Javadoc)
+   * @see asia.stampy.common.heartbeat.StampyHeartbeatContainer#remove(asia.stampy.common.gateway.HostPort)
    */
+  @Override
   public void remove(HostPort hostPort) {
     stop(hostPort);
     log.info("Removing PaceMaker for {}", hostPort);
     paceMakers.remove(hostPort);
   }
 
-  /**
-   * Resets the {@link PaceMaker} for the specified {@link HostPort}, preventing
-   * a heartbeat from being sent.
-   * 
-   * @param hostPort
-   *          the host port
+  /* (non-Javadoc)
+   * @see asia.stampy.common.heartbeat.StampyHeartbeatContainer#reset(asia.stampy.common.gateway.HostPort)
    */
+  @Override
   public void reset(HostPort hostPort) {
     if (hostPort == null) return;
     log.trace("Resetting PaceMaker for {}", hostPort);

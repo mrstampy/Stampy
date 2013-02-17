@@ -21,6 +21,7 @@ package asia.stampy.examples.remote.exe.log4j.server.netty;
 import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.common.heartbeat.StampyHeartbeatContainer;
 import asia.stampy.examples.common.IDontNeedSecurity;
 import asia.stampy.examples.remote.exe.common.RemoteExeMessageListener;
 import asia.stampy.server.netty.ServerNettyChannelHandler;
@@ -43,7 +44,7 @@ public class NettyInitializer {
    * @return the server mina message gateway
    */
   public static AbstractStampyMessageGateway initialize() {
-    HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
+    StampyHeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
     ServerNettyMessageGateway gateway = new ServerNettyMessageGateway();
     gateway.setPort(1234);

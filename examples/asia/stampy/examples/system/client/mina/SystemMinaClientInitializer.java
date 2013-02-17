@@ -26,6 +26,7 @@ import asia.stampy.common.StampyLibrary;
 import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.common.heartbeat.StampyHeartbeatContainer;
 import asia.stampy.examples.client.mina.MinaAutoTerminatingClientGateway;
 import asia.stampy.examples.common.IDontNeedSecurity;
 
@@ -47,7 +48,7 @@ public class SystemMinaClientInitializer {
    * @return the client mina message gateway
    */
   public static AbstractStampyMessageGateway initialize() {
-    HeartbeatContainer heartbeatContainer = new HeartbeatContainer();
+    StampyHeartbeatContainer heartbeatContainer = new HeartbeatContainer();
 
     MinaAutoTerminatingClientGateway gateway = new MinaAutoTerminatingClientGateway();
     gateway.setPort(1234);

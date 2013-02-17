@@ -28,6 +28,7 @@ import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
+import asia.stampy.common.heartbeat.StampyHeartbeatContainer;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.server.message.connected.ConnectedMessage;
@@ -45,7 +46,7 @@ import asia.stampy.server.message.connected.ConnectedMessage;
  * every MAX([cx],[sy]) milliseconds In the other direction, [sx] and [cy] are
  * used the same way.</i>
  * 
- * @see HeartbeatContainer
+ * @see StampyHeartbeatContainer
  * @see PaceMaker
  */
 @StampyLibrary(libraryName = "stampy-client-server")
@@ -55,7 +56,7 @@ public abstract class AbstractConnectedMessageListener<CLNT extends AbstractStam
 
   private static StompMessageType[] TYPES = { StompMessageType.CONNECTED };
 
-  private HeartbeatContainer heartbeatContainer;
+  private StampyHeartbeatContainer heartbeatContainer;
 
   private CLNT gateway;
 
@@ -108,7 +109,7 @@ public abstract class AbstractConnectedMessageListener<CLNT extends AbstractStam
    * 
    * @return the heartbeat container
    */
-  public HeartbeatContainer getHeartbeatContainer() {
+  public StampyHeartbeatContainer getHeartbeatContainer() {
     return heartbeatContainer;
   }
 
@@ -118,7 +119,7 @@ public abstract class AbstractConnectedMessageListener<CLNT extends AbstractStam
    * @param heartbeatContainer
    *          the new heartbeat container
    */
-  public void setHeartbeatContainer(HeartbeatContainer heartbeatContainer) {
+  public void setHeartbeatContainer(StampyHeartbeatContainer heartbeatContainer) {
     this.heartbeatContainer = heartbeatContainer;
   }
 
