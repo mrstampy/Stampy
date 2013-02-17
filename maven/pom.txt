@@ -1,0 +1,30 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>$groupId</groupId>
+  <artifactId>$artifactId</artifactId>
+  <packaging>jar</packaging>
+  <name>$name</name>
+  <version>$version</version>
+  <description>Java implementation of the STOMP 1.2 specification</description>
+  <url>http://mrstampy.github.com/Stampy/</url>
+  <licenses>
+    <license>
+      <name>GNU Public License, Version 2.0</name>
+      <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>https://github.com/mrstampy/Stampy.git</url>
+    <connection>https://github.com/mrstampy/Stampy.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>mrstampy</id>
+      <name>Burt Alexander</name>
+      <email>burt.alexander@gmail.com</email>
+    </developer>
+  </developers>
+  
+  $dependencies
+</project>

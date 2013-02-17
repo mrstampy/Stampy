@@ -2,7 +2,13 @@
 <project name="Stampy" basedir="." default="release.stampy" xmlns:ivy="antlib:org.apache.ivy.ant">
 	
 	<property file="build.properties" />
-	
+
+	<!-- defined maven snapshots and staging repository id and url -->
+	<property name="maven-snapshots-repository-id" value="sonatype-nexus-snapshots" />
+	<property name="maven-snapshots-repository-url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
+	<property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
+	<property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
+
 	<target name="release.stampy" depends="resolve, build.stampy">
 	</target>
 
@@ -40,16 +46,16 @@
 		    <format property="date" pattern="dd-MM-yyyy" locale="en,AU"/>
 		</tstamp>
 		<antcall target="clean" />
-		<ant antfile="${basedir}/build-stampy-core.xml" inheritall="true" />
+		<ant antfile="${basedir}/build-stampy-core.xml" inheritall="true" target="deploy"/>
 		<antcall target="clean" />
-		<ant antfile="${basedir}/build-stampy-client-server.xml" inheritall="true" />
+		<ant antfile="${basedir}/build-stampy-client-server.xml" inheritall="true" target="deploy" />
 		<antcall target="clean" />
-		<ant antfile="${basedir}/build-stampy-MINA.xml" inheritall="true" />
+		<ant antfile="${basedir}/build-stampy-MINA.xml" inheritall="true" target="deploy" />
 		<antcall target="clean" />
-		<ant antfile="${basedir}/build-stampy-NETTY.xml" inheritall="true" />
+		<ant antfile="${basedir}/build-stampy-NETTY.xml" inheritall="true" target="deploy" />
 		<antcall target="clean" />
-		<ant antfile="${basedir}/build-stampy-examples.xml" inheritall="true" />
-		<ant antfile="${basedir}/build-stampy-all.xml" inheritall="true" />
+		<ant antfile="${basedir}/build-stampy-examples.xml" inheritall="true" target="deploy" />
+		<ant antfile="${basedir}/build-stampy-all.xml" inheritall="true" target="deploy" />
 	</target>
 
 </project>

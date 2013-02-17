@@ -1,15 +1,44 @@
 
-<project name="stampy-NETTY-client-server-RI" basedir="." default="release.stampy.NETTY.client.server.RI" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="stampy-NETTY-client-server-RI" basedir="." default="release.stampy.NETTY.client.server.RI" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+	<!-- define Maven coordinates -->
+	<property name="artifactId" value="stampy-NETTY-client-server-RI" />
+
+	<!-- define artifacts' name, which follows the convention of Maven -->
+	<property name="maven-jar" value="${basedir}/build/${artifactId}/${artifactId}-${version}.jar" />
+	<property name="maven-javadoc-jar" value="${basedir}/build/${artifactId}/${artifactId}-${version}-javadoc.jar" />
+	<property name="maven-sources-jar" value="${basedir}/build/${artifactId}/${artifactId}-${version}-sources.jar" />
+
+	<target name="deploy" depends="release.stampy.NETTY.client.server.RI, create.pom" description="deploy snapshot version to Maven snapshot repository">
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file" />
+			<arg value="-Durl=${maven-snapshots-repository-url}" />
+			<arg value="-DrepositoryId=${maven-snapshots-repository-id}" />
+			<arg value="-DpomFile=pom.xml" />
+			<arg value="-Dfile=${maven-jar}" />
+		</artifact:mvn>
+	</target>
 	
+	<target name="create.pom">
+		<delete file="${basedir}/pom.xml" />
+		<copyfile dest="${basedir}/pom.xml" src="${basedir}/maven/pom.txt"/>
+		<loadfile property="deps" srcfile="${basedir}/maven/dep-NETTY.txt" />
+		<replace file="${basedir}/pom.xml" token="$dependencies" value="${deps}" />
+		<replace file="${basedir}/pom.xml"  token="$groupId" value="${groupId}" />
+		<replace file="${basedir}/pom.xml"  token="$artifactId" value="${artifactId}" />
+		<replace file="${basedir}/pom.xml"  token="$version" value="${version}" />
+		<replace file="${basedir}/pom.xml"  token="$name" value="Stampy NETTY RI" />
+	</target>
+
 	<path id="stampy.classpath">
 		<fileset dir="${basedir}/lib">
 			<include name="**/*.jar"/>
 		</fileset>
 		<fileset dir="${basedir}/build/stampy-core">
-			<include name="stampy-core.jar"/>
+			<include name="stampy-core-${version}.jar"/>
 		</fileset>
 		<fileset dir="${basedir}/build/stampy-client-server">
-			<include name="stampy-client-server.jar"/>
+			<include name="stampy-client-server-${version}.jar"/>
 		</fileset>
 	</path>
 	
@@ -58,7 +87,7 @@
 	</target>
 	
 	<target name="jar.stampy.NETTY.client.server.RI" depends="compile.stampy.NETTY.client.server.RI">
-		<jar destfile="${basedir}/build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI.jar" basedir="${basedir}/build/bin">
+		<jar destfile="${basedir}/build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-${version}.jar" basedir="${basedir}/build/bin">
 			<manifest id="stampy.NETTY.client.server.RI.manifest">
 				<attribute name="Built-By" value="${jar.built.by}"/>
 				<attribute name="Email-Address" value="${jar.email.address}"/>
@@ -70,7 +99,7 @@
 	</target>
 	
 	<target name="jar.stampy.NETTY.client.server.RI.javadoc" depends="javadoc.stampy.NETTY.client.server.RI">
-		<jar destfile="${basedir}/build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-javadoc.jar" basedir="${basedir}/build/javadoc">
+		<jar destfile="${basedir}/build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-javadoc-${version}.jar" basedir="${basedir}/build/javadoc">
 			<manifest id="stampy.NETTY.client.server.RI.manifest">
 				<attribute name="Built-By" value="${jar.built.by}"/>
 				<attribute name="Email-Address" value="${jar.email.address}"/>
@@ -82,7 +111,7 @@
 	</target>
 	
 	<target name="jar.stampy.NETTY.client.server.RI.src">
-		<jar destfile="${basedir}/build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-src.jar" basedir="${basedir}/netty">
+		<jar destfile="${basedir}/build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-sources-${version}.jar" basedir="${basedir}/netty">
 			<manifest id="stampy.NETTY.client.server.RI.manifest">
 				<attribute name="Built-By" value="${jar.built.by}"/>
 				<attribute name="Email-Address" value="${jar.email.address}"/>
