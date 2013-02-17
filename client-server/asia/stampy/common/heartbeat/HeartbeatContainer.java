@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asia.stampy.common.StampyLibrary;
+import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 
 /**
@@ -35,11 +36,26 @@ import asia.stampy.common.gateway.HostPort;
  * singleton; wire into the system appropriately.
  */
 @Resource
-@StampyLibrary(libraryName="stampy-client-server")
+@StampyLibrary(libraryName = "stampy-client-server")
 public class HeartbeatContainer {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private Map<HostPort, PaceMaker> paceMakers = new ConcurrentHashMap<HostPort, PaceMaker>();
+
+  /**
+   * Starts a heartbeat for the specified host & port.
+   * @param hostPort
+   * @param gateway
+   * @param timeMillis
+   */
+  public void start(HostPort hostPort, AbstractStampyMessageGateway gateway, int timeMillis) {
+    PaceMaker paceMaker = new PaceMaker(timeMillis);
+    paceMaker.setHostPort(hostPort);
+    paceMaker.setGateway(gateway);
+    paceMaker.start();
+
+    add(hostPort, paceMaker);
+  }
 
   /**
    * Stops heartbeats to the specified {@link HostPort}.
@@ -63,7 +79,7 @@ public class HeartbeatContainer {
    * @param paceMaker
    *          the pace maker
    */
-  public void add(HostPort hostPort, PaceMaker paceMaker) {
+  protected void add(HostPort hostPort, PaceMaker paceMaker) {
     stop(hostPort);
     log.info("Adding PaceMaker for {}", hostPort);
     paceMakers.put(hostPort, paceMaker);
@@ -89,7 +105,7 @@ public class HeartbeatContainer {
    *          the host port
    */
   public void reset(HostPort hostPort) {
-    if(hostPort == null) return;
+    if (hostPort == null) return;
     log.trace("Resetting PaceMaker for {}", hostPort);
     PaceMaker paceMaker = paceMakers.get(hostPort);
     if (paceMaker != null) paceMaker.reset();

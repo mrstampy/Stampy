@@ -28,7 +28,6 @@ import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 import asia.stampy.server.message.connected.ConnectedMessage;
@@ -100,12 +99,8 @@ public abstract class AbstractConnectedMessageListener<CLNT extends AbstractStam
     int heartbeat = Math.max(requested, gateway.getHeartbeat());
 
     log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
-    PaceMaker paceMaker = new PaceMaker(heartbeat);
-    paceMaker.setHostPort(hostPort);
-    paceMaker.setGateway(getGateway());
-    paceMaker.start();
 
-    getHeartbeatContainer().add(hostPort, paceMaker);
+    getHeartbeatContainer().start(hostPort, getGateway(), heartbeat);
   }
 
   /**

@@ -32,13 +32,13 @@ import asia.stampy.common.gateway.AbstractStampyMessageGateway;
 import asia.stampy.common.gateway.HostPort;
 import asia.stampy.common.gateway.StampyMessageListener;
 import asia.stampy.common.heartbeat.HeartbeatContainer;
-import asia.stampy.common.heartbeat.PaceMaker;
 import asia.stampy.common.message.StampyMessage;
 import asia.stampy.common.message.StompMessageType;
 
 /**
  * This class intercepts incoming {@link StompMessageType#CONNECT} from a STOMP
- * 1.2 client and starts a heartbeat, if requested.<br><br>
+ * 1.2 client and starts a heartbeat, if requested.<br>
+ * <br>
  * 
  * <i>CONNECT heart-beat:[cx],[cy] <br>
  * CONNECTED: heart-beat:[sx],[sy]<br>
@@ -52,8 +52,9 @@ import asia.stampy.common.message.StompMessageType;
  * @see HeartbeatContainer
  * @see PaceMaker
  */
-@StampyLibrary(libraryName="stampy-client-server")
-public abstract class AbstractHeartbeatListener<SVR extends AbstractStampyMessageGateway> implements StampyMessageListener {
+@StampyLibrary(libraryName = "stampy-client-server")
+public abstract class AbstractHeartbeatListener<SVR extends AbstractStampyMessageGateway> implements
+    StampyMessageListener {
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   private static StompMessageType[] TYPES = { StompMessageType.CONNECT, StompMessageType.STOMP,
       StompMessageType.DISCONNECT };
@@ -106,12 +107,8 @@ public abstract class AbstractHeartbeatListener<SVR extends AbstractStampyMessag
     int heartbeat = Math.max(requested, getGateway().getHeartbeat());
 
     log.info("Starting heartbeats for {} at {} ms intervals", hostPort, heartbeat);
-    PaceMaker paceMaker = new PaceMaker(heartbeat);
-    paceMaker.setHostPort(hostPort);
-    paceMaker.setGateway(getGateway());
-    paceMaker.start();
 
-    getHeartbeatContainer().add(hostPort, paceMaker);
+    getHeartbeatContainer().start(hostPort, getGateway(), heartbeat);
   }
 
   /**
