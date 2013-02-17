@@ -29,6 +29,40 @@
 		<replace file="${basedir}/pom.xml"  token="$version" value="${version}" />
 		<replace file="${basedir}/pom.xml"  token="$name" value="Stampy NETTY RI" />
 	</target>
+	
+	<target name="stage" depends="release.stampy.NETTY.client.server.RI, create.pom" description="deploy release version to Maven staging repository">
+		<!-- sign and deploy the main artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=pom.xml" />
+			<arg value="-Dfile=${maven-jar}" />
+            <arg value="-Pgpg" />
+		</artifact:mvn>
+
+		<!-- sign and deploy the sources artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=pom.xml" />
+			<arg value="-Dfile=${maven-sources-jar}" />
+			<arg value="-Dclassifier=sources" />
+            <arg value="-Pgpg" />
+		</artifact:mvn>
+
+		<!-- sign and deploy the javadoc artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=pom.xml" />
+			<arg value="-Dfile=${maven-javadoc-jar}" />
+			<arg value="-Dclassifier=javadoc" />
+            <arg value="-Pgpg" />
+		</artifact:mvn>
+	</target>
 
 	<path id="stampy.classpath">
 		<fileset dir="${basedir}/lib">
@@ -99,7 +133,7 @@
 	</target>
 	
 	<target name="jar.stampy.NETTY.client.server.RI.javadoc" depends="javadoc.stampy.NETTY.client.server.RI">
-		<jar destfile="${basedir}/build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-javadoc-${version}.jar" basedir="${basedir}/build/javadoc">
+		<jar destfile="${basedir}/build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-${version}-javadoc.jar" basedir="${basedir}/build/javadoc">
 			<manifest id="stampy.NETTY.client.server.RI.manifest">
 				<attribute name="Built-By" value="${jar.built.by}"/>
 				<attribute name="Email-Address" value="${jar.email.address}"/>
@@ -111,7 +145,7 @@
 	</target>
 	
 	<target name="jar.stampy.NETTY.client.server.RI.src">
-		<jar destfile="${basedir}/build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-sources-${version}.jar" basedir="${basedir}/netty">
+		<jar destfile="${basedir}/build/stampy-NETTY-client-server-RI/stampy-NETTY-client-server-RI-${version}-sources.jar" basedir="${basedir}/netty">
 			<manifest id="stampy.NETTY.client.server.RI.manifest">
 				<attribute name="Built-By" value="${jar.built.by}"/>
 				<attribute name="Email-Address" value="${jar.email.address}"/>

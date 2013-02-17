@@ -29,6 +29,40 @@
 		<replace file="${basedir}/pom.xml"  token="$version" value="${version}" />
 		<replace file="${basedir}/pom.xml"  token="$name" value="Stampy Client Server" />
 	</target>
+	
+	<target name="stage" depends="release.stampy.client.server, create.pom" description="deploy release version to Maven staging repository">
+		<!-- sign and deploy the main artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=pom.xml" />
+			<arg value="-Dfile=${maven-jar}" />
+            <arg value="-Pgpg" />
+		</artifact:mvn>
+
+		<!-- sign and deploy the sources artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=pom.xml" />
+			<arg value="-Dfile=${maven-sources-jar}" />
+			<arg value="-Dclassifier=sources" />
+            <arg value="-Pgpg" />
+		</artifact:mvn>
+
+		<!-- sign and deploy the javadoc artifact -->
+		<artifact:mvn>
+			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
+			<arg value="-Durl=${maven-staging-repository-url}" />
+			<arg value="-DrepositoryId=${maven-staging-repository-id}" />
+			<arg value="-DpomFile=pom.xml" />
+			<arg value="-Dfile=${maven-javadoc-jar}" />
+			<arg value="-Dclassifier=javadoc" />
+            <arg value="-Pgpg" />
+		</artifact:mvn>
+	</target>
 
 	<path id="stampy.classpath">
 		<fileset dir="${basedir}/lib">
@@ -90,7 +124,7 @@
 	</target>
 	
 	<target name="jar.stampy.client.server.javadoc" depends="javadoc.stampy.client.server">
-		<jar destfile="${basedir}/build/stampy-client-server/stampy-client-server-javadoc-${version}.jar" basedir="${basedir}/build/javadoc">
+		<jar destfile="${basedir}/build/stampy-client-server/stampy-client-server-${version}-javadoc.jar" basedir="${basedir}/build/javadoc">
 			<manifest id="stampy.client.server.manifest">
 				<attribute name="Built-By" value="${jar.built.by}"/>
 				<attribute name="Email-Address" value="${jar.email.address}"/>
@@ -102,7 +136,7 @@
 	</target>
 	
 	<target name="jar.stampy.client.server.src">
-		<jar destfile="${basedir}/build/stampy-client-server/stampy-client-server-sources-${version}.jar" basedir="${basedir}/client-server">
+		<jar destfile="${basedir}/build/stampy-client-server/stampy-client-server-${version}-sources.jar" basedir="${basedir}/client-server">
 			<manifest id="stampy.client.server.manifest">
 				<attribute name="Built-By" value="${jar.built.by}"/>
 				<attribute name="Email-Address" value="${jar.email.address}"/>

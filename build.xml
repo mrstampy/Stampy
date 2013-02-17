@@ -8,6 +8,9 @@
 	<property name="maven-snapshots-repository-url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
 	<property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
 	<property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
+	
+	<!-- values 'deploy', 'stage' -->
+	<property name="build.target" value="deploy" />
 
 	<target name="release.stampy" depends="resolve, build.stampy">
 	</target>
@@ -46,16 +49,16 @@
 		    <format property="date" pattern="dd-MM-yyyy" locale="en,AU"/>
 		</tstamp>
 		<antcall target="clean" />
-		<ant antfile="${basedir}/build-stampy-core.xml" inheritall="true" target="deploy"/>
+		<ant antfile="${basedir}/build-stampy-core.xml" inheritall="true" target="${build.target}"/>
 		<antcall target="clean" />
-		<ant antfile="${basedir}/build-stampy-client-server.xml" inheritall="true" target="deploy" />
+		<ant antfile="${basedir}/build-stampy-client-server.xml" inheritall="true" target="${build.target}" />
 		<antcall target="clean" />
-		<ant antfile="${basedir}/build-stampy-MINA.xml" inheritall="true" target="deploy" />
+		<ant antfile="${basedir}/build-stampy-MINA.xml" inheritall="true" target="${build.target}" />
 		<antcall target="clean" />
-		<ant antfile="${basedir}/build-stampy-NETTY.xml" inheritall="true" target="deploy" />
+		<ant antfile="${basedir}/build-stampy-NETTY.xml" inheritall="true" target="${build.target}" />
 		<antcall target="clean" />
-		<ant antfile="${basedir}/build-stampy-examples.xml" inheritall="true" target="deploy" />
-		<ant antfile="${basedir}/build-stampy-all.xml" inheritall="true" target="deploy" />
+		<ant antfile="${basedir}/build-stampy-examples.xml" inheritall="true" target="${build.target}" />
+		<ant antfile="${basedir}/build-stampy-all.xml" inheritall="true" target="${build.target}" />
 	</target>
 
 </project>
