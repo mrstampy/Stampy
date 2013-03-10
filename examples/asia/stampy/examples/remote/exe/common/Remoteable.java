@@ -19,6 +19,7 @@
 package asia.stampy.examples.remote.exe.common;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import asia.stampy.common.StampyLibrary;
@@ -48,5 +49,5 @@ public interface Remoteable extends Serializable {
    * @throws MissingPropertyException
    *           the missing propery exception
    */
-  void setProperties(Map<String, String> properties) throws MissingPropertyException;
+  void setProperties(Map<String, List<String>> properties) throws MissingPropertyException;
 }

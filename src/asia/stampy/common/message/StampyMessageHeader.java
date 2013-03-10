@@ -19,6 +19,7 @@
 package asia.stampy.common.message;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import asia.stampy.common.StampyLibrary;
@@ -26,7 +27,7 @@ import asia.stampy.common.StampyLibrary;
 /**
  * The Interface StampyMessageHeader.
  */
-@StampyLibrary(libraryName="stampy-core")
+@StampyLibrary(libraryName = "stampy-core")
 public interface StampyMessageHeader extends Serializable {
 
   /**
@@ -47,6 +48,15 @@ public interface StampyMessageHeader extends Serializable {
   void addHeader(String key, String value);
 
   /**
+   * Adds a header at the specified index.
+   * 
+   * @param key
+   * @param value
+   * @param idx
+   */
+  void addHeader(String key, String value, int idx);
+
+  /**
    * Checks for header.
    * 
    * @param key
@@ -56,7 +66,7 @@ public interface StampyMessageHeader extends Serializable {
   boolean hasHeader(String key);
 
   /**
-   * Removes the header.
+   * Removes the header and all its value.
    * 
    * @param key
    *          the key
@@ -64,7 +74,7 @@ public interface StampyMessageHeader extends Serializable {
   void removeHeader(String key);
 
   /**
-   * Gets the header value.
+   * Gets the first header value.
    * 
    * @param key
    *          the key
@@ -73,9 +83,17 @@ public interface StampyMessageHeader extends Serializable {
   String getHeaderValue(String key);
 
   /**
+   * Returns all the values associated with the header key.
+   * 
+   * @param key
+   * @return
+   */
+  List<String> getHeaderValues(String key);
+
+  /**
    * Gets the headers.
    * 
    * @return the headers
    */
-  Map<String, String> getHeaders();
+  Map<String, List<String>> getHeaders();
 }

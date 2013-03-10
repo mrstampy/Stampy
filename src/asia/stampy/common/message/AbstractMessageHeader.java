@@ -18,7 +18,9 @@
  */
 package asia.stampy.common.message;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -30,7 +32,7 @@ import asia.stampy.common.StampyLibrary;
 /**
  * Abstract implementation of a {@link StampyMessageHeader}.
  */
-@StampyLibrary(libraryName="stampy-core")
+@StampyLibrary(libraryName = "stampy-core")
 public abstract class AbstractMessageHeader implements StampyMessageHeader {
 
   private static final long serialVersionUID = 4570408820942642173L;
@@ -38,7 +40,7 @@ public abstract class AbstractMessageHeader implements StampyMessageHeader {
   /** The Constant CONTENT_LENGTH. */
   public static final String CONTENT_LENGTH = "content-length";
 
-  private Map<String, String> headers = new HashMap<String, String>();
+  private Map<String, List<String>> headers = new HashMap<String, List<String>>();
 
   /**
    * Sets the content length.
@@ -68,18 +70,18 @@ public abstract class AbstractMessageHeader implements StampyMessageHeader {
    * values are only used to maintain a history of state changes of the header
    * and MAY be ignored.</i><br>
    * <br>
-   * If addHeader is invoked when the key specified is already in use the value
-   * is NOT updated. To replace an existing key-value, first use the
    * 
-   * @param key
-   *          the key
-   * @param value
-   *          the value {@link AbstractMessageHeader#removeHeader(String)}
-   *          method.
+   * Values are added in order, only the first value added is returned in
+   * {@link AbstractMessageHeader#getHeaderValue(String)}
    */
   @Override
   public void addHeader(String key, String value) {
-    if (!hasHeader(key)) headers.put(key, value);
+    getList(key).add(value);
+  }
+
+  @Override
+  public void addHeader(String key, String value, int idx) {
+    getList(key).add(idx, value);
   }
 
   /*
@@ -103,7 +105,13 @@ public abstract class AbstractMessageHeader implements StampyMessageHeader {
    */
   @Override
   public String getHeaderValue(String key) {
-    return headers.get(key);
+    List<String> list = getList(key);
+    return list.isEmpty() ? null : list.get(0);
+  }
+
+  @Override
+  public List<String> getHeaderValues(String key) {
+    return new ArrayList<String>(getList(key));
   }
 
   /*
@@ -114,7 +122,17 @@ public abstract class AbstractMessageHeader implements StampyMessageHeader {
    */
   @Override
   public boolean hasHeader(String key) {
-    return headers.containsKey(key);
+    return headers.containsKey(key) && !getList(key).isEmpty();
+  }
+
+  private List<String> getList(String key) {
+    List<String> list = headers.get(key);
+    if (list == null) {
+      list = new ArrayList<String>();
+      headers.put(key, list);
+    }
+
+    return list;
   }
 
   /*
@@ -127,14 +145,18 @@ public abstract class AbstractMessageHeader implements StampyMessageHeader {
     boolean first = true;
 
     StringBuilder builder = new StringBuilder();
-    for (Entry<String, String> entry : headers.entrySet()) {
-      if (!first) builder.append("\n");
+    for (Entry<String, List<String>> entry : headers.entrySet()) {
+      if (entry.getValue() == null || entry.getValue().isEmpty()) continue;
 
-      builder.append(entry.getKey());
-      builder.append(":");
-      builder.append(entry.getValue());
+      for (String value : entry.getValue()) {
+        if (!first) builder.append("\n");
 
-      first = false;
+        builder.append(entry.getKey());
+        builder.append(":");
+        builder.append(value);
+
+        first = false;
+      }
     }
 
     return builder.toString();
@@ -146,8 +168,8 @@ public abstract class AbstractMessageHeader implements StampyMessageHeader {
    * @see asia.stampy.common.message.StampyMessageHeader#getHeaders()
    */
   @Override
-  public Map<String, String> getHeaders() {
-    return new HashMap<String, String>(headers);
+  public Map<String, List<String>> getHeaders() {
+    return new HashMap<String, List<String>>(headers);
   }
 
   /*

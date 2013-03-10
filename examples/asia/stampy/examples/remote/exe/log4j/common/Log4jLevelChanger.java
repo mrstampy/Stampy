@@ -18,6 +18,7 @@
  */
 package asia.stampy.examples.remote.exe.log4j.common;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -65,7 +66,7 @@ public class Log4jLevelChanger implements Remoteable {
    * .Map)
    */
   @Override
-  public void setProperties(Map<String, String> properties) throws MissingPropertyException {
+  public void setProperties(Map<String, List<String>> properties) throws MissingPropertyException {
     // unimplemented
   }
 
