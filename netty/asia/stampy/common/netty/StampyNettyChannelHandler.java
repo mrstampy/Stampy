@@ -363,7 +363,7 @@ public abstract class StampyNettyChannelHandler extends SimpleChannelUpstreamHan
    */
   public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
     HostPort hostPort = createHostPort(ctx);
-    log.error("Unexpected Netty exception for " + hostPort, e.getCause());
+    log.error("Unexpected Netty exception for {}", hostPort, e.getCause());
   }
 
   /**

@@ -280,6 +280,6 @@ public abstract class StampyMinaHandler extends IoHandlerAdapter {
   public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
     HostPort hostPort = new HostPort((InetSocketAddress) session.getRemoteAddress());
 
-    log.error("Unexpected exception for " + hostPort, cause);
+    log.error("Unexpected exception for {}", hostPort, cause);
   }
 }

@@ -54,7 +54,7 @@ public class StampyHandlerHelper {
         errorHandle(sm, e, hostPort);
       }
     } catch (Exception e1) {
-      log.error("Unexpected exception sending error message for " + hostPort, e1);
+      log.error("Unexpected exception sending error message for {}", hostPort, e1);
     }
   }
 
@@ -76,8 +76,8 @@ public class StampyHandlerHelper {
       try {
         errorHandle(e1, hostPort);
       } catch (Exception e2) {
-        log.error("Could not parse message " + msg + " for " + hostPort, e);
-        log.error("Unexpected exception sending error message for " + hostPort, e2);
+        log.error("Could not parse message {} for {}", msg, hostPort, e);
+        log.error("Unexpected exception sending error message for {}", hostPort, e2);
       }
     }
   }
@@ -95,7 +95,7 @@ public class StampyHandlerHelper {
    *           the exception
    */
   protected void errorHandle(StampyMessage<?> message, Exception e, HostPort hostPort) throws Exception {
-    log.error("Handling error, sending error message to " + hostPort, e);
+    log.error("Handling error, sending error message to {}", hostPort, e);
     String receipt = message.getHeader().getHeaderValue(ClientMessageHeader.RECEIPT);
     ErrorMessage error = new ErrorMessage(StringUtils.isEmpty(receipt) ? "n/a" : receipt);
     error.getHeader().setMessageHeader("Could not execute " + message.getMessageType() + " - " + e.getMessage());
@@ -113,7 +113,7 @@ public class StampyHandlerHelper {
    *           the exception
    */
   protected void errorHandle(Exception e, HostPort hostPort) throws Exception {
-    log.error("Handling error, sending error message to " + hostPort, e);
+    log.error("Handling error, sending error message to {}", hostPort, e);
     ErrorMessage error = new ErrorMessage("n/a");
     error.getHeader().setMessageHeader(e.getMessage());
     getGateway().sendMessage(error.toStompMessage(true), hostPort);
